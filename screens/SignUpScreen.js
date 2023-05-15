@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Image } from "react-native";
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addUser } from "../reducers/user";
@@ -14,7 +14,7 @@ export default function SignUpScreen() {
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
-
+    //todo verification
     const dispatch = useDispatch();
 
     const handleSubmit = () => {
@@ -62,11 +62,19 @@ export default function SignUpScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text>SignUp Screen </Text>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
             <View>
+                <View style={styles.inputContainer}>
                 <TextInput placeholder="Prénom" onChangeText={(value) => setFirstname(value)} value={firstname} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
                 <TextInput placeholder="Nom" onChangeText={(value) => setLastname(value)} value={lastname} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
                 <TextInput
                     placeholder="Adresse email"
                     onChangeText={(value) => setEmail(value)}
@@ -76,36 +84,54 @@ export default function SignUpScreen() {
                     textContentType="emailAddress"
                     autoComplete="email"
                 />
+                </View>
                 {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
-                <TextInput placeholder="Mot de passe" onChangeText={(value) => setPassword(value)} value={password} style={styles.input} />
-                <TextInput placeholder="Confirmation de mot de passe" onChangeText={(value) => setConfirmedPassword(value)} value={confirmedPassword} style={styles.input} />
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Mot de passe" onChangeText={(value) => setPassword(value)} value={password} secureTextEntry={true} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Confirmation de mot de passe" onChangeText={(value) => setConfirmedPassword(value)} value={confirmedPassword} secureTextEntry={true} style={styles.input} />
+                </View>
                 {passwordError && <Text style={styles.error}>Les mots de passe ne correspondent pas</Text>}
                 <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
                     <Text style={styles.textButton}>s'enregistrer</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: "#7935b0",
         alignItems: 'center',
-    justifyContent: 'center',
+        justifyContent: "flex-start",
+    },
+    logo: {
+        width: "100%",
+        height: "40%",
+    },
 
+    inputContainer: {
+        borderColor: '#ec6e5b',
+        borderWidth: 1,
+        borderRadius:15,
+        paddingLeft:10,
+        marginTop: 6,
+        fontSize: 16,
     },
     input: {
-        width: '65%',
-        marginTop: 6,
-        borderBottomColor: '#ec6e5b',
-        borderBottomWidth: 1,
-        fontSize: 16,
+        
+
+        color: '#FAF5FF',
+
     },
     button: {
         width: '30%',
         alignItems: 'center',
+        marginTop: 20,
         paddingTop: 8,
         backgroundColor: '#ec6e5b',
         borderRadius: 10,
