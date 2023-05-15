@@ -1,4 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addUser } from "../reducers/user";
 
@@ -11,6 +12,7 @@ export default function SignUpScreen() {
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmedPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
 
 
     const dispatch = useDispatch();
@@ -22,7 +24,7 @@ export default function SignUpScreen() {
         }
 
         if (password !== confirmedPassword) {
-            console.log("Les champs de mot de passe ne correspondent pas")
+            setPasswordError(true);
         } else {
             console.log(firstname, lastname, email, password, confirmedPassword);
 
@@ -77,6 +79,7 @@ export default function SignUpScreen() {
                 {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
                 <TextInput placeholder="Mot de passe" onChangeText={(value) => setPassword(value)} value={password} style={styles.input} />
                 <TextInput placeholder="Confirmation de mot de passe" onChangeText={(value) => setConfirmedPassword(value)} value={confirmedPassword} style={styles.input} />
+                {passwordError && <Text style={styles.error}>Les mots de passe ne correspondent pas</Text>}
                 <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
                     <Text style={styles.textButton}>s'enregistrer</Text>
                 </TouchableOpacity>
@@ -90,6 +93,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f2f2f2',
         alignItems: 'center',
+    justifyContent: 'center',
+
     },
     input: {
         width: '65%',
@@ -107,8 +112,8 @@ const styles = StyleSheet.create({
     },
     textButton: {
         color: '#ffffff',
-        height: 24,
+        height: 30,
         fontWeight: '600',
-        fontSize: 15,
+        fontSize: 16,
     },
 });
