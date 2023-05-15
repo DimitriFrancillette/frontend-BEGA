@@ -47,11 +47,11 @@ const TabNavigator = () => {
       tabBarIcon: ({ color, size }) => {
         let iconName = '';
         if (route.name === 'MyEvents') {
-          iconName = 'calendar-days';
+          iconName = 'calendar';
         } if (route.name === 'Create') {
           iconName = 'plus';
       } else if (route.name === 'Profil') {
-        iconName = 'user';
+        iconName = 'user-circle';
       }
 
         return <FontAwesome name={iconName} size={size} color={color} />;

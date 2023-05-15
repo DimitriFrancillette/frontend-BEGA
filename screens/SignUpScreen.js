@@ -3,10 +3,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Image,
   StyleSheet,
 } from "react-native";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 import { addUser } from "../reducers/user";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -23,7 +25,9 @@ export default function SignUpScreen({ navigation }) {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  const dispatch = useDispatch();
+
+    //todo verification
+    const dispatch = useDispatch();
 
   const handleSubmit = () => {
     if (!EMAIL_REGEX.test(email)) {
@@ -69,87 +73,87 @@ export default function SignUpScreen({ navigation }) {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text>SignUp Screen </Text>
-      <View>
-        <TextInput
-          placeholder="Prénom"
-          onChangeText={(value) => setFirstname(value)}
-          value={firstname}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Nom"
-          onChangeText={(value) => setLastname(value)}
-          value={lastname}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Adresse email"
-          onChangeText={(value) => setEmail(value)}
-          value={email}
-          style={styles.input}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoComplete="email"
-        />
-        {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
-        <TextInput
-          placeholder="Mot de passe"
-          onChangeText={(value) => setPassword(value)}
-          value={password}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Confirmation de mot de passe"
-          onChangeText={(value) => setConfirmedPassword(value)}
-          value={confirmedPassword}
-          style={styles.input}
-        />
-        {passwordError && (
-          <Text style={styles.error}>
-            Les mots de passe ne correspondent pas
-          </Text>
-        )}
-        <TouchableOpacity
-          onPress={() => handleSubmit()}
-          style={styles.button}
-          activeOpacity={0.8}
+
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <Text style={styles.textButton}>s'enregistrer</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+            <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
+            <View>
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Prénom" onChangeText={(value) => setFirstname(value)} value={firstname} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Nom" onChangeText={(value) => setLastname(value)} value={lastname} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
+                <TextInput
+                    placeholder="Adresse email"
+                    onChangeText={(value) => setEmail(value)}
+                    value={email} style={styles.input}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    textContentType="emailAddress"
+                    autoComplete="email"
+                />
+                </View>
+                {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Mot de passe" onChangeText={(value) => setPassword(value)} value={password} secureTextEntry={true} style={styles.input} />
+                </View>
+                <View style={styles.inputContainer}>
+                <TextInput placeholder="Confirmation de mot de passe" onChangeText={(value) => setConfirmedPassword(value)} value={confirmedPassword} secureTextEntry={true} style={styles.input} />
+                </View>
+                {passwordError && <Text style={styles.error}>Les mots de passe ne correspondent pas</Text>}
+                <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
+                    <Text style={styles.textButton}>s'enregistrer</Text>
+                </TouchableOpacity>
+            </View>
+
+        </KeyboardAvoidingView>
+    )
 }
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  input: {
-    width: "65%",
-    marginTop: 6,
-    borderBottomColor: "#ec6e5b",
-    borderBottomWidth: 1,
-    fontSize: 16,
-  },
-  button: {
-    width: "30%",
-    alignItems: "center",
-    paddingTop: 8,
-    backgroundColor: "#ec6e5b",
-    borderRadius: 10,
-  },
-  textButton: {
-    color: "#ffffff",
-    height: 30,
-    fontWeight: "600",
-    fontSize: 16,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#7935b0",
+        alignItems: 'center',
+        justifyContent: "flex-start",
+    },
+    logo: {
+        width: "100%",
+        height: "40%",
+    },
+
+    inputContainer: {
+        borderColor: '#ec6e5b',
+        borderWidth: 1,
+        borderRadius:15,
+        paddingLeft:10,
+        marginTop: 6,
+        fontSize: 16,
+    },
+    input: {
+
+
+        color: '#FAF5FF',
+
+    },
+    button: {
+        width: '30%',
+        alignItems: 'center',
+        marginTop: 20,
+        paddingTop: 8,
+        backgroundColor: '#ec6e5b',
+        borderRadius: 10,
+    },
+    textButton: {
+        color: '#ffffff',
+        height: 30,
+        fontWeight: '600',
+        fontSize: 16,
+    },
 });
