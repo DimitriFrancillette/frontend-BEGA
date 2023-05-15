@@ -71,12 +71,19 @@ export default function SignUpScreen({ navigation }) {
         }
     };
 
-
     return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
+            <View style={styles.arrowContainer}>
+                <FontAwesome 
+                name='arrow-left' 
+                size={30} 
+                color='#DDA304' 
+                onPress={() => navigation.navigate("Home")} 
+                />
+            </View>
             <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
             <View>
                 <View style={styles.inputContainer}>
@@ -115,7 +122,8 @@ export default function SignUpScreen({ navigation }) {
                         value={password}
                         secureTextEntry={true}
                         style={styles.input}
-                        placeholderTextColor="#faf5ff" />
+                        placeholderTextColor="#faf5ff"
+                    />
                 </View>
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -124,7 +132,8 @@ export default function SignUpScreen({ navigation }) {
                         value={confirmedPassword}
                         secureTextEntry={true}
                         style={styles.input}
-                        placeholderTextColor="#faf5ff" />
+                        placeholderTextColor="#faf5ff"
+                    />
                 </View>
                 {passwordError && <Text style={styles.error}>Les mots de passe ne correspondent pas</Text>}
                 <View style={styles.buttonContainer}>
@@ -149,9 +158,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "flex-start",
     },
+    arrowContainer: {
+        marginTop: 70,
+        marginLeft: 20,
+        alignSelf: 'flex-start',
+    },
     logo: {
         width: "100%",
-        height: "40%",
+        height: "30%",
     },
 
     inputContainer: {

@@ -8,6 +8,9 @@ import {
     StyleSheet,
 } from "react-native";
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 
 export default function SignInScreen({ navigation }) {
@@ -16,6 +19,8 @@ export default function SignInScreen({ navigation }) {
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
+    const dispatch = useDispatch();
+
 
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -28,7 +33,7 @@ export default function SignInScreen({ navigation }) {
         if (password === '') {
             setPasswordError(true);
         } else {
-            
+
             //*modele du fetch pour post dans le backend
             // fetch(`http://mon.adresse.ip/maRouteBack`, {
             //     method: 'POST',
@@ -62,6 +67,14 @@ export default function SignInScreen({ navigation }) {
             style={styles.container}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
+            <View style={styles.arrowContainer}>
+                <FontAwesome
+                    name='arrow-left'
+                    size={30}
+                    color='#DDA304'
+                    onPress={() => navigation.navigate("Home")}
+                />
+            </View>
             <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
             <View style={styles.inputContainer}>
                 <TextInput
@@ -86,14 +99,14 @@ export default function SignInScreen({ navigation }) {
                     placeholderTextColor="#faf5ff" />
             </View>
             <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={() => handleSubmit()}
-                        style={styles.buttonSignUp}
-                        activeOpacity={0.8}>
-                        <Text style={styles.textButton}>se connecter</Text>
-                    </TouchableOpacity>
-                </View>
-                {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
+                <TouchableOpacity
+                    onPress={() => handleSubmit()}
+                    style={styles.buttonSignUp}
+                    activeOpacity={0.8}>
+                    <Text style={styles.textButton}>se connecter</Text>
+                </TouchableOpacity>
+            </View>
+            {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
 
         </KeyboardAvoidingView>
     )
@@ -106,13 +119,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "flex-start",
     },
+    arrowContainer: {
+        marginTop: 70,
+        marginLeft: 20,
+        alignSelf: 'flex-start',
+    },
     logo: {
         width: "100%",
         height: "40%",
     },
 
     inputContainer: {
-        width:'70%',
+        width: '70%',
         borderColor: '#ec6e5b',
         borderWidth: 1,
         borderRadius: 25,
