@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
-import LogInScreen from './screens/LogInScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import SignInScreen from './screens/SignInScreen';
 //import EventScreen from './screens/EventScreen';
 
@@ -43,7 +43,7 @@ export default function App() {
        <NavigationContainer>
        <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="LogIn" component={LogInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
           </Stack.Navigator>
