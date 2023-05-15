@@ -8,6 +8,9 @@ import {
 } from "react-native";
 
 import { useState } from "react";
+import FontAwesome, {
+    RegularIcons,
+  } from "react-native-vector-icons/FontAwesome";
 
 export default function EventScreen({ navigation }) {
   const [search, setSearch] = useState("");
@@ -15,19 +18,18 @@ export default function EventScreen({ navigation }) {
   return (
     <>
       <View style={styles.container1}>
-        <Text style={styles.title}>My Events</Text>
-        <KeyboardAvoidingView>
+        <Text style={styles.title1}>My Events</Text>
+        <KeyboardAvoidingView style={{width: "100%"}}>
           <TextInput
             onChangeText={(value) => setSearch(value)}
             value={search}
             style={styles.input}
-            placeholder="search"
-            iconName="burger"
+            placeholder="search events"
           />
         </KeyboardAvoidingView>
         <View style={styles.container2}>
-          <Text>Event's Name</Text>
-          <Text>Date</Text>
+          <Text style={styles.title2}>Event's Name</Text>
+          <Text style={styles.date}>Date</Text>
           <KeyboardAvoidingView>
             <TouchableOpacity
               style={styles.buttonInfos}
@@ -49,29 +51,64 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAF5FF",
     alignItems: "center",
     paddingTop: 60,
-    paddingLeft: 50,
   },
-  title: {
-    width: "80%",
+  title1: {
+    width: "100%",
     fontSize: 48,
     fontWeight: 600,
     fontFamily: "roboto",
+    textAlign: 'center'
   },
   input: {
-    width: 90,
+    width: "90%",
+    marginHorizontal: "5%",
     padding: 10,
-    margin: 50,
+    marginBottom: 50,
     height: 40,
     marginTop: 25,
     backgroundColor: "#ffff",
     fontSize: 18,
   },
   container2: {
-    flex: 1,
+    display: 'flex',
     borderColor : '#6B21A8',
     backgroundColor: '#FAF5FF',
     borderWidth: 3,
     borderRadius: 10,
+    padding: 40,
+  },
+  buttonInfos:{
+        backgroundColor: '#6B21A8',
+        borderRadius: 10,
+       marginBottom:2,
+       marginLeft: 10,
+       width: '80%',
+       paddingTop: 8,
+       alignItems: 'center',
+       display: 'flex',
+       marginTop: 40 ,
+      },
+textButtonInfos :{
+    color: '#DDA304',
+    height: 30,
+    fontWeight: '600',
+    fontSize: 16, 
+},
+title2: {
+    width: "100%",
+    fontSize: 20,
+    fontWeight: 500,
+    fontFamily: "Inter",
+    textAlign: 'center'
+  },
+  date: {
+    width: "100%",
+    fontSize: 16,
+    fontWeight: 400,
+    fontFamily: "Regular",
+    textAlign: 'center',
+    marginTop: 40,
+    marginLeft: 45,
+  },
 
-  }
 });
