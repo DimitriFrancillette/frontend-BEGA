@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
+import { addUser } from "../reducers/user";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
@@ -35,30 +36,34 @@ export default function SignInScreen({ navigation }) {
         } else {
 
             //*modele du fetch pour post dans le backend
-            // fetch(`http://mon.adresse.ip/maRouteBack`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         email: email,
-            //         password: password
-            //     }),
-            // }).then((response) => response.json())
-            //     .then((data) => {
-            //         console.log(data)
-            //     });
+            fetch(`http://192.168.1.32:3000/users/signin`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            }).then((response) => response.json()).then((data) => {
+                console.log(data)
+                //todo rajouter une condition en cas de retour négatif
 
-            const newUser = {
-                firstname: "fakeAccount",
-                lastname: "fakeAccount",
-                email,
-                password,
-            };
+                const newUser = {
+                    firstname: data.user.firstname,
+                    lastname: data.user.lastname,
+                    email: data.user.email,
+                    token: data.user.authTokens,
+                };
 
-            dispatch(addUser(newUser));
-            navigation.navigate("TabNavigator", { screen: "MyEvents" });
+                dispatch(addUser(newUser));
+                navigation.navigate("TabNavigator", { screen: "MyEvents" });
 
-            setEmail("");
-            setPassword("");
+                setEmail("");
+                setPassword("");
+            });
+
+
+
+
         }
     };
 
@@ -98,6 +103,7 @@ export default function SignInScreen({ navigation }) {
                     style={styles.input}
                     placeholderTextColor="#faf5ff" />
             </View>
+            {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     onPress={() => handleSubmit()}
@@ -106,7 +112,14 @@ export default function SignInScreen({ navigation }) {
                     <Text style={styles.textButton}>se connecter</Text>
                 </TouchableOpacity>
             </View>
-            {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
+
+            <TouchableOpacity
+            //todo affichage suite au onPress du j'ai oublié mon mot de passe
+                    // onPress={() => handleSubmit()}
+                    style={styles.forgotLink}
+                    activeOpacity={0.8}>
+                    <Text style={styles.forgotText}>J'ai oublié mon mot de passe</Text>
+                </TouchableOpacity>
 
         </KeyboardAvoidingView>
     )
@@ -157,4 +170,13 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 16,
     },
+
+    forgotText: {
+        marginTop:20,
+        color: '#DDA304',
+        height: 30,
+        fontWeight: '600',
+        fontSize: 16,
+        textDecorationLine: 'underline',
+    }
 });
