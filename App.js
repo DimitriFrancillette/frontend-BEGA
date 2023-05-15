@@ -16,6 +16,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 const persistConfig = {
   key: "bega",
   storage: AsyncStorage,
+  blacklist: ['user'],
 };
 
 const reducers = combineReducers({ user });
