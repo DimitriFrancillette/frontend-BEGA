@@ -2,9 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
+import MyEventsScreen from './screens/MyEventsScreen';
+import CreateScreen from './screens/CreateScreen';
+import ProfilScreen from './screens/ProfilScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import SignInScreen from './screens/SignInScreen';
-//import EventScreen from './screens/EventScreen';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 import { Provider } from 'react-redux';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
@@ -37,6 +41,32 @@ import { StyleSheet, Text, View } from 'react-native';
 
 //todo tabnavigator for MyEvent
 
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ color, size }) => {
+        let iconName = '';
+        if (route.name === 'MyEvents') {
+          iconName = 'calendar-days';
+        } if (route.name === 'Create') {
+          iconName = 'plus';
+      } else if (route.name === 'Profil') {
+        iconName = 'user';
+      }
+
+        return <FontAwesome name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: '#6B21A8',
+      tabBarInactiveTintColor: '#335561',
+      headerShown: false,
+    })}>
+      <Tab.Screen name="MyEvents" component={MyEventsScreen} />
+      <Tab.Screen name="Create" component={CreateScreen} />
+      <Tab.Screen name="Profil" component={ProfilScreen} />
+    </Tab.Navigator>
+  );
+};
+
 export default function App() {
   return (
     <Provider store={store}>
@@ -46,7 +76,7 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
-            {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
     </NavigationContainer>
     </PersistGate>

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function HomeScreen({ navigation }) {
   return (
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     height: "40%",
   },
   buttonSignIn: {
-    backgroundColor: '#EC6E5B',
+    backgroundColor: '#6B21A8',
     borderRadius: 10,
    marginBottom: 80,
    width: '80%',
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
    marginBottom: 50,
   },
   buttonSignUp: {
-    backgroundColor: '#EC6E5B',
+    backgroundColor: '#6B21A8',
     borderRadius: 10,
    marginBottom: 80,
    width: '80%',
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
    marginBottom: 80,
   },
   textButton: {
-    color: '#ffffff',
+    color: '#DDA304',
     height: 30,
     fontWeight: '600',
     fontSize: 16,
