@@ -9,7 +9,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action) => {
-      //state.value.firstname = action.payload;
+      state.value.firstname = action.payload.firstname;
+      state.value.lastname = action.payload.lastname;
+      state.value.email = action.payload.email;
+      state.value.password = action.payload.password;
     },
   },
 });
