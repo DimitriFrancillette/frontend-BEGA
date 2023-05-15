@@ -1,77 +1,75 @@
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Image,
-  StyleSheet,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    Image,
+    StyleSheet,
 } from "react-native";
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { addUser } from "../reducers/user";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const EMAIL_REGEX =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function SignUpScreen({ navigation }) {
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmedPassword, setConfirmedPassword] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmedPassword, setConfirmedPassword] = useState("");
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
 
 
     //todo verification
     const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    if (!EMAIL_REGEX.test(email)) {
-      setEmailError(true);
-      return;
-    }
+    const handleSubmit = () => {
+        if (!EMAIL_REGEX.test(email)) {
+            setEmailError(true);
+            return;
+        }
 
-    if (password !== confirmedPassword && password === '') {
-      setPasswordError(true);
-    } else {
-      console.log(firstname, lastname, email, password, confirmedPassword);
+        if (password !== confirmedPassword || password === '') {
+            setPasswordError(true);
+        } else {
 
-      //*modele du fetch pour post dans le backend
-      // fetch(`http://mon.adresse.ip/maRouteBack`, {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({
-      //         firstname: firstname,
-      //         lastname: lastname,
-      //         email: email,
-      //         password: password
-      //     }),
-      // }).then((response) => response.json())
-      //     .then((data) => {
-      //         console.log(data)
-      //     });
+            //*modele du fetch pour post dans le backend
+            // fetch(`http://mon.adresse.ip/maRouteBack`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         firstname: firstname,
+            //         lastname: lastname,
+            //         email: email,
+            //         password: password
+            //     }),
+            // }).then((response) => response.json())
+            //     .then((data) => {
+            //         console.log(data)
+            //     });
 
-      const newUser = {
-        firstname,
-        lastname,
-        email,
-        password,
-      };
+            const newUser = {
+                firstname,
+                lastname,
+                email,
+                password,
+            };
 
-      dispatch(addUser(newUser));
-      navigation.navigate("TabNavigator", { screen: "MyEvents" });
+            dispatch(addUser(newUser));
+            navigation.navigate("TabNavigator", { screen: "MyEvents" });
 
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setPassword("");
-      setConfirmedPassword("");
-    }
-  };
+            setFirstname("");
+            setLastname("");
+            setEmail("");
+            setPassword("");
+            setConfirmedPassword("");
+        }
+    };
 
 
     return (
@@ -82,33 +80,61 @@ export default function SignUpScreen({ navigation }) {
             <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
             <View>
                 <View style={styles.inputContainer}>
-                <TextInput placeholder="Prénom" onChangeText={(value) => setFirstname(value)} value={firstname} style={styles.input} />
+                    <TextInput
+                        placeholder="Prénom"
+                        onChangeText={(value) => setFirstname(value)}
+                        value={firstname} style={styles.input}
+                        placeholderTextColor="#faf5ff"
+                    />
                 </View>
                 <View style={styles.inputContainer}>
-                <TextInput placeholder="Nom" onChangeText={(value) => setLastname(value)} value={lastname} style={styles.input} />
+                    <TextInput
+                        placeholder="Nom"
+                        onChangeText={(value) => setLastname(value)}
+                        value={lastname} style={styles.input}
+                        placeholderTextColor="#faf5ff"
+                    />
                 </View>
                 <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Adresse email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email} style={styles.input}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    textContentType="emailAddress"
-                    autoComplete="email"
-                />
+                    <TextInput
+                        placeholder="Adresse email"
+                        onChangeText={(value) => setEmail(value)}
+                        value={email} style={styles.input}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        textContentType="emailAddress"
+                        autoComplete="email"
+                        placeholderTextColor="#faf5ff"
+                    />
                 </View>
                 {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
                 <View style={styles.inputContainer}>
-                <TextInput placeholder="Mot de passe" onChangeText={(value) => setPassword(value)} value={password} secureTextEntry={true} style={styles.input} />
+                    <TextInput
+                        placeholder="Mot de passe"
+                        onChangeText={(value) => setPassword(value)}
+                        value={password}
+                        secureTextEntry={true}
+                        style={styles.input}
+                        placeholderTextColor="#faf5ff" />
                 </View>
                 <View style={styles.inputContainer}>
-                <TextInput placeholder="Confirmation de mot de passe" onChangeText={(value) => setConfirmedPassword(value)} value={confirmedPassword} secureTextEntry={true} style={styles.input} />
+                    <TextInput
+                        placeholder="Confirmation de mot de passe"
+                        onChangeText={(value) => setConfirmedPassword(value)}
+                        value={confirmedPassword}
+                        secureTextEntry={true}
+                        style={styles.input}
+                        placeholderTextColor="#faf5ff" />
                 </View>
                 {passwordError && <Text style={styles.error}>Les mots de passe ne correspondent pas</Text>}
-                <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
-                    <Text style={styles.textButton}>s'enregistrer</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => handleSubmit()}
+                        style={styles.buttonSignUp}
+                        activeOpacity={0.8}>
+                        <Text style={styles.textButton}>s'enregistrer</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </KeyboardAvoidingView>
@@ -131,27 +157,27 @@ const styles = StyleSheet.create({
     inputContainer: {
         borderColor: '#ec6e5b',
         borderWidth: 1,
-        borderRadius:15,
-        paddingLeft:10,
-        marginTop: 6,
-        fontSize: 16,
+        borderRadius: 25,
+        paddingLeft: 10,
+        padding: 10,
+        marginTop: 10,
     },
     input: {
-
-
         color: '#FAF5FF',
-
+        fontSize: 16,
     },
-    button: {
-        width: '30%',
-        alignItems: 'center',
+    buttonContainer: {
+        backgroundColor: '#6B21A8',
+        borderRadius: 10,
         marginTop: 20,
         paddingTop: 8,
-        backgroundColor: '#ec6e5b',
-        borderRadius: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        alignSelf: 'center',
     },
+
     textButton: {
-        color: '#ffffff',
+        color: '#DDA304',
         height: 30,
         fontWeight: '600',
         fontSize: 16,
