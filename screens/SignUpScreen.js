@@ -24,8 +24,6 @@ export default function SignUpScreen({ navigation }) {
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
-
-    //todo verification
     const dispatch = useDispatch();
 
     const handleSubmit = () => {
@@ -38,36 +36,33 @@ export default function SignUpScreen({ navigation }) {
             setPasswordError(true);
         } else {
 
-            //*modele du fetch pour post dans le backend
-            // fetch(`http://mon.adresse.ip/maRouteBack`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         firstname: firstname,
-            //         lastname: lastname,
-            //         email: email,
-            //         password: password
-            //     }),
-            // }).then((response) => response.json())
-            //     .then((data) => {
-            //         console.log(data)
-            //     });
+            fetch(`http://192.168.1.32:3000/users/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstname: firstname,
+                    lastname: lastname,
+                    email: email,
+                    password: password
+                }),
+            }).then((response) => response.json()).then((data) => {
+                console.log(data)
+                //todo rajouter une condition en cas de retour négatif
+                const newUser = {
+                    firstname: data.user.firstname,
+                    lastname: data.user.lastname,
+                    email: data.user.email,
+                    token: data.user.authTokens,
+                };
+                dispatch(addUser(newUser));
+                navigation.navigate("TabNavigator", { screen: "MyEvents" });
 
-            const newUser = {
-                firstname,
-                lastname,
-                email,
-                password,
-            };
-
-            dispatch(addUser(newUser));
-            navigation.navigate("TabNavigator", { screen: "MyEvents" });
-
-            setFirstname("");
-            setLastname("");
-            setEmail("");
-            setPassword("");
-            setConfirmedPassword("");
+                setFirstname("");
+                setLastname("");
+                setEmail("");
+                setPassword("");
+                setConfirmedPassword("");
+            });
         }
     };
 
@@ -77,11 +72,11 @@ export default function SignUpScreen({ navigation }) {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
             <View style={styles.arrowContainer}>
-                <FontAwesome 
-                name='arrow-left' 
-                size={30} 
-                color='#DDA304' 
-                onPress={() => navigation.navigate("Home")} 
+                <FontAwesome
+                    name='arrow-left'
+                    size={30}
+                    color='#DDA304'
+                    onPress={() => navigation.navigate("Home")}
                 />
             </View>
             <Image style={styles.logo} source={require("../assets/logo-bega.png")} />

@@ -13,6 +13,7 @@ export const userSlice = createSlice({
       state.value.lastname = action.payload.lastname;
       state.value.email = action.payload.email;
       state.value.password = action.payload.password;
+      state.value.token = action.payload.token;
     },
   },
 });
