@@ -86,7 +86,7 @@ export default function SignUpScreen({ navigation }) {
                         onPress={() => navigation.navigate("Home")}
                     />
                 </View>
-                <Image source={require("../assets/logo-bega.png")} />
+                <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
                 <View>
                     <KeyboardAvoidingView
                         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -176,6 +176,10 @@ const styles = StyleSheet.create({
         marginTop: 70,
         marginLeft: 20,
         alignSelf: 'flex-start',
+    },
+
+    logo: {
+        width: '100%'
     },
 
     inputContainer: {
