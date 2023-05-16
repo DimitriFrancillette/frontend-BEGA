@@ -154,15 +154,16 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
     },
     arrowContainer: {
+        position:"absolute",
         marginTop: 70,
         marginLeft: 20,
         alignSelf: 'flex-start',
     },
     logo: {
+        marginTop: 30,
         width: "100%",
         height: "30%",
     },
-
     inputContainer: {
         borderColor: '#ec6e5b',
         borderWidth: 1,
