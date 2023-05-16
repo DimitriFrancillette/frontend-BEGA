@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 48,
     fontWeight: 600,
-    fontFamily: "roboto",
-    textAlign: "center",
+    fontFamily: "Roboto",
+    textAlign: 'center'
   },
   input: {
     width: "90%",
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     fontWeight: 400,
-    fontFamily: "Regular",
-    textAlign: "center",
+    fontFamily: "Inter",
+    textAlign: 'center',
     marginTop: 40,
   },
   textButtonPastEvents: {

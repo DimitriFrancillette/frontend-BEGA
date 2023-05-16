@@ -9,6 +9,9 @@ import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useEffect, useState } from "react";
+import * as Font from 'expo-font';
+
 
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
@@ -81,6 +84,23 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+  //*chargement des font
+  const [isFontLoaded, setIsFontLoaded] = useState(false);
+  useEffect(() => {
+    const loadFont = async () => {
+      await Font.loadAsync({
+        'Inter': require('./assets/fonts/Inter-Regular.ttf'),
+        'Roboto': require('./assets/fonts/Roboto-Regular.ttf'),
+      });
+      setIsFontLoaded(true);
+    };
+
+    loadFont();
+  }, []);
+
+  if (!isFontLoaded) return null
+  //*chargement des font
+ 
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
