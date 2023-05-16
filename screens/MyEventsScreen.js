@@ -5,14 +5,11 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
 } from "react-native";
 
 import { useState } from "react";
-import FontAwesome, {
-  RegularIcons,
-} from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EventComponent = (props) => {
   return (
