@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 48,
     fontWeight: 600,
-    fontFamily: "roboto",
+    fontFamily: "Roboto",
     textAlign: 'center'
   },
   input: {
@@ -105,7 +105,7 @@ title2: {
     width: "100%",
     fontSize: 16,
     fontWeight: 400,
-    fontFamily: "Regular",
+    fontFamily: "Inter",
     textAlign: 'center',
     marginTop: 40,
     marginLeft: 45,

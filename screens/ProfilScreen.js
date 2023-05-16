@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         width: "100%",
         fontSize: 48,
         fontWeight: 600,
-        fontFamily: "roboto",
+        fontFamily: "Roboto",
         textAlign: 'center'
     },
     inputContainer: {
