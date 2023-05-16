@@ -5,6 +5,8 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 
 import { useState } from "react";
@@ -16,13 +18,22 @@ const EventComponent = (props) => {
   return (
     <View style={styles.eventContainer}>
       <Text style={styles.eventTitle}>{props.eventName}</Text>
-      <Text style={styles.date}>{props.date}</Text>
+      <Text style={styles.date}>
+        {props.date.toLocaleString("fr-FR", {
+          weekday: "short",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </Text>
       <KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.buttonInfos}
           activeOpacity={0.8}
           onPress={() =>
-            navigation.navigate("EventStackNavigator", { screen: "Event" })
+            props.navigation.navigate("EventStackNavigator", {
+              screen: "Event",
+            })
           }
         >
           <Text style={styles.textButtonInfos}>Infos</Text>
@@ -34,30 +45,66 @@ const EventComponent = (props) => {
 
 export default function EventScreen({ navigation }) {
   const [search, setSearch] = useState("");
+  //const [eventsData, setEventsData] = useState([]);
+
+  //   useEffect(() => {
+  //     fetch("http://192.168.1.77:3000/events")
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setEventsData(data.events);
+  //       });
+  //   }, []);
+
+  const eventsData = [
+    { eventName: "PICNIC", date: new Date() },
+    { eventName: "DEJEUNER", date: new Date() },
+    { eventName: "ANNIF", date: new Date() },
+    { eventName: "CREMALLIERE", date: new Date() },
+  ];
+
+  const events = eventsData.map((data, i) => {
+    return (
+      <EventComponent
+        key={i}
+        eventName={data.eventName}
+        date={data.date}
+        navigation={navigation}
+      />
+    );
+  });
 
   return (
     <>
-      <View style={styles.container}>
-        <Text style={styles.title}>My Events</Text>
-        <KeyboardAvoidingView style={{ width: "100%" }}>
-          <TextInput
-            onChangeText={(value) => setSearch(value)}
-            value={search}
-            style={styles.input}
-            placeholder="search events"
-          />
-        </KeyboardAvoidingView>
-        <EventComponent eventName={'Event Name'} date={'date'}/>
-        <KeyboardAvoidingView>
+      <ScrollView style={styles.scrollView} stickyHeaderIndices={[0]}>
+        <View style={{ backgroundColor: "#FAF5FF" }}>
           <TouchableOpacity
-            style={styles.buttonEventsPassés}
+            style={styles.buttonPastEvents}
             activeOpacity={0.8}
             // onPress={() => }
           >
-            <Text style={styles.textButtonEventsPassés}>Events Passés</Text>
+            <FontAwesome name="clock-o" size={28} color="#6B21A8" />
           </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </View>
+          <Text style={styles.title}>My Events</Text>
+          <KeyboardAvoidingView style={{ width: "100%" }}>
+            <TextInput
+              onChangeText={(value) => setSearch(value)}
+              value={search}
+              style={styles.input}
+              placeholder="search events"
+            />
+          </KeyboardAvoidingView>
+        </View>
+        <View style={styles.container}>
+          <View style={styles.eventsComponent}>
+            {events}
+            {/* <EventComponent
+          eventName={"Event Name"}
+          date={"date"}
+          navigation={navigation}
+        /> */}
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 }
@@ -67,10 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FAF5FF",
     alignItems: "center",
-    paddingTop: 60,
+    paddingTop: 40,
   },
   title: {
-    width: "100%",
     fontSize: 48,
     fontWeight: 600,
     fontFamily: "roboto",
@@ -80,19 +126,22 @@ const styles = StyleSheet.create({
     width: "90%",
     marginHorizontal: "5%",
     padding: 10,
-    marginBottom: 50,
+    marginBottom: 10,
     height: 40,
     marginTop: 25,
     backgroundColor: "#ffff",
     fontSize: 18,
   },
   eventContainer: {
+    width: "45%",
     display: "flex",
     borderColor: "#6B21A8",
     backgroundColor: "#FAF5FF",
     borderWidth: 3,
     borderRadius: 10,
-    padding: 40,
+    padding: 10,
+    marginHorizontal: "2.5%",
+    marginBottom: 20,
   },
   buttonInfos: {
     backgroundColor: "#6B21A8",
@@ -125,6 +174,27 @@ const styles = StyleSheet.create({
     fontFamily: "Regular",
     textAlign: "center",
     marginTop: 40,
-    marginLeft: 45,
+  },
+  textButtonPastEvents: {
+    color: "#FAF5FF",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  buttonPastEvents: {
+    top: 60,
+    left: 20,
+    width: 42,
+    backgroundColor: "#DDA304",
+    borderRadius: "100%",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  eventsComponent: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
