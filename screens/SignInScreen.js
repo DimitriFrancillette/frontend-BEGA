@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { addUser } from "../reducers/user";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function SignInScreen({ navigation }) {
 
@@ -22,10 +22,15 @@ export default function SignInScreen({ navigation }) {
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
+
     const dispatch = useDispatch();
 
 
-    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    const createAlert = (backMessage) =>
+    Alert.alert("Echec de la connexion", backMessage, [
+      {text: 'OK'},
+    ]);
 
     const handleSubmit = () => {
         if (!EMAIL_REGEX.test(email)) {
@@ -37,7 +42,6 @@ export default function SignInScreen({ navigation }) {
             setPasswordError(true);
         } else {
 
-            //*modele du fetch pour post dans le backend
             fetch(`http://192.168.1.32:3000/users/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -47,13 +51,17 @@ export default function SignInScreen({ navigation }) {
                 }),
             }).then((response) => response.json()).then((data) => {
                 console.log(data)
-                //todo rajouter une condition en cas de retour négatif
+                //todo modifier apres formalisation du message du back
+                if (data === "Connection not possible") {
+                    createAlert(data);
+                    return
+                }
 
                 const newUser = {
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
                     email: data.user.email,
-                    token: data.user.authTokens,
+                    token: data.user.authTokens[0].authToken,
                 };
 
                 dispatch(addUser(newUser));
@@ -167,6 +175,11 @@ const styles = StyleSheet.create({
     input: {
         color: '#FAF5FF',
         fontSize: 16,
+    },
+
+    error: {
+        color: '#DDA304',
+        alignSelf: 'center',
     },
     buttonContainer: {
         backgroundColor: '#6B21A8',

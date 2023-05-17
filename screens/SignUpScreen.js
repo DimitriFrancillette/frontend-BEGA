@@ -28,7 +28,7 @@ export default function SignUpScreen({ navigation }) {
 
     const dispatch = useDispatch();
 
-    const createTwoButtonAlert = (backMessage) =>
+    const createAlert = (backMessage) =>
     Alert.alert("L'enregistrement n'a pas fonctionné", backMessage, [
       {text: 'OK'},
     ]);
@@ -56,7 +56,7 @@ export default function SignUpScreen({ navigation }) {
                 console.log(data)
 
                 if (data.result === false) {
-                    createTwoButtonAlert(data.message);
+                    createAlert(data.message);
                     return
                 }
                 
