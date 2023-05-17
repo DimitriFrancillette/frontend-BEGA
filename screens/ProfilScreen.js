@@ -6,26 +6,77 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
-    Switch
+    Switch,
+    Alert
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import FontAwesome, { RegularIcons } from "react-native-vector-icons/FontAwesome";
+import { addUser, disconnectUser } from "../reducers/user";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-// const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export default function ProfilScreen() {
+export default function ProfilScreen({ navigation }) {
 
-    const [firstname, setFirstname] = useState("Dim");
-    const [lastname, setLastname] = useState("Dim");
-    const [email, setEmail] = useState("bb@fg.fr");
-    const [password, setPassword] = useState("******");
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [isEnabled, setIsEnabled] = useState(false);
-    // const [emailError, setEmailError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [fieldError, setFieldError] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.value);
-    console.log(user);
+
+    useEffect(() => {
+        setFirstname(user.firstname);
+        setLastname(user.lastname);
+        setEmail(user.email);
+    }, [user]);
+
+    const createAlert = (user) =>
+        Alert.alert("Confirmation", "Voulez-vous valider ces modifications?", [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            { text: 'OK', onPress: () => {dispatch(addUser(user), setIsChanged(false))} },
+        ]);
+
+    const handleModification = () => {
+        if (!EMAIL_REGEX.test(email)) {
+            setEmailError(true);
+            return
+        }
+
+        if (firstname === '' || lastname === '') {
+            setFieldError(true);
+            return
+        }
+
+        const updateUser = {
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+        }
+        //todo fetch vers le back à faire pour changer les infos dans la DB
+        createAlert(updateUser);
+    };
+
+    const handleRemove = () => {
+        //todo fetch vers le back à faire pour changer les infos dans la DB
+        console.log('REMOVED!')
+        navigation.navigate("Home");
+    };
+
+    const handleDisconnect = () => {
+        dispatch(disconnectUser());
+        navigation.navigate("Home");
+    };
+
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
@@ -42,41 +93,49 @@ export default function ProfilScreen() {
                     <View style={styles.imageContainer}>
                         <FontAwesome name="user-circle" size={100} color="#6B21A8" />
                     </View>
-                    <Text>Username</Text>
+                    <Text>{firstname}</Text>
                 </View>
 
                 <KeyboardAvoidingView style={styles.userInfosContainer} behavior="padding" keyboardVerticalOffset={60}>
                     <Text>User Infos</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
-                            placeholder={firstname}
-                            onChangeText={(value) => setFirstname(value)}
+                            placeholder="Prénom"
+                            onChangeText={(value) => { setFirstname(value), setIsChanged(true) }}
                             value={firstname} style={styles.input}
                             placeholderTextColor="black"
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <TextInput
-                            placeholder={lastname}
-                            onChangeText={(value) => setLastname(value)}
+                            placeholder="Nom"
+                            onChangeText={(value) => { setLastname(value), setIsChanged(true) }}
                             value={lastname} style={styles.input}
                             placeholderTextColor="black"
                         />
                     </View>
+                    {fieldError && <Text style={styles.error}>Les champs ne peuvent pas être sans récolte</Text>}
+
                     <View style={styles.inputContainer}>
                         <TextInput
-                            placeholder={email}
-                            onChangeText={(value) => setEmail(value)}
+                            placeholder="Email"
+                            onChangeText={(value) => { setEmail(value), setIsChanged(true) }}
                             value={email} style={styles.input}
                             placeholderTextColor="black"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            textContentType="emailAddress"
+                            autoComplete="email"
                         />
                     </View>
+                    {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
                     <View style={styles.inputContainer}>
                         <TextInput
-                            placeholder={password}
-                            onChangeText={(value) => setPassword(value)}
+                            placeholder="Password"
+                            onChangeText={(value) => { setPassword(value), setIsChanged(true) }}
                             value={password} style={styles.input}
                             placeholderTextColor="black"
+                            secureTextEntry={true}
                         />
                     </View>
                     <View style={styles.notificationContainer}>
@@ -89,6 +148,16 @@ export default function ProfilScreen() {
                             value={isEnabled}
                         />
                     </View>
+                    {isChanged &&
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity
+                                onPress={() => handleModification()}
+                                style={styles.buttonSignUp}
+                                activeOpacity={0.8}>
+                                <Text style={styles.modificationButton}>Enregistrer les modifications</Text>
+                            </TouchableOpacity>
+                        </View>}
+
                 </KeyboardAvoidingView>
                 <View style={styles.otherContainer}>
                     <View style={styles.buttonContainer}>
@@ -101,16 +170,14 @@ export default function ProfilScreen() {
                     </View>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            //todo comportement on press
-                            // onPress={() => handleSubmit()}
+                            onPress={() => handleRemove()}
                             activeOpacity={0.8}>
                             <Text style={styles.buttonText}>Supprimer mon compte</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            //todo comportement on press
-                            // onPress={() => handleSubmit()}
+                            onPress={() => handleDisconnect()}
                             activeOpacity={0.8}>
                             <Text style={styles.buttonText}>déconnexion</Text>
                         </TouchableOpacity>
@@ -178,7 +245,10 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: 16,
     },
-
+    error: {
+        color: '#DDA304',
+        alignSelf: 'center',
+    },
     notificationContainer: {
         width: '80%',
         borderColor: '#6B21A8',
@@ -203,6 +273,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    modificationButton: {
+        color: '#DDA304',
+
+    },
     buttonText: {
         color: "#FAF5FF",
     },
