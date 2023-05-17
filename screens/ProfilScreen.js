@@ -24,6 +24,8 @@ export default function ProfilScreen() {
     // const [emailError, setEmailError] = useState(false);
 
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+    console.log(user);
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
