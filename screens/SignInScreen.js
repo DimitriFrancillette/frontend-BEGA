@@ -6,6 +6,8 @@ import {
     KeyboardAvoidingView,
     Image,
     StyleSheet,
+    ScrollView,
+    Alert
 } from "react-native";
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
@@ -68,60 +70,67 @@ export default function SignInScreen({ navigation }) {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-            <View style={styles.arrowContainer}>
-                <FontAwesome
-                    name='arrow-left'
-                    size={30}
-                    color='#DDA304'
-                    onPress={() => navigation.navigate("Home")}
-                />
-            </View>
-            <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Adresse email"
-                    onChangeText={(value) => setEmail(value)}
-                    value={email} style={styles.input}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    textContentType="emailAddress"
-                    autoComplete="email"
-                    placeholderTextColor="#faf5ff"
-                />
-            </View>
-            {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Mot de passe"
-                    onChangeText={(value) => setPassword(value)}
-                    value={password}
-                    secureTextEntry={true}
-                    style={styles.input}
-                    placeholderTextColor="#faf5ff" />
-            </View>
-            {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={() => handleSubmit()}
-                    style={styles.buttonSignUp}
-                    activeOpacity={0.8}>
-                    <Text style={styles.textButton}>se connecter</Text>
-                </TouchableOpacity>
-            </View>
+        <View style={styles.container}>
+            <ScrollView style={styles.scrollView}>
 
-            <TouchableOpacity
-            //todo affichage suite au onPress du j'ai oublié mon mot de passe
-                    // onPress={() => handleSubmit()}
-                    style={styles.forgotLink}
-                    activeOpacity={0.8}>
-                    <Text style={styles.forgotText}>J'ai oublié mon mot de passe</Text>
-                </TouchableOpacity>
+                <View style={styles.arrowContainer}>
+                    <FontAwesome
+                        name='arrow-left'
+                        size={30}
+                        color='#DDA304'
+                        onPress={() => navigation.navigate("Home")}
+                    />
+                </View>
+                <Image style={styles.logo} source={require("../assets/logo-bega.png")} />
+                <View>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    >
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                placeholder="Adresse email"
+                                onChangeText={(value) => setEmail(value)}
+                                value={email} style={styles.input}
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                                textContentType="emailAddress"
+                                autoComplete="email"
+                                placeholderTextColor="#faf5ff"
+                            />
+                        </View>
+                        {emailError && <Text style={styles.error}>Adresse email invalide</Text>}
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                placeholder="Mot de passe"
+                                onChangeText={(value) => setPassword(value)}
+                                value={password}
+                                secureTextEntry={true}
+                                style={styles.input}
+                                placeholderTextColor="#faf5ff" />
+                        </View>
+                        {passwordError && <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>}
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity
+                                onPress={() => handleSubmit()}
+                                style={styles.buttonSignUp}
+                                activeOpacity={0.8}>
+                                <Text style={styles.textButton}>se connecter</Text>
+                            </TouchableOpacity>
+                        </View>
 
-        </KeyboardAvoidingView>
+                        <TouchableOpacity
+                            //todo affichage suite au onPress du j'ai oublié mon mot de passe
+                            // onPress={() => handleSubmit()}
+                            style={styles.forgotLink}
+                            activeOpacity={0.8}>
+                            <Text style={styles.forgotText}>J'ai oublié mon mot de passe</Text>
+                        </TouchableOpacity>
+
+                    </KeyboardAvoidingView>
+                </View>
+            </ScrollView>
+        </View>
+
     )
 }
 
@@ -132,14 +141,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "flex-start",
     },
+    scrollView: {
+        width: "100%",
+    },
     arrowContainer: {
+        position: "absolute",
+        zIndex: 1,
         marginTop: 70,
         marginLeft: 20,
         alignSelf: 'flex-start',
     },
     logo: {
         width: "100%",
-        height: "40%",
     },
 
     inputContainer: {
@@ -149,6 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: 10,
         marginTop: 10,
+        alignSelf: 'center',
     },
     input: {
         color: '#FAF5FF',
@@ -172,11 +186,12 @@ const styles = StyleSheet.create({
     },
 
     forgotText: {
-        marginTop:20,
+        marginTop: 20,
         color: '#DDA304',
         height: 30,
         fontWeight: '600',
         fontSize: 16,
         textDecorationLine: 'underline',
+        alignSelf: 'center',
     }
 });
