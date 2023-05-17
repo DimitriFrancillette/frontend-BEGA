@@ -11,10 +11,13 @@ import {
   Button,
 } from "react-native";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addEvent } from "../reducers/user";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
+
 
 export default function CreateScreen({ navigation }) {
+  const dispatch = useDispatch();
 
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
@@ -23,6 +26,8 @@ export default function CreateScreen({ navigation }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
@@ -53,17 +58,54 @@ export default function CreateScreen({ navigation }) {
   const handleSubmit = () => {
     if (
       !nameEvent ||
-      !adressEvent ||
-      !descriptionEvent ||
       !selectedDate ||
-      !selectedTime
+      !selectedTime||
+      !adressEvent ||
+      !descriptionEvent 
     ) {
-      // Display an error message or perform any other necessary action
+      setError("merci de compléter tous les champs ");
+      setSubmitted(true);
       return;
     }
-  
-    // Navigate to the new screen and pass the form data as a parameter
-    navigation.navigate("EventStackNavigator", { screen: "Event" });
+    fetch(`http://192.168.1.77:3000/events/addevent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: nameEvent,
+        //todo gestion userId, add back date and time
+        //date: selectedDate,
+       //time: selectedTime,
+        location: adressEvent,
+        description:descriptionEvent,
+        userId: '12345699686',
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+
+        if(data.result = false){
+          console.log(data.error)
+          return;
+        } 
+
+        const newEvent = {
+          title: data.event.nameEvent,
+          //date: data.event.selectedDate,
+          //time: data.event.selectedTime,
+          location: data.event.adressEvent,
+          description: data.event.descriptionEvent,
+          userId: '12345699686'
+        };
+        dispatch(addEvent(newEvent));
+        navigation.navigate("EventStackNavigator", { screen: "Event" });
+
+        setNameEvent("");
+        //setSelectedDate(new Date());
+        //setSelectedTime(new Date());
+        setAdressEvent(null);
+        setDescriptionEvent("");
+      });
   };
 
   return (
@@ -139,6 +181,12 @@ export default function CreateScreen({ navigation }) {
                 <Text style={styles.textButtonAddFriends}> + invités</Text>
               </TouchableOpacity>
             </View>
+            {submitted &&
+              (!nameEvent ||
+                !adressEvent ||
+                !descriptionEvent ||
+                !selectedDate ||
+                !selectedTime) && <Text style={styles.error}>{error}</Text>}
 
             <TouchableOpacity
               style={styles.ButtonValid}
@@ -250,5 +298,9 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: "row",
+  },
+  error: {
+    color: "red",
+    marginBottom: 10,
   },
 });

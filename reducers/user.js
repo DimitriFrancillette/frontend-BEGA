@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   value: {firstname: null, lastname: null, email: null, password: null, avatar: null, token: null}
 };
+// todo add userId
 
 export const userSlice = createSlice({
   name: 'user',

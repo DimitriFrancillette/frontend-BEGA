@@ -17,6 +17,7 @@ import * as Font from 'expo-font';
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import user from "./reducers/user";
+import event from "./reducers/event";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -27,7 +28,7 @@ const persistConfig = {
   blacklist: ["user"],
 };
 
-const reducers = combineReducers({ user });
+const reducers = combineReducers({ user, event });
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
@@ -42,6 +43,7 @@ const Tab = createBottomTabNavigator();
 
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+
 
 //todo tabnavigator for MyEvent
 
@@ -108,11 +110,11 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
-          
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />   
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />         
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />   
+                   
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
