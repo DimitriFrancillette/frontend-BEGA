@@ -86,18 +86,18 @@ export default function ProfilScreen({ navigation }) {
 
 
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title1}>Profil</Text>
+                    <Text style={styles.title}>Profil</Text>
                 </View>
 
                 <View style={styles.avatarContainer}>
                     <View style={styles.imageContainer}>
-                        <FontAwesome name="user-circle" size={100} color="#6B21A8" />
+                        <FontAwesome name="user-circle" size={90} color="#6B21A8" />
                     </View>
-                    <Text>{firstname}</Text>
+                    <Text style={styles.userNameText}>{firstname}</Text>
                 </View>
 
                 <KeyboardAvoidingView style={styles.userInfosContainer} behavior="padding" keyboardVerticalOffset={60}>
-                    <Text>User Infos</Text>
+                    <Text style={styles.infosText}>User Infos</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
                             placeholder="Prénom"
@@ -209,7 +209,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 30,
+    },
 
+    userNameText: {
+        fontSize:20,
+        fontWeight: 600,
     },
     userInfosContainer: {
         flex: 3,
@@ -219,6 +223,13 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
 
+    infosText: {
+        color:'#6B21A8',
+        fontSize:20,
+        fontWeight: 600,
+        textDecorationLine: 'underline',
+    },
+
     otherContainer: {
         flex: 3,
         justifyContent: 'center',
@@ -226,7 +237,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
 
-    title1: {
+    title: {
         width: "100%",
         fontSize: 48,
         fontWeight: 600,
@@ -265,7 +276,7 @@ const styles = StyleSheet.create({
         width: "50%",
         backgroundColor: '#6B21A8',
         borderRadius: 10,
-        marginTop: 20,
+        marginTop: 15,
         paddingTop: 8,
         paddingBottom: 8,
         paddingLeft: 20,

@@ -58,6 +58,7 @@ export default function SignInScreen({ navigation }) {
                 }
 
                 const newUser = {
+                    userId: data.user.id,
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
                     email: data.user.email,
