@@ -28,7 +28,7 @@ export default function SignUpScreen({ navigation }) {
 
     const dispatch = useDispatch();
 
-    const createTwoButtonAlert = (backMessage) =>
+    const createAlert = (backMessage) =>
     Alert.alert("L'enregistrement n'a pas fonctionné", backMessage, [
       {text: 'OK'},
     ]);
@@ -43,7 +43,7 @@ export default function SignUpScreen({ navigation }) {
             setPasswordError(true);
         } else {
 
-            fetch(`http://192.168.1.77:3000/users/signup`, {
+            fetch(`http://192.168.1.32:3000/users/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -56,10 +56,10 @@ export default function SignUpScreen({ navigation }) {
                 console.log(data)
 
                 if (data.result === false) {
-                    createTwoButtonAlert(data.message);
+                    createAlert(data.message);
                     return
                 }
-                //todo rajouter une condition en cas de retour négatif
+                
                 const newUser = {
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
