@@ -8,6 +8,7 @@ import CreateScreen from "./screens/CreateScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import * as Font from 'expo-font';
@@ -107,10 +108,11 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
+          
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />   
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />         
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

@@ -18,7 +18,7 @@ export default function EventScreen({ navigation }) {
             width: "100%",
             fontSize: 38,
             fontWeight: 600,
-            fontFamily: "roboto",
+            fontFamily: "Roboto",
             textAlign: "center",
           },
     });
