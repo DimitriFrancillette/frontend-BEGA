@@ -14,30 +14,24 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function CreateScreen({ navigation }) {
   const [nameEvent, setNameEvent] = useState("");
-  const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(new Date());
 
-  const toggleDatepicker = () => {
-    setShowDatePicker(!showDatePicker);
+  
+
+  const handleDateChange = (event, selected) => {
+    const currentDate = selected || selectedDate;
+    setShowDatePicker(false);
+    setSelectedDate(currentDate);
   };
 
-  const onChange = ({ type }, selectedDate) => {
-    if (type === "set") {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-      if (Platform.OS === "android") {
-        toggleDatepicker();
-        setDate(currentDate);
-      }
-    } else {
-      toggleDatepicker();
-    }
+  const showPickerDate = () => {
+    setShowDatePicker(true);
   };
-  const confirmIOSDate = () => {
-    toggleDatepicker();
-  };
+
+ 
 
   const handleTimeChange = (event, selected) => {
     const currentTime = selected || selectedTime;
@@ -45,11 +39,15 @@ export default function CreateScreen({ navigation }) {
     setSelectedTime(currentTime);
   };
 
-  const showPicker = () => {
+  const showPickerTime = () => {
     setShowTimePicker(true);
   };
-
-
+  //  display the selected time in a consistent format, single-digit minutes are correctly displayed with a leading zero.
+  const formatTime = (time) => {
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+  };
   return (
     <ScrollView style={styles.container}>
       <View>
@@ -62,65 +60,34 @@ export default function CreateScreen({ navigation }) {
             style={styles.input}
             placeholder="nom de l'évènement"
           />
-          {/* <Text style={styles.dateTitle}> DATE </Text> */}
-          {showPicker && (
-            <DateTimePicker
-              mode="date"
-              display="spinner"
-              value={date}
-              onChange={onChange}
-              minimumDate={new Date()}
-            />
-          )}
-          {showPicker && Platform.OS === "ios" && (
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  styles.pickerButton,
-                  { backgroundColor: "#6B21A8" },
-                ]}
-                onPress={toggleDatepicker}
-              >
-                <Text style={[styles.buttonText, { color: "#DDA304" }]}>
-                  Annuler
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.pickerButton, {backgroundColor: "#6B21A8"}]}
-                onPress={confirmIOSDate}
-              >
-                <Text style={[styles.buttonText]}>Valider</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {!showPicker && (
-            <Pressable onPress={toggleDatepicker}>
-              <TextInput
-                style={styles.input}
-                value={date}
-                onChangeText={setDate}
-                placeholderTextColor="red"
-                editable={false}
-                onPressIn={toggleDatepicker}
+          <View>
+            <Button title="Select Date" onPress={showPickerDate} />
+            {showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
               />
-            </Pressable>
-          )}
+            )}
+      <Text>Date de l'évènement: {selectedDate.toDateString()}</Text>
+            
+          </View>
+         
         </View>
         <View>
-      <Button title="Select Time" onPress={showPicker} />
-      {showTimePicker && (
-        <DateTimePicker
-          value={selectedTime}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
-    </View>
+          <Button title="Select Time" onPress={showPickerTime} />
+          {showTimePicker && (
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={handleTimeChange}
+            />
+          )}
+          <Text>Selected Time: {formatTime(selectedTime)}</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -138,15 +105,15 @@ const styles = StyleSheet.create({
     fontFamily: "roboto",
     textAlign: "center",
   },
-  inputContainer:{
-    alignItems:"center",
+  inputContainer: {
+    alignItems: "center",
   },
-  input:{
+  input: {
     fontSize: 20,
-    marginTop : 20,
+    marginTop: 20,
     marginBottom: 10,
   },
-  dateTitle:{
+  dateTitle: {
     fontSize: 20,
     fontWeight: 500,
     fontFamily: "roboto",
