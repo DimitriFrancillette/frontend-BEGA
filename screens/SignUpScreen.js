@@ -206,7 +206,10 @@ const styles = StyleSheet.create({
         color: '#FAF5FF',
         fontSize: 16,
     },
-
+    error: {
+        color: '#DDA304',
+        alignSelf: 'center',
+    },
     buttonContainer: {
         backgroundColor: '#6B21A8',
         borderRadius: 10,
