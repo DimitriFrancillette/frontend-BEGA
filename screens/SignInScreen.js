@@ -51,9 +51,9 @@ export default function SignInScreen({ navigation }) {
                 }),
             }).then((response) => response.json()).then((data) => {
                 console.log(data)
-                //todo modifier apres formalisation du message du back
-                if (data === "Connection not possible") {
-                    createAlert(data);
+                
+                if (data.result === false) {
+                    createAlert(data.error);
                     return
                 }
 

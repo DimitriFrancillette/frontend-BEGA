@@ -56,7 +56,7 @@ export default function SignUpScreen({ navigation }) {
                 console.log(data)
 
                 if (data.result === false) {
-                    createAlert(data.message);
+                    createAlert(data.error);
                     return
                 }
                 
