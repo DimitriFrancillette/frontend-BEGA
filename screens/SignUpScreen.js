@@ -6,7 +6,8 @@ import {
     KeyboardAvoidingView,
     Image,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Alert
 } from "react-native";
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +27,11 @@ export default function SignUpScreen({ navigation }) {
     const [passwordError, setPasswordError] = useState(false);
 
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.value);
+
+    const createTwoButtonAlert = (backMessage) =>
+    Alert.alert("L'enregistrement n'a pas fonctionné", backMessage, [
+      {text: 'OK'},
+    ]);
 
     const handleSubmit = () => {
         if (!EMAIL_REGEX.test(email)) {
@@ -49,12 +54,17 @@ export default function SignUpScreen({ navigation }) {
                 }),
             }).then((response) => response.json()).then((data) => {
                 console.log(data)
+
+                if (data.result === false) {
+                    createTwoButtonAlert(data.message);
+                    return
+                }
                 //todo rajouter une condition en cas de retour négatif
                 const newUser = {
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
                     email: data.user.email,
-                    token: data.user.authTokens,
+                    token: data.user.authTokens[0].authToken,
                 };
                 dispatch(addUser(newUser));
                 navigation.navigate("TabNavigator", { screen: "MyEvents" });
@@ -66,7 +76,6 @@ export default function SignUpScreen({ navigation }) {
                 setConfirmedPassword("");
 
 
-                console.log(user);
 
 
             });
