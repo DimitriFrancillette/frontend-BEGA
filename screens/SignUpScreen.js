@@ -59,7 +59,7 @@ export default function SignUpScreen({ navigation }) {
                     createTwoButtonAlert(data.message);
                     return
                 }
-                //todo rajouter une condition en cas de retour négatif
+                
                 const newUser = {
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
