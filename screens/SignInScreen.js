@@ -42,7 +42,7 @@ export default function SignInScreen({ navigation }) {
             setPasswordError(true);
         } else {
 
-            fetch(`http://192.168.1.32:3000/users/signin`, {
+            fetch(`http://192.168.1.77:3000/users/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

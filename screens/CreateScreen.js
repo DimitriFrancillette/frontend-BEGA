@@ -11,13 +11,14 @@ import {
   Button,
 } from "react-native";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../reducers/user";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
+ 
 
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
@@ -28,7 +29,7 @@ export default function CreateScreen({ navigation }) {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
+ console.log(nameEvent)
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
     setShowDatePicker(false);
@@ -56,17 +57,18 @@ export default function CreateScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    if (
-      !nameEvent ||
-      !selectedDate ||
-      !selectedTime||
-      !adressEvent ||
-      !descriptionEvent 
-    ) {
-      setError("merci de compléter tous les champs ");
-      setSubmitted(true);
-      return;
-    }
+    // if (
+    //   !nameEvent ||
+    //   !selectedDate ||
+    //   !selectedTime||
+    //   !adressEvent ||
+    //   !descriptionEvent 
+    // ) {
+    //   setError("merci de compléter tous les champs ");
+    //   setSubmitted(true);
+      
+    //   return;
+    // }
     fetch(`http://192.168.1.77:3000/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,26 +78,24 @@ export default function CreateScreen({ navigation }) {
         //date: selectedDate,
        //time: selectedTime,
         location: adressEvent,
-        description:descriptionEvent,
-        userId: '12345699686',
+        description: descriptionEvent,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+       console.log(data)
 
         if(data.result = false){
-          console.log(data.error)
+          
           return;
         } 
 
         const newEvent = {
-          title: data.event.nameEvent,
+          title: data.title,
           //date: data.event.selectedDate,
           //time: data.event.selectedTime,
-          location: data.event.adressEvent,
-          description: data.event.descriptionEvent,
-          userId: '12345699686'
+          location: data.location,
+          description: data.description,
         };
         dispatch(addEvent(newEvent));
         navigation.navigate("EventStackNavigator", { screen: "Event" });
