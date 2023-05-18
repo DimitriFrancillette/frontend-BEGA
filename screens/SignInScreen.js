@@ -1,3 +1,4 @@
+import { REACT_APP_BACK_API } from "@env";
 import {
     View,
     Text,
@@ -42,7 +43,7 @@ export default function SignInScreen({ navigation }) {
             setPasswordError(true);
         } else {
 
-            fetch(`http://192.168.1.77:3000/users/signin`, {
+            fetch(`${REACT_APP_BACK_API}/users/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -58,6 +59,7 @@ export default function SignInScreen({ navigation }) {
                 }
 
                 const newUser = {
+                    userId: data.user.id,
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
                     email: data.user.email,

@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: {firstname: null, lastname: null, email: null, password: null, avatar: null, token: null}
+  value: {userId: null, firstname: null, lastname: null, email: null, password: null, avatar: null, token: null}
 };
-// todo add userId
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     addUser: (state, action) => {
+      state.value.userId = action.payload.userId;
       state.value.firstname = action.payload.firstname;
       state.value.lastname = action.payload.lastname;
       state.value.email = action.payload.email;
@@ -18,6 +18,7 @@ export const userSlice = createSlice({
     },
 
     disconnectUser: (state, action) => {
+      state.value.userId = null;
       state.value.firstname = null;
       state.value.lastname = null;
       state.value.email = null;
