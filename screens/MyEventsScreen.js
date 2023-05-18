@@ -12,44 +12,45 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const EventComponent = (props) => {
+const EventComponent = ({ eventName, description, navigation }) => {
   return (
     <View style={styles.eventContainer}>
-      <Text style={styles.eventTitle}>{props.eventName}</Text>
-      <Text style={styles.date}>
+      <Text style={styles.eventTitle}>{eventName}</Text>
+      {/* <Text style={styles.date}>
         {props.date.toLocaleString("fr-FR", {
           weekday: "short",
           year: "numeric",
           month: "long",
           day: "numeric",
         })}
-      </Text>
+      </Text> */}
       <KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.buttonInfos}
           activeOpacity={0.8}
           onPress={() =>
-            props.navigation.navigate("EventStackNavigator", {
+            navigation.navigate("EventStackNavigator", {
               screen: "Event",
             })
           }
         >
-          <Text style={styles.textButtonInfos}>Infos</Text>
+          <Text style={styles.textButtonInfos}>{description}</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default function EventScreen({ navigation }) {
+export default function EventScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
-  console.log(user);
+
   useEffect(() => {
-    const fetchData = fetch(`${BACK_API}/events/${user.userId}`)
+    const fetchData = fetch(`${BACK_API}/events/findallevents/${user.userId}`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.events);
         setEventsData(data.events);
       });
     return () => {
@@ -68,9 +69,9 @@ export default function EventScreen({ navigation }) {
     return (
       <EventComponent
         key={i}
-        eventName={data.eventName}
-        date={data.date}
-        navigation={navigation}
+        eventName={data.title}
+        description={data.description}
+        //navigation={navigation}
       />
     );
   });
@@ -97,14 +98,7 @@ export default function EventScreen({ navigation }) {
           </KeyboardAvoidingView>
         </View>
         <View style={styles.container}>
-          <View style={styles.eventsComponent}>
-            {events}
-            {/* <EventComponent
-          eventName={"Event Name"}
-          date={"date"}
-          navigation={navigation}
-        /> */}
-          </View>
+          <View style={styles.eventsComponent}>{events}</View>
         </View>
       </ScrollView>
     </>
