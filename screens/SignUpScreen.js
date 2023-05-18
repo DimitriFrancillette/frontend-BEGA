@@ -45,7 +45,10 @@ export default function SignUpScreen({ navigation }) {
     } else {
       fetch(`${BACK_API}/users/signup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           firstname,
           lastname,
@@ -55,19 +58,17 @@ export default function SignUpScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          
-
           if (data.result === false) {
             createAlert(data.error);
             return;
           }
 
           const newUser = {
-            userId: data.user.userId,
+            userId: data.user._id,
             firstname: data.user.firstname,
             lastname: data.user.lastname,
             email: data.user.email,
-            token: data.user.authToken.authToken,
+            token: data.user.authTokens[0].authToken,
           };
           dispatch(addUser(newUser));
           navigation.navigate("TabNavigator", { screen: "MyEvents" });

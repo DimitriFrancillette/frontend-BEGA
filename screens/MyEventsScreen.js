@@ -45,9 +45,7 @@ export default function EventScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
-
-  console.log(user.userId);
-
+  console.log(user);
   useEffect(() => {
     const fetchData = fetch(`${BACK_API}/events/${user.userId}`)
       .then((response) => response.json())

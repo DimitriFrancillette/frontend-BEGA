@@ -60,9 +60,9 @@ export default function SignInScreen({ navigation }) {
             firstname: data.user.firstname,
             lastname: data.user.lastname,
             email: data.user.email,
-            token: data.user.authToken.authToken,
+            token: data.user.authTokens.authToken,
           };
-          console.log("TEST",newUser)
+          console.log("TEST", newUser);
 
           dispatch(addUser(newUser));
           navigation.navigate("TabNavigator", { screen: "MyEvents" });

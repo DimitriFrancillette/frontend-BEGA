@@ -11,11 +11,10 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { useState} from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../reducers/event";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import EventScreen from "./EventScreen";
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -69,7 +68,6 @@ export default function CreateScreen({ navigation }) {
 
     //   return;
     // }
-    
 
     fetch(`${BACK_API}/events/addevent`, {
       method: "POST",
@@ -88,8 +86,6 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        
-
         if (data.result === false) {
           return;
         }
