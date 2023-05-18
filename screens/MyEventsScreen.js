@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-
-import { useState } from "react";
+import { BACK_API } from "@env";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EventComponent = (props) => {
@@ -42,22 +43,28 @@ const EventComponent = (props) => {
 
 export default function EventScreen({ navigation }) {
   const [search, setSearch] = useState("");
-  //const [eventsData, setEventsData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+  const user = useSelector((state) => state.user.value);
 
-  //   useEffect(() => {
-  //     fetch("http://192.168.1.77:3000/events")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setEventsData(data.events);
-  //       });
-  //   }, []);
+  console.log(user.userId);
 
-  const eventsData = [
-    { eventName: "PICNIC", date: new Date() },
-    { eventName: "DEJEUNER", date: new Date() },
-    { eventName: "ANNIF", date: new Date() },
-    { eventName: "CREMALLIERE", date: new Date() },
-  ];
+  useEffect(() => {
+    const fetchData = fetch(`${BACK_API}/events/${user.userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setEventsData(data.events);
+      });
+    return () => {
+      fetchData;
+    };
+  }, []);
+
+  // const eventsData = [
+  //   { eventName: "PICNIC", date: new Date() },
+  //   { eventName: "DEJEUNER", date: new Date() },
+  //   { eventName: "ANNIF", date: new Date() },
+  //   { eventName: "CREMALLIERE", date: new Date() },
+  // ];
 
   const events = eventsData.map((data, i) => {
     return (
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
-    textAlign: 'center'
+    textAlign: "center",
   },
   input: {
     width: "90%",
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 400,
     fontFamily: "Inter",
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 40,
   },
   textButtonPastEvents: {

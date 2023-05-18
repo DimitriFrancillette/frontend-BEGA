@@ -76,12 +76,12 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: "#335561",
         headerShown: false,
       })}
-    >
+      >
+      {/* un tab en plus pour afficher l'event, tabBarbutton pour cacher le button dans le tabBar*/}
+      <Tab.Screen name="EventStackNavigator" component={EventStackNavigator} options={{tabBarButton: () => null }} /> 
       <Tab.Screen name="MyEvents" component={MyEventsScreen} />
       <Tab.Screen name="Create" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
-      {/* un tab en plus pour afficher l'event, tabBarbutton pour cacher le button dans le tabBar*/}
-      <Tab.Screen name="EventStackNavigator" component={EventStackNavigator} options={{tabBarButton: () => null }} /> 
     </Tab.Navigator>
   );
 };
@@ -110,11 +110,10 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />   
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />   
-                   
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />   
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

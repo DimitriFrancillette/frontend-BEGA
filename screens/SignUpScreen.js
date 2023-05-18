@@ -55,7 +55,7 @@ export default function SignUpScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          
 
           if (data.result === false) {
             createAlert(data.error);
@@ -63,11 +63,11 @@ export default function SignUpScreen({ navigation }) {
           }
 
           const newUser = {
-            userId: data.user.id,
+            userId: data.user.userId,
             firstname: data.user.firstname,
             lastname: data.user.lastname,
             email: data.user.email,
-            token: data.user.authTokens[0].authToken,
+            token: data.user.authToken.authToken,
           };
           dispatch(addUser(newUser));
           navigation.navigate("TabNavigator", { screen: "MyEvents" });

@@ -11,10 +11,11 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { useState } from "react";
+import { useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addEvent } from "../reducers/user";
+import { addEvent } from "../reducers/event";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import EventScreen from "./EventScreen";
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -29,7 +30,6 @@ export default function CreateScreen({ navigation }) {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  console.log(nameEvent);
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
     setShowDatePicker(false);
@@ -69,6 +69,8 @@ export default function CreateScreen({ navigation }) {
 
     //   return;
     // }
+    
+
     fetch(`${BACK_API}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -86,9 +88,9 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        
 
-        if ((data.result = false)) {
+        if (data.result === false) {
           return;
         }
 
@@ -100,15 +102,21 @@ export default function CreateScreen({ navigation }) {
           description: data.description,
         };
         dispatch(addEvent(newEvent));
-        
+
         setNameEvent("");
         //setSelectedDate(new Date());
         //setSelectedTime(new Date());
         setAdressEvent(null);
         setDescriptionEvent("");
-
       });
-      navigation.navigate("EventStackNavigator", { screen: "Event" });
+    navigation.navigate("EventStackNavigator", {
+      screen: "Event",
+      params: {
+        nameEvent,
+        adressEvent,
+        descriptionEvent,
+      },
+    });
   };
 
   return (
@@ -212,7 +220,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   title: {
-    fontSize: 33,
+    fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
     textAlign: "center",
