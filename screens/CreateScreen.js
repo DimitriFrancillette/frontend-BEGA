@@ -1,4 +1,5 @@
 import React from "react";
+import { BACK_API } from "@env";
 import {
   View,
   Text,
@@ -17,7 +18,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.value);
+  const user = useSelector((state) => state.user.value);
 
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
@@ -99,14 +100,15 @@ export default function CreateScreen({ navigation }) {
           description: data.description,
         };
         dispatch(addEvent(newEvent));
-        navigation.navigate("EventStackNavigator", { screen: "Event" });
-
+        
         setNameEvent("");
         //setSelectedDate(new Date());
         //setSelectedTime(new Date());
         setAdressEvent(null);
         setDescriptionEvent("");
+
       });
+      navigation.navigate("EventStackNavigator", { screen: "Event" });
   };
 
   return (
