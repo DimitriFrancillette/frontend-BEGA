@@ -1,4 +1,4 @@
-import { REACT_APP_BACK_API } from "@env";
+import { BACK_API } from "@env";
 import {
     View,
     Text,
@@ -43,7 +43,7 @@ export default function SignUpScreen({ navigation }) {
         if (password !== confirmedPassword || password === "") {
             setPasswordError(true);
         } else {
-            fetch(`${REACT_APP_BACK_API}/users/signup`, {
+            fetch(`${BACK_API}/users/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
