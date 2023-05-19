@@ -16,7 +16,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 
-export default function EventScreen({}) {
+export default function MyEventsScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
