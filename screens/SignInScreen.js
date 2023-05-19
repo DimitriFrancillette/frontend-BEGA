@@ -48,8 +48,6 @@ export default function SignInScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-
           if (data.result === false) {
             createAlert(data.error);
             return;
@@ -62,7 +60,6 @@ export default function SignInScreen({ navigation }) {
             email: data.user.email,
             token: data.user.authTokens.authToken,
           };
-          console.log("TEST", newUser);
 
           dispatch(addUser(newUser));
           navigation.navigate("TabNavigator", { screen: "MyEvents" });

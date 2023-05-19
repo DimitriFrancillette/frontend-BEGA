@@ -6,7 +6,6 @@ const initialState = {
     firstname: null,
     lastname: null,
     email: null,
-    password: null,
     avatar: null,
     token: null,
   },
@@ -29,7 +28,6 @@ export const userSlice = createSlice({
       state.value.firstname = null;
       state.value.lastname = null;
       state.value.email = null;
-      state.value.password = null;
       state.value.token = null;
     },
   },

@@ -54,19 +54,11 @@ export default function EventScreen({}) {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.events);
           setEventsData(data.events);
         });
       return () => fetchEvents;
     }, [])
   );
-
-  // const eventsData = [
-  //   { eventName: "PICNIC", date: new Date() },
-  //   { eventName: "DEJEUNER", date: new Date() },
-  //   { eventName: "ANNIF", date: new Date() },
-  //   { eventName: "CREMALLIERE", date: new Date() },
-  // ];
 
   const events = eventsData.map((data, i) => {
     return (
