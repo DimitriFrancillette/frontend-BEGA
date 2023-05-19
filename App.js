@@ -12,8 +12,7 @@ import TodoScreen from "./screens/TodoScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
-import * as Font from 'expo-font';
-
+import * as Font from "expo-font";
 
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
@@ -44,7 +43,6 @@ const Tab = createBottomTabNavigator();
 
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-
 
 //todo tabnavigator for MyEvent
 
@@ -77,9 +75,13 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: "#335561",
         headerShown: false,
       })}
-      >
+    >
       {/* un tab en plus pour afficher l'event, tabBarbutton pour cacher le button dans le tabBar*/}
-      <Tab.Screen name="EventStackNavigator" component={EventStackNavigator} options={{tabBarButton: () => null }} /> 
+      <Tab.Screen
+        name="EventStackNavigator"
+        component={EventStackNavigator}
+        options={{ tabBarButton: () => null }}
+      />
       <Tab.Screen name="MyEvents" component={MyEventsScreen} />
       <Tab.Screen name="Create" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
@@ -93,8 +95,8 @@ export default function App() {
   useEffect(() => {
     const loadFont = async () => {
       await Font.loadAsync({
-        'Inter': require('./assets/fonts/Inter-Regular.ttf'),
-        'Roboto': require('./assets/fonts/Roboto-Regular.ttf'),
+        Inter: require("./assets/fonts/Inter-Regular.ttf"),
+        Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
       });
       setIsFontLoaded(true);
     };
@@ -102,9 +104,9 @@ export default function App() {
     loadFont();
   }, []);
 
-  if (!isFontLoaded) return null
+  if (!isFontLoaded) return null;
   //*chargement des font
- 
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
@@ -113,8 +115,9 @@ export default function App() {
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />   
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />   
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Event" component={EventScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
