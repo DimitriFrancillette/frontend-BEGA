@@ -15,6 +15,13 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Checkbox from "expo-checkbox";
 
 export default function EventScreen({ navigation }) {
+  const [eventTitle, setEventTitle] = useState("Nom de l'event");
+  const [date, setDate] = useState("Date & Heure");
+  const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
+  const [description, setDescription] = useState("Ajouter une description");
+  const [isChanged, setIsChanged] = useState(false);
+  const [isChecked, setChecked] = useState(false);
+
   return (
     <View style={styles.container}>
       <ScrollView
