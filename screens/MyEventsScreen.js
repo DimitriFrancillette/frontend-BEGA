@@ -8,10 +8,10 @@ import {
   ScrollView,
 } from "react-native";
 import { BACK_API } from "@env";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-
 
 const EventComponent = ({ eventName, description, navigation }) => {
   return (
@@ -47,20 +47,19 @@ export default function MyEventsScreen({}) {
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
 
-  
-  useEffect(() => {
-    console.log('testuseffect')
-    
-    const fetchData = fetch(`http://192.168.1.77:3000/events/findallevents/${user.userId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.events);
-        setEventsData(data.events);
-      });
-    return () => {
-      fetchData;
-    };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEvents = fetch(
+        `http://192.168.1.57:3000/events/findallevents/${user.userId}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.events);
+          setEventsData(data.events);
+        });
+      return () => fetchEvents;
+    }, [])
+  );
 
   // const eventsData = [
   //   { eventName: "PICNIC", date: new Date() },
