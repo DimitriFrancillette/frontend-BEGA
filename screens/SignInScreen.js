@@ -37,6 +37,7 @@ export default function SignInScreen({ navigation }) {
 
     if (password === "") {
       setPasswordError(true);
+      return;
     } else {
       fetch(`http://192.168.1.57:3000/users/signin`, {
         method: "POST",
@@ -58,7 +59,7 @@ export default function SignInScreen({ navigation }) {
             firstname: data.user.firstname,
             lastname: data.user.lastname,
             email: data.user.email,
-            token: data.user.authTokens.authToken,
+            token: data.user.authTokens[0].authToken,
           };
 
           dispatch(addUser(newUser));

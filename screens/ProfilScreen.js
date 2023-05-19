@@ -52,19 +52,21 @@ export default function ProfilScreen({ navigation }) {
   useEffect(() => {
     const fetchDataUser = fetch(`http://192.168.1.57:3000/users/userprofil`, {
       headers: { Authorization: `Bearer ${user.token}` },
+      Authorization: `Bearer ${user.token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setEmail(data.email);
         setFirstname(data.firstname);
         setLastname(data.lastname);
       });
     return () => fetchDataUser;
   }, []);
-
+  console.log(user);
   const createAlert = (user) =>
     Alert.alert("Confirmation", "Voulez-vous valider ces modifications?", [
       {
@@ -107,6 +109,15 @@ export default function ProfilScreen({ navigation }) {
   };
 
   const handleDisconnect = () => {
+    fetch("http://192.168.1.57:3000/users/logout", {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+
+      method: "POST",
+    });
     dispatch(disconnectUser());
     navigation.navigate("Home");
   };
