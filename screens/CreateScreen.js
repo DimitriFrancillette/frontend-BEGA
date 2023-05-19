@@ -1,4 +1,5 @@
 import React from "react";
+import { BACK_API } from "@env";
 import {
   View,
   Text,
@@ -11,13 +12,13 @@ import {
   Button,
 } from "react-native";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addEvent } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import { addEvent } from "../reducers/event";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
 
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
@@ -28,7 +29,6 @@ export default function CreateScreen({ navigation }) {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
     setShowDatePicker(false);
@@ -56,49 +56,48 @@ export default function CreateScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    if (
-      !nameEvent ||
-      !selectedDate ||
-      !selectedTime||
-      !adressEvent ||
-      !descriptionEvent 
-    ) {
-      setError("merci de compléter tous les champs ");
-      setSubmitted(true);
-      return;
-    }
-    fetch(`http://192.168.1.77:3000/events/addevent`, {
+    // if (
+    //   !nameEvent ||
+    //   !selectedDate ||
+    //   !selectedTime||
+    //   !adressEvent ||
+    //   !descriptionEvent
+    // ) {
+    //   setError("merci de compléter tous les champs ");
+    //   setSubmitted(true);
+
+    //   return;
+    // }
+
+    fetch(`${BACK_API}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: nameEvent,
+        // title, location, description, userId, role
         //todo gestion userId, add back date and time
         //date: selectedDate,
-       //time: selectedTime,
+        //time: selectedTime,
+        role: "admin",
+        userId: user.userId,
         location: adressEvent,
-        description:descriptionEvent,
-        userId: '12345699686',
+        description: descriptionEvent,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-
-        if(data.result = false){
-          console.log(data.error)
+        if (data.result === false) {
           return;
-        } 
+        }
 
         const newEvent = {
-          title: data.event.nameEvent,
+          title: data.title,
           //date: data.event.selectedDate,
           //time: data.event.selectedTime,
-          location: data.event.adressEvent,
-          description: data.event.descriptionEvent,
-          userId: '12345699686'
+          location: data.location,
+          description: data.description,
         };
         dispatch(addEvent(newEvent));
-        navigation.navigate("EventStackNavigator", { screen: "Event" });
 
         setNameEvent("");
         //setSelectedDate(new Date());
@@ -106,6 +105,14 @@ export default function CreateScreen({ navigation }) {
         setAdressEvent(null);
         setDescriptionEvent("");
       });
+    navigation.navigate("EventStackNavigator", {
+      screen: "Event",
+      params: {
+        nameEvent,
+        adressEvent,
+        descriptionEvent,
+      },
+    });
   };
 
   return (
@@ -209,7 +216,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   title: {
-    fontSize: 33,
+    fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
     textAlign: "center",

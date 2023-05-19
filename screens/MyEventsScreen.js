@@ -7,65 +7,71 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-
-import { useState } from "react";
+import { BACK_API } from "@env";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const EventComponent = (props) => {
+const EventComponent = ({ eventName, description, navigation }) => {
   return (
     <View style={styles.eventContainer}>
-      <Text style={styles.eventTitle}>{props.eventName}</Text>
-      <Text style={styles.date}>
+      <Text style={styles.eventTitle}>{eventName}</Text>
+      {/* <Text style={styles.date}>
         {props.date.toLocaleString("fr-FR", {
           weekday: "short",
           year: "numeric",
           month: "long",
           day: "numeric",
         })}
-      </Text>
+      </Text> */}
       <KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.buttonInfos}
           activeOpacity={0.8}
           onPress={() =>
-            props.navigation.navigate("EventStackNavigator", {
+            navigation.navigate("EventStackNavigator", {
               screen: "Event",
             })
           }
         >
-          <Text style={styles.textButtonInfos}>Infos</Text>
+          <Text style={styles.textButtonInfos}>{description}</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default function EventScreen({ navigation }) {
+export default function EventScreen({}) {
   const [search, setSearch] = useState("");
-  //const [eventsData, setEventsData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+  const user = useSelector((state) => state.user.value);
 
-  //   useEffect(() => {
-  //     fetch("http://192.168.1.77:3000/events")
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setEventsData(data.events);
-  //       });
-  //   }, []);
+  useEffect(() => {
+    const fetchData = fetch(`${BACK_API}/events/findallevents/${user.userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.events);
+        setEventsData(data.events);
+      });
+    return () => {
+      fetchData;
+    };
+  }, []);
 
-  const eventsData = [
-    { eventName: "PICNIC", date: new Date() },
-    { eventName: "DEJEUNER", date: new Date() },
-    { eventName: "ANNIF", date: new Date() },
-    { eventName: "CREMALLIERE", date: new Date() },
-  ];
+  // const eventsData = [
+  //   { eventName: "PICNIC", date: new Date() },
+  //   { eventName: "DEJEUNER", date: new Date() },
+  //   { eventName: "ANNIF", date: new Date() },
+  //   { eventName: "CREMALLIERE", date: new Date() },
+  // ];
 
   const events = eventsData.map((data, i) => {
     return (
       <EventComponent
         key={i}
-        eventName={data.eventName}
-        date={data.date}
-        navigation={navigation}
+        eventName={data.title}
+        description={data.description}
+        //navigation={navigation}
       />
     );
   });
@@ -92,14 +98,7 @@ export default function EventScreen({ navigation }) {
           </KeyboardAvoidingView>
         </View>
         <View style={styles.container}>
-          <View style={styles.eventsComponent}>
-            {events}
-            {/* <EventComponent
-          eventName={"Event Name"}
-          date={"date"}
-          navigation={navigation}
-        /> */}
-          </View>
+          <View style={styles.eventsComponent}>{events}</View>
         </View>
       </ScrollView>
     </>
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
-    textAlign: 'center'
+    textAlign: "center",
   },
   input: {
     width: "90%",
@@ -169,7 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 400,
     fontFamily: "Inter",
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 40,
   },
   textButtonPastEvents: {
