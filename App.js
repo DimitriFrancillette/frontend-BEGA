@@ -114,7 +114,9 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />   
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />   
+            <Stack.Screen name="Event" component={EventScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

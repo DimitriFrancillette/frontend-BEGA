@@ -29,6 +29,9 @@ export default function CreateScreen({ navigation }) {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+
+
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
     setShowDatePicker(false);
@@ -69,7 +72,7 @@ export default function CreateScreen({ navigation }) {
     //   return;
     // }
 
-    fetch(`${BACK_API}/events/addevent`, {
+    fetch(`http://192.168.1.32:3000/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -86,6 +89,7 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         if (data.result === false) {
           return;
         }
@@ -97,23 +101,25 @@ export default function CreateScreen({ navigation }) {
           location: data.location,
           description: data.description,
         };
+        
         dispatch(addEvent(newEvent));
 
-        setNameEvent("");
+        // setNameEvent("");
         //setSelectedDate(new Date());
         //setSelectedTime(new Date());
-        setAdressEvent(null);
-        setDescriptionEvent("");
+        // setAdressEvent(null);
+        // setDescriptionEvent("");
+
+        navigation.navigate("EventStackNavigator", {
+          screen: "Event",
+          params: {
+            eventId: data.saveEvent._id,
+          },
+        });
       });
-    navigation.navigate("EventStackNavigator", {
-      screen: "Event",
-      params: {
-        nameEvent,
-        adressEvent,
-        descriptionEvent,
-      },
-    });
+
   };
+  
 
   return (
     <View style={styles.container}>
@@ -182,7 +188,7 @@ export default function CreateScreen({ navigation }) {
             <TouchableOpacity
               style={styles.buttonAddFriends}
               activeOpacity={0.8}
-              // onPress={() => }
+            // onPress={() => }
             >
               <Text style={styles.textButtonAddFriends}> + invités</Text>
             </TouchableOpacity>
