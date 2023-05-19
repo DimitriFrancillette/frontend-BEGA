@@ -18,6 +18,15 @@ export default function MyEventsScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
+  const [eventsFiltered, setEventsFiltered] = useState(eventsData);
+
+  const filterEvents = (value) => {
+    setSearch(value);
+    let filter = eventsData.filter((e) => {
+      return e.title.includes(value);
+    });
+    setEventsFiltered(filter);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -28,21 +37,37 @@ export default function MyEventsScreen({}) {
         .then((data) => {
           setEventsData(data.events);
         });
+
       return () => fetchEvents;
     }, [])
   );
 
-  const events = eventsData.map((data, i) => {
-    return (
-      <EventComponent
-        key={i}
-        eventName={data.title}
-        description={data.description}
-        eventId={data._id}
-        //navigation={navigation}
-      />
-    );
-  });
+  let events = [];
+  if (eventsFiltered.length > 0) {
+    events = eventsFiltered.map((data, i) => {
+      return (
+        <EventComponent
+          key={i}
+          eventName={data.title}
+          description={data.description}
+          eventId={data._id}
+          //navigation={navigation}
+        />
+      );
+    });
+  } else {
+    events = eventsData.map((data, i) => {
+      return (
+        <EventComponent
+          key={i}
+          eventName={data.title}
+          description={data.description}
+          eventId={data._id}
+          //navigation={navigation}
+        />
+      );
+    });
+  }
 
   return (
     <>
@@ -58,7 +83,7 @@ export default function MyEventsScreen({}) {
           <Text style={styles.title}>My Events</Text>
           <KeyboardAvoidingView style={{ width: "100%" }}>
             <TextInput
-              onChangeText={(value) => setSearch(value)}
+              onChangeText={(value) => filterEvents(value)}
               value={search}
               style={styles.input}
               placeholder="search events"
