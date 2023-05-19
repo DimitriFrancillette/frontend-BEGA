@@ -150,7 +150,6 @@ export default function CreateScreen({ navigation }) {
                 style={styles.dateTimePicker}
               />
 
-              <Text> {formatTime(selectedTime)}</Text>
             </View>
             <TextInput
               onChangeText={(value) => setAdressEvent(value)}
