@@ -31,11 +31,13 @@ export default function CreateScreen({ navigation }) {
   const [submitted, setSubmitted] = useState(false);
 
   const handleDateChange = (event, selected) => {
+    event.preventDefault();
     const currentDate = selected || selectedDate;
     setSelectedDate(currentDate);
   };
 
   const handleTimeChange = (event, selected) => {
+    event.preventDefault();
     const currentTime = selected || selectedTime;
 
     setSelectedTime(currentTime);

@@ -30,10 +30,11 @@ export default function ProfilScreen({ navigation }) {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  console.log(user);
+  console.log(user.token, user.userId);
   const updateProfil = () => {
     fetch(`http://192.168.1.57:3000/users/updateprofil/`, {
       headers: {
+        Authorization: `Bearer ${user.token}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -43,10 +44,11 @@ export default function ProfilScreen({ navigation }) {
         lastname,
         email,
         password,
+        userId: user.userId,
       }),
     });
   };
-  console.log(user.token);
+
   useEffect(() => {
     const fetchDataUser = fetch(`http://192.168.1.57:3000/users/userprofil`, {
       headers: { Authorization: `Bearer ${user.token}` },
