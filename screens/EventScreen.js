@@ -14,12 +14,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
-export default function EventScreen({ navigation }) {
+export default function EventScreen({ navigation, route }) {
     const [eventTitle, setEventTitle] = useState("Nom de l'event");
     const [date, setDate] = useState("Date & Heure");
     const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
     const [description, setDescription] = useState("Ajouter une description");
     const [isChanged, setIsChanged] = useState(false);
+    
+    console.log('ROUTE',route.params);
+
+
+    // useEffect(() => {
+    //     const fetchEvents = fetch(
+    //         `http://192.168.1.32:3000/events/findevent/${params.params.eventId}`
+    //       )
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //           console.log('ONE EVENT',data);
+    //         //   setEventsData(data.events);
+    //         });
+    //       return () => fetchEvents;
+    // },[])
+
+    
 
     return (
         <View style={styles.container}>

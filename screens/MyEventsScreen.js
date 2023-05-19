@@ -7,42 +7,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import EventComponent from "../components/EventComponent";
 import { BACK_API } from "@env";
 import { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const EventComponent = ({ eventName, description, navigation }) => {
-  return (
-    <View style={styles.eventContainer}>
-      <Text style={styles.eventTitle}>{eventName}</Text>
-      {/* <Text style={styles.date}>
-        {props.date.toLocaleString("fr-FR", {
-          weekday: "short",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </Text> */}
-      <KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.buttonInfos}
-          activeOpacity={0.8}
-          onPress={() =>
-            navigation.navigate("EventStackNavigator", {
-              screen: "Event",
-            })
-          }
-        >
-          <Text style={styles.textButtonInfos}>Infos</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </View>
-  );
-};
 
-export default function EventScreen({}) {
+
+export default function MyEventsScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
@@ -50,7 +24,7 @@ export default function EventScreen({}) {
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
-        `http://192.168.1.57:3000/events/findallevents/${user.userId}`
+        `http://192.168.1.32:3000/events/findallevents/${user.userId}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -66,6 +40,7 @@ export default function EventScreen({}) {
         key={i}
         eventName={data.title}
         description={data.description}
+        eventId={data._id}
         //navigation={navigation}
       />
     );
