@@ -42,7 +42,7 @@ const EventComponent = ({ eventName, description, navigation }) => {
   );
 };
 
-export default function EventScreen({}) {
+export default function MyEventsScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);

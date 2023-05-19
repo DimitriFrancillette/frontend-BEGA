@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Button,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,31 +24,25 @@ export default function CreateScreen({ navigation }) {
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
   const [descriptionEvent, setDescriptionEvent] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+
+
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
-    setShowDatePicker(false);
     setSelectedDate(currentDate);
-  };
-
-  const showPickerDate = () => {
-    setShowDatePicker(true);
   };
 
   const handleTimeChange = (event, selected) => {
     const currentTime = selected || selectedTime;
-    setShowTimePicker(false);
+
     setSelectedTime(currentTime);
   };
 
-  const showPickerTime = () => {
-    setShowTimePicker(true);
-  };
   //  display the selected time in a consistent format, single-digit minutes are correctly displayed with a leading zero.
   const formatTime = (time) => {
     const hours = time.getHours();
@@ -117,23 +112,21 @@ export default function CreateScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.title}>Création de l'évènement</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            onChangeText={(value) => setNameEvent(value)}
-            value={nameEvent}
-            style={styles.inputNameEvent}
-            placeholder="nom de l'évènement"
-          />
-          <View style={styles.dateEvent}>
-            <TouchableOpacity
-              onPress={showPickerDate}
-              style={styles.buttonDateTime}
-            >
-              <Text>Date de l'évènement</Text>
-            </TouchableOpacity>
-            {showDatePicker && (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.title}>Création de l'évènement</Text>
+            <TextInput
+              onChangeText={(value) => setNameEvent(value)}
+              value={nameEvent}
+              style={styles.inputNameEvent}
+              placeholder="nom de l'évènement"
+            />
+            <View style={styles.dateEvent}>
+              <Text style={styles.dateEventText}>Date:</Text>
               <DateTimePicker
                 value={selectedDate}
                 mode="date"
@@ -142,59 +135,51 @@ export default function CreateScreen({ navigation }) {
                 onChange={handleDateChange}
                 style={styles.dateTimePicker}
               />
-            )}
-            <Text> {selectedDate.toDateString()}</Text>
-          </View>
-          <View style={styles.timeEvent}>
-            <TouchableOpacity
-              onPress={showPickerTime}
-              style={styles.buttonDateTime}
-            >
-              <Text>Heure de l'évènement</Text>
-            </TouchableOpacity>
-            {showTimePicker && (
+            </View>
+            <View style={styles.timeEvent}>
+              <Text style={styles.timeEventText}>Heure:</Text>
               <DateTimePicker
                 value={selectedTime}
                 mode="time"
-                is24Hour={true}
                 display="default"
+                is24Hour={true}
                 onChange={handleTimeChange}
                 style={styles.dateTimePicker}
               />
-            )}
-            <Text> {formatTime(selectedTime)}</Text>
+            </View>
+            <TextInput
+              onChangeText={(value) => setAdressEvent(value)}
+              value={adressEvent}
+              style={styles.inputAdressEvent}
+              placeholder="lieu de l'évènement"
+            />
+            <TextInput
+              onChangeText={(value) => setDescriptionEvent(value)}
+              value={descriptionEvent}
+              style={styles.inputDescEvent}
+              placeholder="Description de l'évènement"
+              multiline={true}
+              maxLength={280}
+              
+            />
+            <View style={styles.buttons}>
+              <TouchableOpacity
+                style={styles.buttonAddFriends}
+                activeOpacity={0.8}
+                // onPress={() => }
+              >
+                <Text style={styles.textButtonAddFriends}> + invités</Text>
+              </TouchableOpacity>
+            </View>
+            {submitted &&
+              (!nameEvent ||
+                !adressEvent ||
+                !descriptionEvent ||
+                !selectedDate ||
+                !selectedTime) && <Text style={styles.error}>{error}</Text>}
           </View>
-          <TextInput
-            onChangeText={(value) => setAdressEvent(value)}
-            value={adressEvent}
-            style={styles.inputAdressEvent}
-            placeholder="lieu de l'évènement"
-          />
-          <TextInput
-            onChangeText={(value) => setDescriptionEvent(value)}
-            value={descriptionEvent}
-            style={styles.inputAdressEvent}
-            placeholder="Description de l'évènement"
-            multiline={true}
-            maxLength={280}
-          />
-          <View style={styles.buttons}>
-            <TouchableOpacity
-              style={styles.buttonAddFriends}
-              activeOpacity={0.8}
-              // onPress={() => }
-            >
-              <Text style={styles.textButtonAddFriends}> + invités</Text>
-            </TouchableOpacity>
-          </View>
-          {submitted &&
-            (!nameEvent ||
-              !adressEvent ||
-              !descriptionEvent ||
-              !selectedDate ||
-              !selectedTime) && <Text style={styles.error}>{error}</Text>}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <TouchableOpacity
         style={styles.buttonValid}
         activeOpacity={0.8}
@@ -212,9 +197,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAF5FF",
     paddingTop: 40,
     alignItems: "center",
+    width: "100%",
+  },
+
+  scrollView: {
+    width: "100%",
+    flexGrow: 1,
   },
   title: {
-    fontSize: 38,
+    fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
     textAlign: "center",
@@ -222,29 +213,47 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: "center",
+    paddingHorizontal: 40,
+    width: "100%",
   },
   inputNameEvent: {
     fontSize: 25,
     marginTop: 20,
     marginBottom: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    width: "99%",
+    borderColor: "#6B21A8",
+    alignItems: "center",
+    padding: 10,
   },
   dateEvent: {
-    width: 200,
-    height: 50,
-    marginBottom: 20,
+    width: "100%",
+    borderColor: "#6B21A8",
+    borderWidth: 0.5,
     borderRadius: 10,
-    backgroundColor: "#FAF5FF",
-    flex: 1,
+    padding: 10,
+    marginTop: 10,
     alignItems: "center",
   },
+  dateEventText: {
+    fontSize: 25,
+    marginBottom: 10,
+  },
+
   timeEvent: {
-    width: 200,
-    height: 50,
-    marginBottom: 20,
+    width: "100%",
+    borderColor: "#6B21A8",
+    borderWidth: 0.5,
     borderRadius: 10,
-    backgroundColor: "#FAF5FF",
-    flex: 1,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 5,
     alignItems: "center",
+  },
+  timeEventText: {
+    fontSize: 25,
+    marginBottom: 10,
   },
   inputAdressEvent: {
     marginTop: 10,
@@ -252,29 +261,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
     overflow: "hidden",
     flex: 1,
-  },
-  buttonDateTime: {
-    alignItems: "center",
-    backgroundColor: "#FAF5FF",
-    borderRadius: 10,
-    borderColor: "#6B21A8",
-    borderWidth: 0.6,
-    padding: 10,
     marginBottom: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    width: "99%",
+    borderColor: "#6B21A8",
+    alignItems: "center",
+    padding: 10,
+  },
+  inputDescEvent: {
+    marginTop: 5,
+    fontSize: 20,
+    overflow: "hidden",
+    flex: 1,
+    marginBottom: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    width: "99%",
+    borderColor: "#6B21A8",
+    alignItems: "center",
+    padding: 40,
+    paddingLeft: 0,
   },
   buttonAddFriends: {
     backgroundColor: "#FAF5FF",
     borderRadius: 10,
     borderColor: "#6B21A8",
     borderWidth: 2,
-    marginBottom: 50,
+    marginBottom: 40,
     marginLeft: 8,
     marginRight: 190,
-    width: "25%",
+    width: "30%",
     paddingTop: 8,
     alignItems: "center",
     display: "flex",
-    marginTop: 40,
+    marginTop: 10,
   },
   textButtonAddFriends: {
     color: "#6B21A8",
@@ -303,9 +324,14 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: "row",
+    width: "100%",
   },
   error: {
-    color: "red",
+    color: "#DDA304",
     marginBottom: 10,
+  },
+  dateTimePicker: {
+    borderRadius: 0,
+    color: "#DDA304",
   },
 });
