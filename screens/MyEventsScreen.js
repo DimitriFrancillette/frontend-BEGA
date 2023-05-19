@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+
 const EventComponent = ({ eventName, description, navigation }) => {
   return (
     <View style={styles.eventContainer}>
@@ -34,7 +35,7 @@ const EventComponent = ({ eventName, description, navigation }) => {
             })
           }
         >
-          <Text style={styles.textButtonInfos}>{description}</Text>
+          <Text style={styles.textButtonInfos}>Infos</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
@@ -46,8 +47,11 @@ export default function EventScreen({}) {
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
 
+  
   useEffect(() => {
-    const fetchData = fetch(`${BACK_API}/events/findallevents/${user.userId}`)
+    console.log('testuseffect')
+    
+    const fetchData = fetch(`http://192.168.1.77:3000/events/findallevents/${user.userId}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data.events);

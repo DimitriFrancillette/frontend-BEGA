@@ -116,96 +116,93 @@ export default function CreateScreen({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <>
-        <View>
-          <Text style={styles.title}>Création de l'évènement</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              onChangeText={(value) => setNameEvent(value)}
-              value={nameEvent}
-              style={styles.inputNameEvent}
-              placeholder="nom de l'évènement"
-            />
-            <View style={styles.dateEvent}>
-              <TouchableOpacity
-                onPress={showPickerDate}
-                style={styles.buttonDateTime}
-              >
-                <Text>Date de l'évènement</Text>
-              </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={selectedDate}
-                  mode="date"
-                  display="default"
-                  is24Hour={true}
-                  onChange={handleDateChange}
-                  style={styles.dateTimePicker}
-                />
-              )}
-              <Text> {selectedDate.toDateString()}</Text>
-            </View>
-            <View style={styles.timeEvent}>
-              <TouchableOpacity
-                onPress={showPickerTime}
-                style={styles.buttonDateTime}
-              >
-                <Text>Heure de l'évènement</Text>
-              </TouchableOpacity>
-              {showTimePicker && (
-                <DateTimePicker
-                  value={selectedTime}
-                  mode="time"
-                  is24Hour={true}
-                  display="default"
-                  onChange={handleTimeChange}
-                  style={styles.dateTimePicker}
-                />
-              )}
-              <Text> {formatTime(selectedTime)}</Text>
-            </View>
-            <TextInput
-              onChangeText={(value) => setAdressEvent(value)}
-              value={adressEvent}
-              style={styles.inputAdressEvent}
-              placeholder="lieu de l'évènement"
-            />
-            <TextInput
-              onChangeText={(value) => setDescriptionEvent(value)}
-              value={descriptionEvent}
-              style={styles.inputAdressEvent}
-              placeholder="Description de l'évènement"
-              multiline={true}
-              maxLength={280}
-            />
-            <View style={styles.buttons}>
-              <TouchableOpacity
-                style={styles.ButtonAddFriends}
-                activeOpacity={0.8}
-                // onPress={() => }
-              >
-                <Text style={styles.textButtonAddFriends}> + invités</Text>
-              </TouchableOpacity>
-            </View>
-            {submitted &&
-              (!nameEvent ||
-                !adressEvent ||
-                !descriptionEvent ||
-                !selectedDate ||
-                !selectedTime) && <Text style={styles.error}>{error}</Text>}
-
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.title}>Création de l'évènement</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            onChangeText={(value) => setNameEvent(value)}
+            value={nameEvent}
+            style={styles.inputNameEvent}
+            placeholder="nom de l'évènement"
+          />
+          <View style={styles.dateEvent}>
             <TouchableOpacity
-              style={styles.ButtonValid}
-              activeOpacity={0.8}
-              onPress={handleSubmit}
+              onPress={showPickerDate}
+              style={styles.buttonDateTime}
             >
-              <Text style={styles.textButtonValid}> Valider </Text>
+              <Text>Date de l'évènement</Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="default"
+                is24Hour={true}
+                onChange={handleDateChange}
+                style={styles.dateTimePicker}
+              />
+            )}
+            <Text> {selectedDate.toDateString()}</Text>
+          </View>
+          <View style={styles.timeEvent}>
+            <TouchableOpacity
+              onPress={showPickerTime}
+              style={styles.buttonDateTime}
+            >
+              <Text>Heure de l'évènement</Text>
+            </TouchableOpacity>
+            {showTimePicker && (
+              <DateTimePicker
+                value={selectedTime}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={handleTimeChange}
+                style={styles.dateTimePicker}
+              />
+            )}
+            <Text> {formatTime(selectedTime)}</Text>
+          </View>
+          <TextInput
+            onChangeText={(value) => setAdressEvent(value)}
+            value={adressEvent}
+            style={styles.inputAdressEvent}
+            placeholder="lieu de l'évènement"
+          />
+          <TextInput
+            onChangeText={(value) => setDescriptionEvent(value)}
+            value={descriptionEvent}
+            style={styles.inputAdressEvent}
+            placeholder="Description de l'évènement"
+            multiline={true}
+            maxLength={280}
+          />
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              style={styles.buttonAddFriends}
+              activeOpacity={0.8}
+              // onPress={() => }
+            >
+              <Text style={styles.textButtonAddFriends}> + invités</Text>
             </TouchableOpacity>
           </View>
+          {submitted &&
+            (!nameEvent ||
+              !adressEvent ||
+              !descriptionEvent ||
+              !selectedDate ||
+              !selectedTime) && <Text style={styles.error}>{error}</Text>}
         </View>
-      </>
-    </ScrollView>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.buttonValid}
+        activeOpacity={0.8}
+        onPress={handleSubmit}
+      >
+        <Text style={styles.textButtonValid}> Valider </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -214,9 +211,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FAF5FF",
     paddingTop: 40,
+    alignItems: "center",
   },
   title: {
-    fontSize: 48,
+    fontSize: 38,
     fontWeight: 600,
     fontFamily: "Roboto",
     textAlign: "center",
@@ -264,7 +262,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  ButtonAddFriends: {
+  buttonAddFriends: {
     backgroundColor: "#FAF5FF",
     borderRadius: 10,
     borderColor: "#6B21A8",
@@ -284,18 +282,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  ButtonValid: {
+  buttonValid: {
     backgroundColor: "#6B21A8",
     borderRadius: 10,
     borderColor: "#DDA304",
     borderWidth: 1,
-    marginBottom: 2,
     marginLeft: 10,
     width: "60%",
     paddingTop: 8,
     alignItems: "center",
     display: "flex",
-    marginTop: 200,
+    position: "absolute",
+    bottom: 20,
   },
   textButtonValid: {
     color: "#DDA304",
