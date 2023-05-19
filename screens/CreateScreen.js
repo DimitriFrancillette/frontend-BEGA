@@ -30,8 +30,6 @@ export default function CreateScreen({ navigation }) {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-
-
   const handleDateChange = (event, selected) => {
     const currentDate = selected || selectedDate;
     setSelectedDate(currentDate);
@@ -64,7 +62,7 @@ export default function CreateScreen({ navigation }) {
     //   return;
     // }
 
-    fetch(`http://192.168.1.32:3000/events/addevent`, {
+    fetch(`http://192.168.1.57:3000/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -81,7 +79,7 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         if (data.result === false) {
           return;
         }
@@ -109,9 +107,7 @@ export default function CreateScreen({ navigation }) {
           },
         });
       });
-
   };
-
 
   return (
     <View style={styles.container}>
@@ -149,7 +145,6 @@ export default function CreateScreen({ navigation }) {
                 onChange={handleTimeChange}
                 style={styles.dateTimePicker}
               />
-
             </View>
             <TextInput
               onChangeText={(value) => setAdressEvent(value)}
@@ -169,7 +164,7 @@ export default function CreateScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.buttonAddFriends}
                 activeOpacity={0.8}
-              // onPress={() => }
+                // onPress={() => }
               >
                 <Text style={styles.textButtonAddFriends}> + invités</Text>
               </TouchableOpacity>

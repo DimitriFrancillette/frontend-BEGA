@@ -14,8 +14,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
-
 export default function MyEventsScreen({}) {
   const [search, setSearch] = useState("");
   const [eventsData, setEventsData] = useState([]);
@@ -24,7 +22,7 @@ export default function MyEventsScreen({}) {
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
-        `http://192.168.1.32:3000/events/findallevents/${user.userId}`
+        `http://192.168.1.57:3000/events/findallevents/${user.userId}`
       )
         .then((response) => response.json())
         .then((data) => {
