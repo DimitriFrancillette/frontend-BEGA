@@ -167,10 +167,48 @@ export default function CreateScreen({ navigation }) {
               maxLength={280}
             />
             <View style={styles.buttons}>
+              <SafeAreaView style={{ flex: 1 }}>
+                <Modal
+                  animationType={"slide"}
+                  transparent={false}
+                  visible={showModal}
+                  onRequestClose={() => {
+                    console.log("Modal has been closed.");
+                  }}
+                >
+                  <View style={styles.modal}>
+                    <TextInput
+                      onChangeText={(value) => setEmailInvitation(value)}
+                      value={emailInvitation}
+                      style={styles.inputEmailInvitation}
+                      placeholder="email de l'invité"
+                      placeholderTextColor= "#c0c0c0"
+                    />
+                    <View style={styles.closeButton}>
+                      <Button
+                        color="#841584"
+                        title="X"
+                        onPress={() => {
+                          setShowModal(!showModal);
+                        }}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.modalValidButton}
+                      activeOpacity={0.8}
+                      //onPress={}
+                    >
+                      <Text style={styles.textButtonValid}> Valider </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+              </SafeAreaView>
               <TouchableOpacity
                 style={styles.buttonAddFriends}
                 activeOpacity={0.8}
-                // onPress={() => }
+                onPress={() => {
+                  setShowModal(!showModal);
+                }}
               >
                 <Text style={styles.textButtonAddFriends}> + invités</Text>
               </TouchableOpacity>
@@ -338,4 +376,44 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     color: "#DDA304",
   },
+  modal: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#FAF5FF",
+    paddingTop: 30,
+    width: "100%",
+    height: "100%",
+  },
+  text: {
+    color: "#3f2949",
+    marginTop: 10,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 50,
+    right: 30,
+  },
+  modalValidButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    paddingTop: 8,
+    alignItems: "center",
+    display: "flex",
+    position: "absolute",
+    bottom: 70,
+    paddingHorizontal: 40,
+  },
+  inputEmailInvitation:{
+    fontSize: 25,
+    marginTop: 80,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    width: "99%",
+    borderColor: "#6B21A8",
+    alignItems: "center",
+    padding: 10,
+    color: "black",
+  }
 });
