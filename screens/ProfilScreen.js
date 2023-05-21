@@ -13,7 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { addUser, disconnectUser } from "../reducers/user";
-import { BACKEND_URL } from "../constants"
+import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EMAIL_REGEX =
@@ -31,7 +31,7 @@ export default function ProfilScreen({ navigation }) {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  
+
   const updateProfil = () => {
     fetch(`${BACKEND_URL}/users/updateprofil/`, {
       headers: {
@@ -61,13 +61,15 @@ export default function ProfilScreen({ navigation }) {
         return response.json();
       })
       .then((data) => {
-        setEmail(data.email);
-        setFirstname(data.firstname);
-        setLastname(data.lastname);
+        if (data.result) {
+          setEmail(data.user.email);
+          setFirstname(data.user.firstname);
+          setLastname(data.user.lastname);
+        }
       });
     return () => fetchDataUser;
   }, []);
-  console.log(user);
+
   const createAlert = (user) =>
     Alert.alert("Confirmation", "Voulez-vous valider ces modifications?", [
       {
@@ -110,7 +112,7 @@ export default function ProfilScreen({ navigation }) {
   };
 
   const handleDisconnect = () => {
-    fetch("http://192.168.1.57:3000/users/logout", {
+    fetch(`${BACKEND_URL}/users/logout`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
         Accept: "application/json",

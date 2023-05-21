@@ -182,7 +182,7 @@ export default function CreateScreen({ navigation }) {
                       value={emailInvitation}
                       style={styles.inputEmailInvitation}
                       placeholder="email de l'invité"
-                      placeholderTextColor= "#c0c0c0"
+                      placeholderTextColor="#c0c0c0"
                     />
                     <View style={styles.closeButton}>
                       <Button
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     bottom: 70,
     paddingHorizontal: 40,
   },
-  inputEmailInvitation:{
+  inputEmailInvitation: {
     fontSize: 25,
     marginTop: 80,
     borderWidth: 0.5,
@@ -415,5 +415,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     color: "black",
-  }
+  },
 });
