@@ -13,7 +13,7 @@ const ResetPassword = () => {
 
   const handleSubmitPassword = async () => {
     const fetchEmail = await fetch(
-      "https://backendbegadeployed.vercel.app/users/resetpassword",
+      "http://192.168.1.57:3000/users/resetpassword",
       {
         headers: {
           Accept: "application/json",
