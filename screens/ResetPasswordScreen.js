@@ -7,29 +7,37 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import ToastManager, { Toast } from "toastify-react-native";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
+  const showToasts = () => {
+    Toast.success("Promised is resolved Success");
+  };
+  const showFailedToasts = () => {
+    Toast.info("Impossible");
+  };
 
-  const handleSubmitPassword = async () => {
-    const fetchEmail = await fetch(
-      "http://192.168.1.57:3000/users/resetpassword",
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "Post",
-        body: JSON.stringify({ email }),
-      }
-    );
-    const response = fetchEmail.json();
-    console.log("envoyé");
-    return response;
+  const handleSubmitPassword = () => {
+    fetch("https://backendbegadeployed.vercel.app/users/resetpassword", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "Post",
+      body: JSON.stringify({ email }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        showToasts();
+      })
+      .catch((e) => showFailedToasts());
   };
 
   return (
     <View style={styles.container}>
+      <ToastManager />
       <ScrollView style={styles.scrollView}>
         <View style={styles.inputContainer}>
           <TextInput
