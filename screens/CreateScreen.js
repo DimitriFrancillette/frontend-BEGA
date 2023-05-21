@@ -179,6 +179,7 @@ export default function CreateScreen({ navigation }) {
                 !selectedTime) && <Text style={styles.error}>{error}</Text>}
           </View>
         </ScrollView>
+        </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.buttonValid}
           activeOpacity={0.8}
@@ -186,7 +187,6 @@ export default function CreateScreen({ navigation }) {
         >
           <Text style={styles.textButtonValid}> Valider </Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
     </View>
   );
 }
