@@ -9,6 +9,7 @@ import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import TodoScreen from "./screens/TodoScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
@@ -116,6 +117,7 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Tab.Screen name="ResetPassword" component={ResetPasswordScreen} />
             <Stack.Screen name="Event" component={EventScreen} />
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>

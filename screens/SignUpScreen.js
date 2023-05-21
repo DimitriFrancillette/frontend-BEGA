@@ -98,6 +98,14 @@ export default function SignUpScreen({ navigation }) {
           source={require("../assets/logo-bega.png")}
         />
         <View>
+          <TouchableOpacity
+            //todo affichage suite au onPress du j'ai oublié mon mot de passe
+            onPress={() => navigation.navigate("ResetPassword")}
+            style={styles.forgotLink}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.forgotText}>J'ai oublié mon mot de passe</Text>
+          </TouchableOpacity>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
@@ -160,6 +168,7 @@ export default function SignUpScreen({ navigation }) {
                 Les mots de passe ne correspondent pas
               </Text>
             )}
+
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => handleSubmit()}
@@ -222,7 +231,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "#6B21A8",
     borderRadius: 10,
-    marginTop: 20,
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,
@@ -234,5 +242,14 @@ const styles = StyleSheet.create({
     height: 30,
     fontWeight: "600",
     fontSize: 16,
+  },
+  forgotText: {
+    marginTop: 20,
+    color: "#DDA304",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    alignSelf: "center",
   },
 });

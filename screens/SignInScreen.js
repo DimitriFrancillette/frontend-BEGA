@@ -120,18 +120,13 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.error}>Un mot de passe est nécéssaire!</Text>
             )}
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => handleSubmit()}
-                style={styles.buttonSignUp}
-                activeOpacity={0.8}
-              >
+              <TouchableOpacity onPress={() => handleSubmit()}>
                 <Text style={styles.textButton}>se connecter</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
-              //todo affichage suite au onPress du j'ai oublié mon mot de passe
-              // onPress={() => handleSubmit()}
+              onPress={() => navigation.navigate("ResetPassword")}
               style={styles.forgotLink}
               activeOpacity={0.8}
             >
