@@ -24,7 +24,7 @@ export default function EventScreen({ navigation, route }) {
 
   // useEffect(() => {
   //     const fetchEvents = fetch(
-  //         `http://192.168.1.57:3000/events/findevent/${params.params.eventId}`
+  //         `http://192.168.1.77:3000/events/findevent/${params.params.eventId}`
   //       )
   //         .then((response) => response.json())
   //         .then((data) => {

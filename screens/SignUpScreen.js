@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../reducers/user";
+import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EMAIL_REGEX =
@@ -43,7 +44,7 @@ export default function SignUpScreen({ navigation }) {
     if (password !== confirmedPassword || password === "") {
       setPasswordError(true);
     } else {
-      fetch(`http://192.168.1.57:3000/users/signup`, {
+      fetch(`${BACKEND_URL}/users/signup`, {
         method: "POST",
         headers: {
           Accept: "application/json, text/plain, */*",

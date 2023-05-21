@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { addUser, disconnectUser } from "../reducers/user";
+import { BACKEND_URL } from "../constants"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EMAIL_REGEX =
@@ -30,9 +31,9 @@ export default function ProfilScreen({ navigation }) {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  console.log(user.token, user.userId);
+  
   const updateProfil = () => {
-    fetch(`http://192.168.1.57:3000/users/updateprofil/`, {
+    fetch(`${BACKEND_URL}/users/updateprofil/`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
         Accept: "application/json",
@@ -50,7 +51,7 @@ export default function ProfilScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const fetchDataUser = fetch(`http://192.168.1.57:3000/users/userprofil`, {
+    const fetchDataUser = fetch(`${BACKEND_URL}/users/userprofil`, {
       headers: { Authorization: `Bearer ${user.token}` },
       Authorization: `Bearer ${user.token}`,
       Accept: "application/json",

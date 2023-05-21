@@ -12,6 +12,7 @@ import { BACK_API } from "@env";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { BACKEND_URL } from "../constants"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function MyEventsScreen({}) {
@@ -28,10 +29,29 @@ export default function MyEventsScreen({}) {
     setEventsFiltered(filter);
   };
 
+
+  // const handleDelete = (eventId) => {
+  //   fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+  //     methode: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ eventId }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //      if (data.result) {
+  //         fetch(`http://192.168.1.77:3000/events/findallevents/${user.userId}`)
+  //          .then((response) => response.json())
+  //          .then((data) => {
+  //             setEventsData(data.events);
+  //           });
+  //       }
+  //    });
+  // };
+
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
-        `http://192.168.1.57:3000/events/findallevents/${user.userId}`
+        `${BACKEND_URL}/events/findallevents/${user.userId}`
       )
         .then((response) => response.json())
         .then((data) => {

@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../reducers/user";
+import { BACKEND_URL } from "../constants"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EMAIL_REGEX =
@@ -39,7 +40,7 @@ export default function SignInScreen({ navigation }) {
       setPasswordError(true);
       return;
     } else {
-      fetch(`http://192.168.1.57:3000/users/signin`, {
+      fetch(`${BACKEND_URL}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

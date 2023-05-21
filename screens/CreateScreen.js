@@ -5,16 +5,18 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Pressable,
+  SafeAreaView,
   Platform,
   ScrollView,
   TouchableOpacity,
   Button,
   KeyboardAvoidingView,
+  Modal,
 } from "react-native";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../reducers/event";
+import { BACKEND_URL } from "../constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function CreateScreen({ navigation }) {
@@ -29,26 +31,28 @@ export default function CreateScreen({ navigation }) {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [emailInvitation, setEmailInvitation] = useState("");
 
-  const handleDateChange = (event, selected) => {
-    event.preventDefault();
+  const handleDateChange = (selected) => {
     const currentDate = selected || selectedDate;
     setSelectedDate(currentDate);
   };
 
-  const handleTimeChange = (event, selected) => {
-    event.preventDefault();
+  // ne pas mettre event.preventDefault car ne fonctionnne pas en reactnative mais en web yes
+
+  const handleTimeChange = (selected) => {
     const currentTime = selected || selectedTime;
 
     setSelectedTime(currentTime);
   };
 
   //  display the selected time in a consistent format, single-digit minutes are correctly displayed with a leading zero.
-  const formatTime = (time) => {
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    return `${hours}:${minutes < 10 ? "0" + minutes : minutes}`;
-  };
+  // const formatTime = (time) => {
+  //   const hours = time.getHours();
+  //   const minutes = time.getMinutes();
+  //   return `${hours}:${minutes < 10 ? "0" + minutes : minutes}`;
+  // };
 
   const handleSubmit = () => {
     // if (
@@ -64,7 +68,7 @@ export default function CreateScreen({ navigation }) {
     //   return;
     // }
 
-    fetch(`http://192.168.1.57:3000/events/addevent`, {
+    fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -179,14 +183,14 @@ export default function CreateScreen({ navigation }) {
                 !selectedTime) && <Text style={styles.error}>{error}</Text>}
           </View>
         </ScrollView>
-        </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.buttonValid}
-          activeOpacity={0.8}
-          onPress={handleSubmit}
-        >
-          <Text style={styles.textButtonValid}> Valider </Text>
-        </TouchableOpacity>
+      </KeyboardAvoidingView>
+      <TouchableOpacity
+        style={styles.buttonValid}
+        activeOpacity={0.8}
+        onPress={handleSubmit}
+      >
+        <Text style={styles.textButtonValid}> Valider </Text>
+      </TouchableOpacity>
     </View>
   );
 }
