@@ -19,7 +19,7 @@ const ResetPassword = () => {
   };
 
   const handleSubmitPassword = () => {
-    fetch("https://backendbegadeployed.vercel.app/users/resetpassword", {
+    fetch("http://<ton ip serveur>:3000/users/resetpassword", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
