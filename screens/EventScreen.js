@@ -38,8 +38,6 @@ export default function EventScreen({ navigation, route }) {
     return () => fetchEvents;
   }, []);
 
-  console.log(participants);
-
   return (
     <View style={styles.container}>
       <ScrollView

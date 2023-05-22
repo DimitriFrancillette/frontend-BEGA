@@ -9,6 +9,7 @@ import {
   Text,
 } from "react-native";
 import ToastManager, { Toast } from "toastify-react-native";
+import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const ResetPassword = ({ navigation }) => {
@@ -21,8 +22,7 @@ const ResetPassword = ({ navigation }) => {
   };
 
   const handleSubmitPassword = () => {
-    ``;
-    fetch("http://192.168.1.57:3000/users/resetpassword", {
+    fetch(`${BACKEND_URL}/users/resetpassword`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
