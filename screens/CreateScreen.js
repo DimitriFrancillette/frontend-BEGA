@@ -71,7 +71,7 @@ export default function CreateScreen({ navigation }) {
     //   return;
     // }
 
-    fetch(`${BACKEND_URL}/events/addevent`, {
+    fetch(`http://192.168.1.77:3000/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

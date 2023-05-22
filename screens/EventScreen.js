@@ -6,12 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
+  Modal,
+  Button,
   Switch,
   Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import BACKEND_URL from "../constants";
+import {BACKEND_URL} from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -20,6 +23,9 @@ export default function EventScreen({ navigation, route }) {
   const [description, setDescription] = useState("Ajouter une description");
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [titleCagnotte, setTitleCagnotte] = useState("");
+  const [cagnotteDescription, setCagnotteDescription] = useState("");
 
   const { eventId } = route.params;
 
@@ -37,6 +43,22 @@ export default function EventScreen({ navigation, route }) {
       });
     return () => fetchEvents;
   }, []);
+
+  const strongboxes = [
+    { user: 'Eric', amount: 20 },
+    { user: 'Béa', amount: 10 },
+    { user: 'Lisa', amount: 40 },
+    { user: 'Lia', amount: 40 },
+  ];
+
+  const people = strongboxes.map((data, i) => {
+    return <Text key={i}>{data.user}</Text>;
+  });
+
+  let totalStrongBox = 0
+  for(const object of strongboxes) {
+    totalStrongBox += object.amount
+  }
 
   return (
     <View style={styles.container}>
@@ -104,11 +126,49 @@ export default function EventScreen({ navigation, route }) {
             />
           </View>
         </KeyboardAvoidingView>
-
+        <SafeAreaView style={{ flex: 1 }}>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            visible={showModal}
+            onRequestClose={() => {
+              console.log("Modal has been closed.");
+            }}
+          >
+            <View style={styles.modal}>
+              <View style={styles.titleGift}>
+              <Text style={styles.titleCagnotte}>Cagnotte</Text>
+              <FontAwesome name="gift" size={70} color="#6B21A8" />
+              </View>
+              
+            <Text style={styles.people}> {people} </Text>
+             
+              <Text style={styles.total}> Total : {totalStrongBox} €</Text>
+              <View style={styles.closeButton}>
+                <Button
+                  color="#841584"
+                  title="X"
+                  onPress={() => {
+                    setShowModal(!showModal);
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.modalAddButton}
+                activeOpacity={0.8}
+                //onPress={}
+              >
+                <Text style={styles.textButtonValid}> Valider </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </SafeAreaView>
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              onPress={() => {
+                setShowModal(!showModal);
+              }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>CAGNOTTE</Text>
@@ -124,7 +184,9 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              // onPress={() => {
+              //   setShowModal(!showModal);
+              // }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>DÉPENSES</Text>
@@ -312,4 +374,63 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  modal: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#FAF5FF",
+    paddingTop: 30,
+    width: "100%",
+    height: "100%",
+  },
+  text: {
+    color: "#3f2949",
+    marginTop: 10,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 50,
+    right: 30,
+  },
+  modalAddButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    paddingTop: 8,
+    alignItems: "center",
+    display: "flex",
+    position: "absolute",
+    bottom: 70,
+    paddingHorizontal: 40,
+  },
+  
+  textButtonValid: {
+    color: "#DDA304",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  titleCagnotte:{
+fontSize : 35,
+marginLeft: 60,
+  },
+  titleGift:{
+    alignItems:"center",
+    alignContent: "center",
+    flexDirection: "row-reverse",
+    justifyContent:"flex-start",
+    paddingLeft: 150,
+    paddingRight:40,
+    paddingTop:20,
+  },
+  total:{
+    fontSize: 30,
+    fontWeight: 400,
+    position: "absolute",
+    bottom: 150
+  },
+  people:{
+    fontSize: 20,
+
+  }
 });
