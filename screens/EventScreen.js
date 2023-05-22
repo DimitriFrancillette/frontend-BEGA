@@ -8,9 +8,11 @@ import {
   ScrollView,
   Switch,
   Alert,
+  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Todo from "../components/TodoComponent";
 import BACKEND_URL from "../constants";
 
 export default function EventScreen({ navigation, route }) {
@@ -20,6 +22,7 @@ export default function EventScreen({ navigation, route }) {
   const [description, setDescription] = useState("Ajouter une description");
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
+  const [showTodo, setShowTodo] = useState(false);
 
   const { eventId } = route.params;
 
@@ -104,7 +107,14 @@ export default function EventScreen({ navigation, route }) {
             />
           </View>
         </KeyboardAvoidingView>
-
+        {/*Modal TODO */}
+        <Modal animationType={"slide"} transparent={false} visible={showTodo}>
+          <Todo
+            navigation={navigation}
+            closeModal={() => setShowTodo(!showTodo)}
+          />
+        </Modal>
+        {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -116,7 +126,7 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              onPress={() => setShowTodo(!showTodo)}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>TO DO LIST</Text>
