@@ -10,29 +10,35 @@ import {
   Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import BACKEND_URL from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
   const [description, setDescription] = useState("Ajouter une description");
+  const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
 
-  console.log("ROUTE", route.params);
+  const { eventId } = route.params;
 
-  // useEffect(() => {
-  //     const fetchEvents = fetch(
-  //         `http://192.168.1.77:3000/events/findevent/${params.params.eventId}`
-  //       )
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           console.log('ONE EVENT',data);
-  //         //   setEventsData(data.events);
-  //         });
-  //       return () => fetchEvents;
-  // },[])
+  useEffect(() => {
+    const fetchEvents = fetch(
+      `http://192.168.1.57:3000/events/findevent/${eventId}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("ONE EVENT", data);
+        setEventTitle(data.event.title);
+        setAddress(data.event.location);
+        setDescription(data.event.description);
+        setParticipants(data.event.participants);
+      });
+    return () => fetchEvents;
+  }, []);
+
+  console.log(participants);
 
   return (
     <View style={styles.container}>
@@ -45,7 +51,7 @@ export default function EventScreen({ navigation, route }) {
             name="arrow-left"
             size={25}
             color="#000000"
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate("MyEvents")}
           />
         </View>
         <View style={styles.titleContainer}>
