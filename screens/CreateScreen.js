@@ -103,15 +103,15 @@ export default function CreateScreen({ navigation }) {
 
         dispatch(addEvent(newEvent));
 
-        // setNameEvent("");
-        //setSelectedDate(new Date());
-        //setSelectedTime(new Date());
-        // setAdressEvent(null);
-        // setDescriptionEvent("");
-
+        
         navigation.navigate("Event", {
           eventId: data.saveEvent._id,
         });
+        setNameEvent("");
+        setSelectedDate(new Date());
+        setSelectedTime(new Date());
+        setAdressEvent(null);
+        setDescriptionEvent("");
       });
   };
 
