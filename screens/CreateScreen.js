@@ -33,18 +33,21 @@ export default function CreateScreen({ navigation }) {
   const [submitted, setSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [emailInvitation, setEmailInvitation] = useState("");
+  const [showDate, setShowDate] = useState(false);
+  const [showTime, setShowTime] = useState(false);
 
   const handleDateChange = () => {
     const currentDate = selectedDate;
     setSelectedDate(currentDate);
+    setShowDate(false);
   };
 
   // ne pas mettre event.preventDefault car ne fonctionnne pas en reactnative mais en web yes
 
   const handleTimeChange = () => {
     const currentTime = selectedTime;
-
     setSelectedTime(currentTime);
+    setShowTime(false);
   };
 
   //  display the selected time in a consistent format, single-digit minutes are correctly displayed with a leading zero.
@@ -115,6 +118,14 @@ export default function CreateScreen({ navigation }) {
       });
   };
 
+  const showDatepicker = () => {
+    setShowDate(true);
+  };
+
+  const showTimepicker = () => {
+    setShowTime(true);
+  };
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -131,26 +142,26 @@ export default function CreateScreen({ navigation }) {
               placeholder="nom de l'évènement"
             />
             <View style={styles.dateEvent}>
-              <Text style={styles.dateEventText}>Date:</Text>
-              <DateTimePicker
+              <Text onPress={() => showDatepicker()} style={styles.dateEventText}>Date:</Text>
+              {showDate && <DateTimePicker
                 value={selectedDate}
                 mode="date"
                 display="default"
                 is24Hour={true}
                 onChange={handleDateChange}
                 style={styles.dateTimePicker}
-              />
+              />}
             </View>
             <View style={styles.timeEvent}>
-              <Text style={styles.timeEventText}>Heure:</Text>
-              <DateTimePicker
+              <Text onPress={() => showTimepicker()} style={styles.timeEventText}>Heure:</Text>
+              {showTime && <DateTimePicker
                 value={selectedTime}
                 mode="time"
                 display="default"
                 is24Hour={true}
                 onChange={handleTimeChange}
                 style={styles.dateTimePicker}
-              />
+              />}
             </View>
             <TextInput
               onChangeText={(value) => setAdressEvent(value)}
