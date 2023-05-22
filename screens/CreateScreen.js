@@ -135,6 +135,11 @@ export default function CreateScreen({ navigation }) {
         navigation.navigate("Event", {
           eventId: data.saveEvent._id,
         });
+        setNameEvent("");
+        setSelectedDate(new Date());
+        setSelectedTime(new Date());
+        setAdressEvent(null);
+        setDescriptionEvent("");
       });
   };
 
