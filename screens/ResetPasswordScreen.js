@@ -5,12 +5,14 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Image,
   Text,
 } from "react-native";
 import ToastManager, { Toast } from "toastify-react-native";
 import { BACKEND_URL } from "../constants";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const ResetPassword = () => {
+const ResetPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const showToasts = () => {
     Toast.success("Promised is resolved Success");
@@ -40,6 +42,19 @@ const ResetPassword = () => {
     <View style={styles.container}>
       <ToastManager />
       <ScrollView style={styles.scrollView}>
+        <View style={styles.arrowContainer}>
+          <FontAwesome
+            name="arrow-left"
+            size={30}
+            color="#DDA304"
+            onPress={() => navigation.navigate("Home")}
+          />
+        </View>
+        <Image
+          style={styles.logo}
+          source={require("../assets/logo-bega.png")}
+        />
+
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Enter your email"
@@ -71,16 +86,35 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   scrollView: {
-    marginTop: "70%",
+    width: "100%",
   },
+  arrowContainer: {
+    position: "absolute",
+    zIndex: 1,
+    marginTop: 70,
+    marginLeft: 20,
+    alignSelf: "flex-start",
+  },
+  logo: {
+    width: "100%",
+  },
+
   inputContainer: {
-    width: "90%",
+    width: "70%",
     borderColor: "#ec6e5b",
     borderWidth: 1,
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
-    marginBottom: 5,
+    alignSelf: "center",
+  },
+  input: {
+    color: "#FAF5FF",
+    fontSize: 16,
+  },
+
+  error: {
+    color: "#DDA304",
     alignSelf: "center",
   },
   buttonContainer: {
@@ -92,14 +126,21 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     alignSelf: "center",
   },
-  input: {
-    color: "#FAF5FF",
-    fontSize: 16,
-  },
+
   textButton: {
     color: "#DDA304",
     height: 30,
     fontWeight: "600",
     fontSize: 16,
+  },
+
+  forgotText: {
+    marginTop: 20,
+    color: "#DDA304",
+    height: 30,
+    fontWeight: "600",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    alignSelf: "center",
   },
 });
