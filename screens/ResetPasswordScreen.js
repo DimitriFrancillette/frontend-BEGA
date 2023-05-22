@@ -8,6 +8,7 @@ import {
   Text,
 } from "react-native";
 import ToastManager, { Toast } from "toastify-react-native";
+import { BACKEND_URL } from "../constants";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ const ResetPassword = () => {
   };
 
   const handleSubmitPassword = () => {
-    fetch("http://<ton ip serveur>:3000/users/resetpassword", {
+    fetch(`${BACKEND_URL}/users/resetpassword`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
