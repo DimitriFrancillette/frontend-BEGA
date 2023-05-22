@@ -34,15 +34,15 @@ export default function CreateScreen({ navigation }) {
   const [showModal, setShowModal] = useState(false);
   const [emailInvitation, setEmailInvitation] = useState("");
 
-  const handleDateChange = (selected) => {
-    const currentDate = selected || selectedDate;
+  const handleDateChange = () => {
+    const currentDate = selectedDate;
     setSelectedDate(currentDate);
   };
 
   // ne pas mettre event.preventDefault car ne fonctionnne pas en reactnative mais en web yes
 
-  const handleTimeChange = (selected) => {
-    const currentTime = selected || selectedTime;
+  const handleTimeChange = () => {
+    const currentTime = selectedTime;
 
     setSelectedTime(currentTime);
   };
