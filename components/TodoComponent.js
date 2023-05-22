@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Checkbox from "expo-checkbox";
 
-export default function EventScreen({ navigation }) {
+export default function TodoComponent({ navigation, closeModal }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
@@ -33,7 +33,7 @@ export default function EventScreen({ navigation }) {
             name="arrow-left"
             size={25}
             color="#000000"
-            onPress={() => navigation.navigate("Events")}
+            onPress={() => closeModal()}
           />
         </View>
         <View style={styles.titleContainer}>

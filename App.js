@@ -8,7 +8,6 @@ import CreateScreen from "./screens/CreateScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
-import TodoScreen from "./screens/TodoScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -123,6 +122,7 @@ export default function App() {
               component={ResetPasswordScreen}
             />
             <Stack.Screen name="Event" component={EventScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
