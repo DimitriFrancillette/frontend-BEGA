@@ -121,8 +121,8 @@ export default function App() {
               name="ResetPassword"
               component={ResetPasswordScreen}
             />
-            <Stack.Screen name="Event" component={EventScreen} />
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="Event" component={EventScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

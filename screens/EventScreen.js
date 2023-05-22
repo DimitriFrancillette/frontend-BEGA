@@ -45,7 +45,7 @@ export default function EventScreen({ navigation, route }) {
             name="arrow-left"
             size={25}
             color="#000000"
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate("TabNavigator")}
           />
         </View>
         <View style={styles.titleContainer}>
