@@ -112,7 +112,7 @@ export default function ProfilScreen({ navigation }) {
   };
 
   const handleDisconnect = () => {
-    fetch(`${BACKEND_URL}/users/logout`, {
+    fetch(`http://${BACKEND_URL}:3000/users/logout`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
         Accept: "application/json",

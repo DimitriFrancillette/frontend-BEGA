@@ -113,7 +113,6 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />

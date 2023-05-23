@@ -11,13 +11,11 @@ import {
   Button,
   Switch,
   Alert,
-  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {BACKEND_URL} from "../constants";
 import Todo from "../components/TodoComponent";
-import BACKEND_URL from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -32,19 +30,23 @@ export default function EventScreen({ navigation, route }) {
   const [showTodo, setShowTodo] = useState(false);
 
   const { eventId } = route.params;
-  console.log("EVENT ID",eventId);
 
   useEffect(() => {
     const fetchEvents = fetch(
-      `http://192.168.1.77:3000/events/findevent/${eventId}`,
+      `http://${BACKEND_URL}:3000/events/findevent/${eventId}`,
     )
       .then((response) => response.json())
       .then((data) => {
         console.log("ONE EVENT", data);
+        const newDate = new Date(data.event.date).toLocaleString('fr-FR', {
+          timeZone: 'Europe/Paris',
+        });
+
         setEventTitle(data.event.title);
         setAddress(data.event.location);
         setDescription(data.event.description);
         setParticipants(data.event.participants);
+        setDate(newDate);
       });
     return () => fetchEvents;
   }, []);
