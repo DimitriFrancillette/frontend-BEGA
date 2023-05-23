@@ -9,12 +9,15 @@ import {
   SafeAreaView,
   Button,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 export default function EventScreen({ navigation, route }) {
+  const user = useSelector((state) => state.user.value);
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
@@ -24,7 +27,9 @@ export default function EventScreen({ navigation, route }) {
   const [showCagnotte, setShowCagnotte] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
   const [todoList, setTodoList] = useState();
-  const [ transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [amountCagnotte, setAmountCagnotte] = useState(0);
+  const [strongboxId, setStrongboxId] = useState();
 
   const { eventId } = route.params;
   console.log("EVENT ID", eventId);
@@ -33,24 +38,51 @@ export default function EventScreen({ navigation, route }) {
     console.log("TODO", todo, id);
   };
 
-  useEffect(() => {
-    const fetchEvents = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setEventTitle(data.event.title);
-        setAddress(data.event.location);
-        setDescription(data.event.description);
-        setParticipants(data.event.participants);
-        setTodoList(data.event.todoId);
-      });
+  useFocusEffect(
+    useCallback(() => {
+    const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setEventTitle(data.event.title);
+          setAddress(data.event.location);
+          setDescription(data.event.description);
+          setParticipants(data.event.participants);
+          setTodoList(data.event.todoId);
+          setStrongboxId(data.event.strongboxId);
+        });
+     const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.strongbox.strongboxId.transactionId)
+          setTransactions(data.strongbox.strongboxId.transactionId);
+        });
+      return () => {
+        fetchEvent
+        fetchGetStrongbox
+      }
+    }, [])
+  );
 
-    fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
+  const handleParticipate = () => {
+    fetch(`${BACKEND_URL}/transaction/createtransaction`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: amountCagnotte,
+        userId: user.userId,
+        strongboxId: strongboxId,
+      }),
+    })
       .then((response) => response.json())
-      .then((data) => {
-        setTransactions(data.strongbox.transactionId);
+      .then((createdTransactionData) => {
+        console.log(createdTransactionData);
+        if (createdTransactionData.result === false) {
+          return;
+        }
+        setTransactions([...transactions, createdTransactionData.saveTransaction])
+        setAmountCagnotte(0);
       });
-    return;
-  }, []);
+  };
 
   const todo = todoList?.map((data) => {
     return (
@@ -67,16 +99,21 @@ export default function EventScreen({ navigation, route }) {
     );
   });
 
-  const people = transactions.map((data, i) => {
+  
+   const userList = transactions?.map(transaction => transaction.userId.firstname)
+  const uniqueUserList = [...new Set(userList)];
+ 
+
+  const people = uniqueUserList?.map((user, i) => {
     return (
       <Text key={i} style={styles.people}>
-        {data.userId}
+        {user}
       </Text>
     );
   });
 
   let totalStrongBox = 0;
-  for (const transaction of transactions) {
+  for (let transaction of transactions) {
     totalStrongBox += transaction.amount;
   }
 
@@ -168,9 +205,27 @@ export default function EventScreen({ navigation, route }) {
                 <FontAwesome name="gift" size={70} color="#6B21A8" />
               </View>
 
-              {people}
-
+              <View style={styles.amountAdd}>
+                <TextInput
+                  onChangeText={setAmountCagnotte}
+                  value={amountCagnotte.toString()}
+                  style={styles.inputAmount}
+                  inputMode="numeric"
+                  placeholderTextColor="grey"
+                />
+                <TouchableOpacity
+                  style={styles.addAmountButton}
+                  activeOpacity={0.8}
+                  onPress={handleParticipate}
+                >
+                  <Text style={styles.textaddAmount}> Ajouter </Text>
+                </TouchableOpacity>
+              </View>
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
+              <View style={styles.showParticipants}>
+                <Text style={styles.participe}>Participants :</Text>
+                {people}
+              </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome
                   name="arrow-left"
@@ -480,7 +535,7 @@ const styles = StyleSheet.create({
     bottom: 150,
   },
   people: {
-    fontSize: 25,
+    fontSize: 20,
     marginTop: 5,
   },
   arrowContainerCagnotte: {
@@ -489,5 +544,40 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     alignSelf: "flex-start",
+  },
+  amountAdd: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 30,
+  },
+
+  addAmountButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    padding: 8,
+    marginLeft: 30,
+  },
+  textaddAmount: {
+    color: "#ffff",
+    fontSize: 20,
+  },
+  inputAmount: {
+    color: "#6B21A8",
+    fontSize: 20,
+    borderRadius: 6,
+    borderColor: "#DDA304",
+    borderWidth: 0.2,
+    padding: 10,
+    paddingHorizontal: 20,
+  },
+  showParticipants: {
+    display: "flex",
+    alignContent: "flex-end",
+    marginTop: 20,
+  },
+  participe: {
+    color: "#6B21A8",
+    fontWeight: 700,
   },
 });
