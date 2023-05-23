@@ -14,7 +14,6 @@ import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
-import { BACKEND_URL } from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -46,7 +45,7 @@ export default function EventScreen({ navigation, route }) {
         setTodoList(data.event.todoId);
       });
 
-    fetch(`http://192.168.1.77:3000/strongbox/getstrongbox/${eventId}`)
+    fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
       .then((response) => response.json())
       .then((data) => {
         setTransactions(data.strongbox.transactionId);

@@ -93,7 +93,7 @@ export default function CreateScreen({ navigation }) {
 
     const eventTimestamp = combineTime(datePickerValue, timePickerValue);
 
-    fetch(`http://${BACKEND_URL}:3000/events/addevent`, {
+    fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -126,7 +126,7 @@ export default function CreateScreen({ navigation }) {
 
         dispatch(addEvent(newEvent));
 
-        fetch(`http://192.168.1.77:3000/strongbox/createstrongbox`, {
+        fetch(`${BACKEND_URL}/strongbox/createstrongbox`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

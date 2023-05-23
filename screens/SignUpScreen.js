@@ -44,7 +44,7 @@ export default function SignUpScreen({ navigation }) {
     if (password !== confirmedPassword || password === "") {
       setPasswordError(true);
     } else {
-      fetch(`http://${BACKEND_URL}:3000/users/signup`, {
+      fetch(`${BACKEND_URL}/users/signup`, {
         method: "POST",
         headers: {
           Accept: "application/json, text/plain, */*",
