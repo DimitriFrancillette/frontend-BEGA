@@ -163,7 +163,7 @@ export default function EventScreen({ navigation, route }) {
               console.log("Modal has been closed.");
             }}
           >
-            <View style={styles.modal}>
+            <View style={styles.modalCagnotte}>
               <View style={styles.titleGift}>
                 <Text style={styles.titleCagnotte}>Cagnotte</Text>
                 <FontAwesome name="gift" size={70} color="#6B21A8" />
@@ -181,7 +181,7 @@ export default function EventScreen({ navigation, route }) {
                 />
               </View>
               <TouchableOpacity
-                style={styles.modalAddButton}
+                style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
                 //onPress={}
               >
@@ -435,7 +435,13 @@ const styles = StyleSheet.create({
     top: 50,
     right: 30,
   },
-  modalAddButton: {
+  modalCagnotte: {
+    height: "100%",
+    display: "flex",
+    paddingTop: 20,
+    alignItems: "center",
+  },
+  cagnotteValidButton: {
     backgroundColor: "#6B21A8",
     borderRadius: 10,
     borderColor: "#DDA304",
@@ -481,7 +487,7 @@ const styles = StyleSheet.create({
   arrowContainerCagnotte: {
     position: "absolute",
     zIndex: 1,
-    marginTop: 70,
+    marginTop: 60,
     marginLeft: 20,
     alignSelf: "flex-start",
   },
