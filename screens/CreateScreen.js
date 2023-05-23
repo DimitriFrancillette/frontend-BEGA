@@ -26,28 +26,48 @@ export default function CreateScreen({ navigation }) {
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
   const [descriptionEvent, setDescriptionEvent] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [datePickerValue, setdatePickerValue] = useState(new Date());
+  const [timePickerValue, setTimePickerValue] = useState(new Date());
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [emailInvitation, setEmailInvitation] = useState("");
-  const [showDate, setShowDate] = useState(false);
-  const [showTime, setShowTime] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const handleDateChange = () => {
-    const currentDate = selectedDate;
-    setSelectedDate(currentDate);
-    setShowDate(false);
+  const handleDateChange = (event) => {
+    const timestamp = event.nativeEvent.timestamp;
+    dateOfChoice = new Date(timestamp);
+
+    setShowDatePicker(false);
+    setdatePickerValue(dateOfChoice);
   };
 
   // ne pas mettre event.preventDefault car ne fonctionnne pas en reactnative mais en web yes
 
-  const handleTimeChange = () => {
-    const currentTime = selectedTime;
-    setSelectedTime(currentTime);
-    setShowTime(false);
+  const handleTimeChange = (event) => {
+    const timestamp = event.nativeEvent.timestamp;
+    dateOfChoice = new Date(timestamp);
+
+    setShowTimePicker(false);
+    setTimePickerValue(dateOfChoice);
+  };
+
+  const combineTime = (dateTimestamp, timeTimestamp) => {
+    const date = new Date(dateTimestamp);
+    const time = new Date(timeTimestamp);
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+
+    const combinedTimestamp = new Date(year, month, day, hours, minutes);
+
+    return combinedTimestamp.getTime();
   };
 
   //  display the selected time in a consistent format, single-digit minutes are correctly displayed with a leading zero.
@@ -71,13 +91,16 @@ export default function CreateScreen({ navigation }) {
     //   return;
     // }
 
-    fetch(`${BACKEND_URL}/events/addevent`, {
+    const eventTimestamp = combineTime(datePickerValue, timePickerValue);
+
+    fetch(`http://${BACKEND_URL}:3000/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: nameEvent,
         // title, location, description, userId, role
         //todo gestion userId, add back date and time
+        timestamp: eventTimestamp,
         //date: selectedDate,
         //time: selectedTime,
         role: "admin",
@@ -102,6 +125,12 @@ export default function CreateScreen({ navigation }) {
 
         dispatch(addEvent(newEvent));
 
+        setNameEvent("");
+        setdatePickerValue(new Date());
+        setTimePickerValue(new Date());
+        setAdressEvent(null);
+        setDescriptionEvent("");
+
         navigation.navigate("Event", {
           eventId: data.saveEvent._id,
         });
@@ -114,11 +143,11 @@ export default function CreateScreen({ navigation }) {
   };
 
   const showDatepicker = () => {
-    setShowDate(true);
+    setShowDatePicker(true);
   };
 
   const showTimepicker = () => {
-    setShowTime(true);
+    setShowTimePicker(true);
   };
 
   return (
@@ -141,11 +170,11 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showDatepicker()}
                 style={styles.dateEventText}
               >
-                Date:
+                Date: {datePickerValue.toLocaleDateString()}
               </Text>
-              {showDate && (
+              {showDatePicker && (
                 <DateTimePicker
-                  value={selectedDate}
+                  value={datePickerValue}
                   mode="date"
                   display="default"
                   is24Hour={true}
@@ -159,11 +188,16 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showTimepicker()}
                 style={styles.timeEventText}
               >
-                Heure:
+                Heure:{" "}
+                {(timePickerValue.getHours() < 10 ? "0" : "") +
+                  timePickerValue.getHours()}
+                :
+                {(timePickerValue.getMinutes() < 10 ? "0" : "") +
+                  timePickerValue.getMinutes()}
               </Text>
-              {showTime && (
+              {showTimePicker && (
                 <DateTimePicker
-                  value={selectedTime}
+                  value={timePickerValue}
                   mode="time"
                   display="default"
                   is24Hour={true}
@@ -237,8 +271,8 @@ export default function CreateScreen({ navigation }) {
               (!nameEvent ||
                 !adressEvent ||
                 !descriptionEvent ||
-                !selectedDate ||
-                !selectedTime) && <Text style={styles.error}>{error}</Text>}
+                !datePickerValue ||
+                !timePickerValue) && <Text style={styles.error}>{error}</Text>}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

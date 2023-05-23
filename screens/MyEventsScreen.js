@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import EventComponent from "../components/EventComponent";
-import { BACK_API } from "@env";
+
 import { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";

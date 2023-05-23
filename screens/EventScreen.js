@@ -6,10 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
+  Modal,
+  Button,
   Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
 import { BACKEND_URL } from "../constants";
 
@@ -20,10 +24,14 @@ export default function EventScreen({ navigation, route }) {
   const [description, setDescription] = useState("Ajouter une description");
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [titleCagnotte, setTitleCagnotte] = useState("");
+  const [cagnotteDescription, setCagnotteDescription] = useState("");
   const [showTodo, setShowTodo] = useState(false);
   const [todoList, setTodoList] = useState();
 
   const { eventId } = route.params;
+  console.log("EVENT ID", eventId);
 
   const handleCheckbox = (todo, id) => {
     console.log("TODO", todo, id);
@@ -123,6 +131,43 @@ export default function EventScreen({ navigation, route }) {
             />
           </View>
         </KeyboardAvoidingView>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            visible={showModal}
+            onRequestClose={() => {
+              console.log("Modal has been closed.");
+            }}
+          >
+            <View style={styles.modal}>
+              <View style={styles.titleGift}>
+                <Text style={styles.titleCagnotte}>Cagnotte</Text>
+                <FontAwesome name="gift" size={70} color="#6B21A8" />
+              </View>
+
+              <Text style={styles.people}> {people} </Text>
+
+              <Text style={styles.total}> Total : {totalStrongBox} €</Text>
+              <View style={styles.closeButton}>
+                <Button
+                  color="#841584"
+                  title="X"
+                  onPress={() => {
+                    setShowModal(!showModal);
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.modalAddButton}
+                activeOpacity={0.8}
+                //onPress={}
+              >
+                <Text style={styles.textButtonValid}> Valider </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
           <View style={styles.arrowContainer}>
@@ -147,7 +192,9 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              onPress={() => {
+                setShowModal(!showModal);
+              }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>CAGNOTTE</Text>
@@ -163,7 +210,9 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              // onPress={() => {
+              //   setShowModal(!showModal);
+              // }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>DÉPENSES</Text>
