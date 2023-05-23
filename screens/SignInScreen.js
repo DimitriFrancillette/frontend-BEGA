@@ -40,7 +40,7 @@ export default function SignInScreen({ navigation }) {
       setPasswordError(true);
       return;
     } else {
-      fetch(`http://${BACKEND_URL}:3000/users/signin`, {
+      fetch(`${BACKEND_URL}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -125,7 +125,7 @@ export default function SignInScreen({ navigation }) {
                 <Text style={styles.textButton}>se connecter</Text>
               </TouchableOpacity>
             </View>
-{/* 
+
             <TouchableOpacity
               onPress={() => navigation.navigate("ResetPassword")}
               style={styles.forgotLink}
@@ -134,7 +134,7 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.forgotText}>
                 J'ai oublié mon mot de passe
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity> 
           </KeyboardAvoidingView>
         </View>
       </ScrollView>

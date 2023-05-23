@@ -7,64 +7,116 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  Modal,
   Button,
   Switch,
   Alert,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import {BACKEND_URL} from "../constants";
+import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 export default function EventScreen({ navigation, route }) {
+  const user = useSelector((state) => state.user.value);
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
   const [description, setDescription] = useState("Ajouter une description");
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [titleCagnotte, setTitleCagnotte] = useState("");
-  const [cagnotteDescription, setCagnotteDescription] = useState("");
+  const [showCagnotte, setShowCagnotte] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
+  const [todoList, setTodoList] = useState();
+  const [transactions, setTransactions] = useState([]);
+  const [amountCagnotte, setAmountCagnotte] = useState(0);
+  const [strongboxId, setStrongboxId] = useState();
 
   const { eventId } = route.params;
+  console.log("EVENT ID", eventId);
 
-  useEffect(() => {
-    const fetchEvents = fetch(
-      `http://${BACKEND_URL}:3000/events/findevent/${eventId}`,
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("ONE EVENT", data);
-        const newDate = new Date(data.event.date).toLocaleString('fr-FR', {
-          timeZone: 'Europe/Paris',
+  const handleCheckbox = (todo, id) => {
+    console.log("TODO", todo, id);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+    const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setEventTitle(data.event.title);
+          setAddress(data.event.location);
+          setDescription(data.event.description);
+          setParticipants(data.event.participants);
+          setTodoList(data.event.todoId);
+          setStrongboxId(data.event.strongboxId);
         });
+     const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.strongbox.strongboxId.transactionId)
+          setTransactions(data.strongbox.strongboxId.transactionId);
+        });
+      return () => {
+        fetchEvent
+        fetchGetStrongbox
+      }
+    }, [])
+  );
 
-        setEventTitle(data.event.title);
-        setAddress(data.event.location);
-        setDescription(data.event.description);
-        setParticipants(data.event.participants);
-        setDate(newDate);
+  const handleParticipate = () => {
+    fetch(`${BACKEND_URL}/transaction/createtransaction`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: amountCagnotte,
+        userId: user.userId,
+        strongboxId: strongboxId,
+      }),
+    })
+      .then((response) => response.json())
+      .then((createdTransactionData) => {
+        console.log(createdTransactionData);
+        if (createdTransactionData.result === false) {
+          return;
+        }
+        setTransactions([...transactions, createdTransactionData.saveTransaction])
+        setAmountCagnotte(0);
       });
-    return () => fetchEvents;
-  }, []);
+  };
 
-  const strongboxes = [
-    { user: 'Eric', amount: 20 },
-    { user: 'Béa', amount: 10 },
-    { user: 'Lisa', amount: 40 },
-    { user: 'Lia', amount: 40 },
-  ];
-
-  const people = strongboxes.map((data, i) => {
-    return <Text key={i}>{data.user}</Text>;
+  const todo = todoList?.map((data) => {
+    return (
+      <Todo
+        navigation={navigation}
+        closeModal={() => setShowTodo(!showTodo)}
+        handleCheckbox={handleCheckbox}
+        title={data.taskName}
+        description={data.description}
+        id={data._id}
+        isDone={data.isDone}
+        participants={data.userId}
+      />
+    );
   });
 
-  let totalStrongBox = 0
-  for(const object of strongboxes) {
-    totalStrongBox += object.amount
+  
+   const userList = transactions?.map(transaction => transaction.userId.firstname)
+  const uniqueUserList = [...new Set(userList)];
+ 
+
+  const people = uniqueUserList?.map((user, i) => {
+    return (
+      <Text key={i} style={styles.people}>
+        {user}
+      </Text>
+    );
+  });
+
+  let totalStrongBox = 0;
+  for (let transaction of transactions) {
+    totalStrongBox += transaction.amount;
   }
 
   return (
@@ -73,15 +125,22 @@ export default function EventScreen({ navigation, route }) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
       >
-        <View style={styles.arrowContainer}>
+        {/* <View style={styles.arrowContainer}>
           <FontAwesome
             name="arrow-left"
             size={25}
             color="#000000"
             onPress={() => navigation.navigate("MyEvents")}
           />
-        </View>
+        </View> */}
         <View style={styles.titleContainer}>
+          <FontAwesome
+            name="arrow-left"
+            size={25}
+            color="#000000"
+            style={{ marginLeft: 10 }}
+            onPress={() => navigation.navigate("MyEvents")}
+          />
           <TextInput
             placeholder="Nom"
             onChangeText={(value) => {
@@ -137,31 +196,48 @@ export default function EventScreen({ navigation, route }) {
           <Modal
             animationType={"slide"}
             transparent={false}
-            visible={showModal}
+            visible={showCagnotte}
             onRequestClose={() => {
               console.log("Modal has been closed.");
             }}
           >
-            <View style={styles.modal}>
+            <View style={styles.modalCagnotte}>
               <View style={styles.titleGift}>
-              <Text style={styles.titleCagnotte}>Cagnotte</Text>
-              <FontAwesome name="gift" size={70} color="#6B21A8" />
+                <Text style={styles.titleCagnotte}>Cagnotte</Text>
+                <FontAwesome name="gift" size={70} color="#6B21A8" />
               </View>
-              
-            <Text style={styles.people}> {people} </Text>
-             
+
+              <View style={styles.amountAdd}>
+                <TextInput
+                  onChangeText={setAmountCagnotte}
+                  value={amountCagnotte.toString()}
+                  style={styles.inputAmount}
+                  inputMode="numeric"
+                  placeholderTextColor="grey"
+                />
+                <TouchableOpacity
+                  style={styles.addAmountButton}
+                  activeOpacity={0.8}
+                  onPress={handleParticipate}
+                >
+                  <Text style={styles.textaddAmount}> Ajouter </Text>
+                </TouchableOpacity>
+              </View>
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
-              <View style={styles.closeButton}>
-                <Button
-                  color="#841584"
-                  title="X"
-                  onPress={() => {
-                    setShowModal(!showModal);
-                  }}
+              <View style={styles.showParticipants}>
+                <Text style={styles.participe}>Participants :</Text>
+                {people}
+              </View>
+              <View style={styles.arrowContainerCagnotte}>
+                <FontAwesome
+                  name="arrow-left"
+                  size={25}
+                  color="#000000"
+                  onPress={() => setShowCagnotte(false)}
                 />
               </View>
               <TouchableOpacity
-                style={styles.modalAddButton}
+                style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
                 //onPress={}
               >
@@ -172,17 +248,30 @@ export default function EventScreen({ navigation, route }) {
         </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <Todo
-            navigation={navigation}
-            closeModal={() => setShowTodo(!showTodo)}
-          />
+          <View style={styles.arrowContainer}>
+            <FontAwesome
+              name="arrow-left"
+              size={25}
+              color="#000000"
+              onPress={() => setShowTodo(!showTodo)}
+            />
+          </View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>To Do List</Text>
+          </View>
+          {todo}
+          <TouchableOpacity style={styles.plusButton}>
+            <Text>
+              <FontAwesome name="plus" size={50} color="#6B21A8" />
+            </Text>
+          </TouchableOpacity>
         </Modal>
         {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => {
-                setShowModal(!showModal);
+                setShowCagnotte(!showCagnotte);
               }}
               activeOpacity={0.8}
             >
@@ -286,16 +375,17 @@ const styles = StyleSheet.create({
   arrowContainer: {
     position: "absolute",
     zIndex: 1,
-    marginTop: 15,
     marginLeft: 20,
     alignSelf: "flex-start",
   },
   titleContainer: {
-    justifyContent: "center",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
   },
   title: {
     width: "100%",
-    fontSize: 38,
+    fontSize: 28,
     fontWeight: "600",
     fontFamily: "Roboto",
     textAlign: "center",
@@ -389,13 +479,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modal: {
-    flex: 1,
+  plusButton: {
     alignItems: "center",
-    backgroundColor: "#FAF5FF",
-    paddingTop: 30,
-    width: "100%",
-    height: "100%",
   },
   text: {
     color: "#3f2949",
@@ -406,7 +491,13 @@ const styles = StyleSheet.create({
     top: 50,
     right: 30,
   },
-  modalAddButton: {
+  modalCagnotte: {
+    height: "100%",
+    display: "flex",
+    paddingTop: 20,
+    alignItems: "center",
+  },
+  cagnotteValidButton: {
     backgroundColor: "#6B21A8",
     borderRadius: 10,
     borderColor: "#DDA304",
@@ -418,34 +509,77 @@ const styles = StyleSheet.create({
     bottom: 70,
     paddingHorizontal: 40,
   },
-  
+
   textButtonValid: {
     color: "#DDA304",
     height: 30,
     fontWeight: "600",
     fontSize: 16,
   },
-  titleCagnotte:{
-fontSize : 35,
-marginLeft: 60,
+  titleCagnotte: {
+    fontSize: 35,
+    marginRight: 40,
   },
-  titleGift:{
-    alignItems:"center",
+  titleGift: {
+    alignItems: "center",
     alignContent: "center",
-    flexDirection: "row-reverse",
-    justifyContent:"flex-start",
-    paddingLeft: 150,
-    paddingRight:40,
-    paddingTop:20,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingLeft: 120,
+    paddingRight: 55,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
-  total:{
+  total: {
     fontSize: 30,
     fontWeight: 400,
     position: "absolute",
-    bottom: 150
+    bottom: 150,
   },
-  people:{
+  people: {
     fontSize: 20,
+    marginTop: 5,
+  },
+  arrowContainerCagnotte: {
+    position: "absolute",
+    zIndex: 1,
+    marginTop: 60,
+    marginLeft: 20,
+    alignSelf: "flex-start",
+  },
+  amountAdd: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 30,
+  },
 
-  }
+  addAmountButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    padding: 8,
+    marginLeft: 30,
+  },
+  textaddAmount: {
+    color: "#ffff",
+    fontSize: 20,
+  },
+  inputAmount: {
+    color: "#6B21A8",
+    fontSize: 20,
+    borderRadius: 6,
+    borderColor: "#DDA304",
+    borderWidth: 0.2,
+    padding: 10,
+    paddingHorizontal: 20,
+  },
+  showParticipants: {
+    display: "flex",
+    alignContent: "flex-end",
+    marginTop: 20,
+  },
+  participe: {
+    color: "#6B21A8",
+    fontWeight: 700,
+  },
 });
