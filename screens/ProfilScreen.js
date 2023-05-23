@@ -51,7 +51,7 @@ export default function ProfilScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const fetchDataUser = fetch(`${BACKEND_URL}/users/userprofil`, {
+    const fetchDataUser = fetch(`http://${BACKEND_URL}:3000/users/userprofil`, {
       headers: { Authorization: `Bearer ${user.token}` },
       Authorization: `Bearer ${user.token}`,
       Accept: "application/json",

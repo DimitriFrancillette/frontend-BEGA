@@ -8,7 +8,6 @@ import CreateScreen from "./screens/CreateScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
-import TodoScreen from "./screens/TodoScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -114,6 +113,7 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -121,8 +121,8 @@ export default function App() {
               name="ResetPassword"
               component={ResetPasswordScreen}
             />
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="Event" component={EventScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

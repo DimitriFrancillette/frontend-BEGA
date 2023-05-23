@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import EventComponent from "../components/EventComponent";
-import { BACK_API } from "@env";
+
 import { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -50,11 +50,10 @@ export default function MyEventsScreen({}) {
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
-        `http://192.168.1.57:3000/events/findallevents/${user.userId}`
+        `${BACKEND_URL}/events/findallevents/${user.userId}`
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(user.userId);
           setEventsData(data.events);
         });
 

@@ -6,12 +6,16 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Switch,
-  Alert,
+  SafeAreaView,
+  Modal,
+  Button,
+  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import BACKEND_URL from "../constants";
+import { BACKEND_URL } from "../constants";
+import Todo from "../components/TodoComponent";
+import { BACKEND_URL } from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -20,23 +24,46 @@ export default function EventScreen({ navigation, route }) {
   const [description, setDescription] = useState("Ajouter une description");
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [titleCagnotte, setTitleCagnotte] = useState("");
+  const [cagnotteDescription, setCagnotteDescription] = useState("");
+  const [showTodo, setShowTodo] = useState(false);
+  const [todoList, setTodoList] = useState();
 
   const { eventId } = route.params;
+  console.log("EVENT ID", eventId);
+
+  const handleCheckbox = (todo, id) => {
+    console.log("TODO", todo, id);
+  };
 
   useEffect(() => {
-    const fetchEvents = fetch(
-      `http://192.168.1.57:3000/events/findevent/${eventId}`
-    )
+    const fetchEvents = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("ONE EVENT", data);
         setEventTitle(data.event.title);
         setAddress(data.event.location);
         setDescription(data.event.description);
         setParticipants(data.event.participants);
+        setTodoList(data.event.todoId);
       });
     return () => fetchEvents;
   }, []);
+
+  const todo = todoList?.map((data) => {
+    return (
+      <Todo
+        navigation={navigation}
+        closeModal={() => setShowTodo(!showTodo)}
+        handleCheckbox={handleCheckbox}
+        title={data.taskName}
+        description={data.description}
+        id={data._id}
+        isDone={data.isDone}
+        participants={data.userId}
+      />
+    );
+  });
 
   return (
     <View style={styles.container}>
@@ -104,11 +131,70 @@ export default function EventScreen({ navigation, route }) {
             />
           </View>
         </KeyboardAvoidingView>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            visible={showModal}
+            onRequestClose={() => {
+              console.log("Modal has been closed.");
+            }}
+          >
+            <View style={styles.modal}>
+              <View style={styles.titleGift}>
+                <Text style={styles.titleCagnotte}>Cagnotte</Text>
+                <FontAwesome name="gift" size={70} color="#6B21A8" />
+              </View>
 
+              <Text style={styles.people}> {people} </Text>
+
+              <Text style={styles.total}> Total : {totalStrongBox} €</Text>
+              <View style={styles.closeButton}>
+                <Button
+                  color="#841584"
+                  title="X"
+                  onPress={() => {
+                    setShowModal(!showModal);
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.modalAddButton}
+                activeOpacity={0.8}
+                //onPress={}
+              >
+                <Text style={styles.textButtonValid}> Valider </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </SafeAreaView>
+        {/*Modal TODO */}
+        <Modal animationType={"slide"} transparent={false} visible={showTodo}>
+          <View style={styles.arrowContainer}>
+            <FontAwesome
+              name="arrow-left"
+              size={25}
+              color="#000000"
+              onPress={() => setShowTodo(!showTodo)}
+            />
+          </View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>To Do List</Text>
+          </View>
+          {todo}
+          <TouchableOpacity style={styles.plusButton}>
+            <Text>
+              <FontAwesome name="plus" size={50} color="#6B21A8" />
+            </Text>
+          </TouchableOpacity>
+        </Modal>
+        {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              onPress={() => {
+                setShowModal(!showModal);
+              }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>CAGNOTTE</Text>
@@ -116,7 +202,7 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              onPress={() => setShowTodo(!showTodo)}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>TO DO LIST</Text>
@@ -124,7 +210,9 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => handleRemove()}
+              // onPress={() => {
+              //   setShowModal(!showModal);
+              // }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>DÉPENSES</Text>
@@ -310,6 +398,9 @@ const styles = StyleSheet.create({
   guestsButtonContainer: {
     width: "50%",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  plusButton: {
     alignItems: "center",
   },
 });
