@@ -41,7 +41,7 @@ export default function EventScreen({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+    const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
           setEventTitle(data.event.title);
@@ -51,13 +51,16 @@ export default function EventScreen({ navigation, route }) {
           setTodoList(data.event.todoId);
           setStrongboxId(data.event.strongboxId);
         });
-
-      fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
+     const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
-          setTransactions(data.strongbox.transactionId);
+          console.log(data.strongbox.strongboxId.transactionId)
+          setTransactions(data.strongbox.strongboxId.transactionId);
         });
-      return;
+      return () => {
+        fetchEvent
+        fetchGetStrongbox
+      }
     }, [])
   );
 
@@ -97,10 +100,12 @@ export default function EventScreen({ navigation, route }) {
     );
   });
 
-  const userList = transactions.map(transaction => transaction.userId)
+  
+   const userList = transactions?.map(transaction => transaction.userId.firstname)
   const uniqueUserList = [...new Set(userList)];
+ 
 
-  const people = uniqueUserList.map((user, i) => {
+  const people = uniqueUserList?.map((user, i) => {
     return (
       <Text key={i} style={styles.people}>
         {user}
