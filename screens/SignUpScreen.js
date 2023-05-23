@@ -44,7 +44,7 @@ export default function SignUpScreen({ navigation }) {
     if (password !== confirmedPassword || password === "") {
       setPasswordError(true);
     } else {
-      fetch(`http://${BACKEND_URL}:3000/users/signup`, {
+      fetch(`${BACKEND_URL}/users/signup`, {
         method: "POST",
         headers: {
           Accept: "application/json, text/plain, */*",
@@ -99,14 +99,6 @@ export default function SignUpScreen({ navigation }) {
           source={require("../assets/logo-bega.png")}
         />
         <View>
-          <TouchableOpacity
-            //todo affichage suite au onPress du j'ai oublié mon mot de passe
-            onPress={() => navigation.navigate("ResetPassword")}
-            style={styles.forgotLink}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.forgotText}>J'ai oublié mon mot de passe</Text>
-          </TouchableOpacity>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >

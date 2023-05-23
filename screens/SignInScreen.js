@@ -40,7 +40,7 @@ export default function SignInScreen({ navigation }) {
       setPasswordError(true);
       return;
     } else {
-      fetch(`http://${BACKEND_URL}:3000/users/signin`, {
+      fetch(`${BACKEND_URL}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
