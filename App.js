@@ -47,13 +47,13 @@ import { StyleSheet, Text, View } from "react-native";
 
 //todo tabnavigator for MyEvent
 
-const EventStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Event" component={EventScreen} />
-    </Stack.Navigator>
-  );
-};
+// const EventStackNavigator = () => {
+//   return (
+//     <Stack.Navigator screenOptions={{ headerShown: false }}>
+//       <Stack.Screen name="Event" component={EventScreen} />
+//     </Stack.Navigator>
+//   );
+// };
 
 const TabNavigator = () => {
   return (
@@ -78,11 +78,11 @@ const TabNavigator = () => {
       })}
     >
       {/* un tab en plus pour afficher l'event, tabBarbutton pour cacher le button dans le tabBar*/}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="EventStackNavigator"
         component={EventStackNavigator}
         options={{ tabBarButton: () => null }}
-      />
+      /> */}
       <Tab.Screen name="MyEvents" component={MyEventsScreen} />
       <Tab.Screen name="Create" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
@@ -121,8 +121,8 @@ export default function App() {
               name="ResetPassword"
               component={ResetPasswordScreen}
             />
-            <Stack.Screen name="Event" component={EventScreen} />
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="Event" component={EventScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
