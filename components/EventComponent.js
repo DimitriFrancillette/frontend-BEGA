@@ -27,7 +27,7 @@ const EventComponent = ({ eventName, description, eventId }) => {
           activeOpacity={0.8}
           onPress={() => navigation.navigate("Event", { eventId })}
         >
-          <Text style={styles.textButtonInfos}>{description}</Text>
+          <Text style={styles.textButtonInfos}>Infos</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>

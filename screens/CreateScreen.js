@@ -110,35 +110,44 @@ export default function CreateScreen({ navigation }) {
       }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        if (data.result === false) {
+      .then((createdEventData) => {
+        console.log(createdEventData);
+        if (createdEventData.result === false) {
           return;
         }
 
         const newEvent = {
-          title: data.title,
-          //date: data.event.selectedDate,
-          //time: data.event.selectedTime,
-          location: data.location,
-          description: data.description,
+          title: createdEventData.title,
+          //date: createdEventData.event.selectedDate,
+          //time: createdEventData.event.selectedTime,
+          location: createdEventData.location,
+          description: createdEventData.description,
         };
 
         dispatch(addEvent(newEvent));
 
-        setNameEvent("");
-        setdatePickerValue(new Date());
-        setTimePickerValue(new Date());
-        setAdressEvent(null);
-        setDescriptionEvent("");
-
-        navigation.navigate("Event", {
-          eventId: data.saveEvent._id,
-        });
-        setNameEvent("");
-        setSelectedDate(new Date());
-        setSelectedTime(new Date());
-        setAdressEvent(null);
-        setDescriptionEvent("");
+        fetch(`http://192.168.1.77:3000/strongbox/createstrongbox`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            creatorId: user.userId,
+            eventId: createdEventData.saveEvent._id,
+          }),
+        })
+          .then((response) => response.json())
+          .then((createdStrongboxData) => {
+            if (createdStrongboxData.result === false) {
+              return;
+            }
+            navigation.navigate("Event", {
+              eventId: createdEventData.saveEvent._id,
+            });
+            setNameEvent("");
+            setSelectedDate(new Date());
+            setSelectedTime(new Date());
+            setAdressEvent(null);
+            setDescriptionEvent("");
+          });
       });
   };
 
