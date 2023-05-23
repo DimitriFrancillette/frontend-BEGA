@@ -97,7 +97,7 @@ export default function CreateScreen({ navigation }) {
 
     console.log('PARTICIPANTS', participants);
 
-    fetch(`http://${BACKEND_URL}:3000/events/addevent`, {
+    fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -169,10 +169,11 @@ export default function CreateScreen({ navigation }) {
   };
 
   //FRIENDS
+  //todo modifier le fetch pour qu'il soit dynamique
   const showGuests = () => {
     setShowModal(!showModal);
     fetch(
-      `http://${BACKEND_URL}:3000/users/getfriends/646bcd1ee0fb1cc4a5464471`,
+      `${BACKEND_URL}/users/getfriends/646bcd1ee0fb1cc4a5464471`,
     ).then((response) => response.json()).then((data) => {
       setFriends(data.user.friends);
     });
@@ -184,7 +185,7 @@ export default function CreateScreen({ navigation }) {
     // invited? color="red": color="blue";
     return (
       <View style={styles.friendContainer}>
-        <Text key={i} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
+        <Text key={data._id} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
       </View>
     )
   });
