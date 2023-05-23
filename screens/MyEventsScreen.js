@@ -50,11 +50,10 @@ export default function MyEventsScreen({}) {
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
-        `http://192.168.1.77:3000/events/findallevents/${user.userId}`
+        `${BACKEND_URL}/events/findallevents/${user.userId}`
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(user.userId);
           setEventsData(data.events);
         });
 

@@ -6,14 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Switch,
-  Alert,
   Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Todo from "../components/TodoComponent";
-import BACKEND_URL from "../constants";
+import { BACKEND_URL } from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -23,23 +21,41 @@ export default function EventScreen({ navigation, route }) {
   const [participants, setParticipants] = useState();
   const [isChanged, setIsChanged] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
+  const [todoList, setTodoList] = useState();
 
   const { eventId } = route.params;
 
+  const handleCheckbox = (todo, id) => {
+    console.log("TODO", todo, id);
+  };
+
   useEffect(() => {
-    const fetchEvents = fetch(
-      `http://192.168.1.77:3000/events/findevent/${eventId}`,
-    )
+    const fetchEvents = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("ONE EVENT", data);
         setEventTitle(data.event.title);
         setAddress(data.event.location);
         setDescription(data.event.description);
         setParticipants(data.event.participants);
+        setTodoList(data.event.todoId);
       });
     return () => fetchEvents;
   }, []);
+
+  const todo = todoList?.map((data) => {
+    return (
+      <Todo
+        navigation={navigation}
+        closeModal={() => setShowTodo(!showTodo)}
+        handleCheckbox={handleCheckbox}
+        title={data.taskName}
+        description={data.description}
+        id={data._id}
+        isDone={data.isDone}
+        participants={data.userId}
+      />
+    );
+  });
 
   return (
     <View style={styles.container}>
@@ -109,10 +125,23 @@ export default function EventScreen({ navigation, route }) {
         </KeyboardAvoidingView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <Todo
-            navigation={navigation}
-            closeModal={() => setShowTodo(!showTodo)}
-          />
+          <View style={styles.arrowContainer}>
+            <FontAwesome
+              name="arrow-left"
+              size={25}
+              color="#000000"
+              onPress={() => setShowTodo(!showTodo)}
+            />
+          </View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>To Do List</Text>
+          </View>
+          {todo}
+          <TouchableOpacity style={styles.plusButton}>
+            <Text>
+              <FontAwesome name="plus" size={50} color="#6B21A8" />
+            </Text>
+          </TouchableOpacity>
         </Modal>
         {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
@@ -320,6 +349,9 @@ const styles = StyleSheet.create({
   guestsButtonContainer: {
     width: "50%",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  plusButton: {
     alignItems: "center",
   },
 });

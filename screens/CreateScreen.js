@@ -88,7 +88,6 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.result === false) {
           return;
         }
@@ -103,7 +102,6 @@ export default function CreateScreen({ navigation }) {
 
         dispatch(addEvent(newEvent));
 
-        
         navigation.navigate("Event", {
           eventId: data.saveEvent._id,
         });
