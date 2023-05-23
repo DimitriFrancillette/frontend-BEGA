@@ -9,13 +9,11 @@ import {
   SafeAreaView,
   Modal,
   Button,
-  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
-import { BACKEND_URL } from "../constants";
 
 export default function EventScreen({ navigation, route }) {
   const [eventTitle, setEventTitle] = useState("Nom de l'event");
@@ -146,7 +144,7 @@ export default function EventScreen({ navigation, route }) {
                 <FontAwesome name="gift" size={70} color="#6B21A8" />
               </View>
 
-              <Text style={styles.people}> {people} </Text>
+              <Text style={styles.people}> people </Text>
 
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.closeButton}>
