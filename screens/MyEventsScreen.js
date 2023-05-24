@@ -113,16 +113,17 @@ export default function MyEventsScreen({}) {
 
         <View style={styles.container}>
           <View style={styles.eventsComponent}>
-            {eventsData.length > 0 && (
+            {eventsData.length > 0 ? (
               <Modal
                 animationType={"slide"}
                 transparent={true}
-                visible={eventsData.length === 0 ? true : false}
+                visible={eventsData.length > 0 ? true : false}
               >
                 <FirstMessage />
               </Modal>
+            ) : (
+              events
             )}
-            {events}
           </View>
         </View>
       </ScrollView>

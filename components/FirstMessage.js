@@ -5,7 +5,7 @@ const FirstMessage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Text>tst</Text>
+        <Text>zazazazaazaz</Text>
       </View>
     </View>
   );
@@ -14,14 +14,12 @@ const FirstMessage = () => {
 export default FirstMessage;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(0,0,0,0.6)",
-    flex: 1,
-  },
-  contents: {
-    backgroundColor: "white ",
-    margin: 50,
+    backgroundColor: "white",
+    width: "50%",
+    height: "30%",
+    margin: 100,
+    marginTop: 200,
     padding: 40,
     borderRadius: 10,
-    height: "70%",
   },
 });
