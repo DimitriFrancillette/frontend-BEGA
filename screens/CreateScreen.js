@@ -1,5 +1,4 @@
 import React from "react";
-import { BACK_API } from "@env";
 import {
   View,
   Text,
@@ -35,6 +34,8 @@ export default function CreateScreen({ navigation }) {
   const [emailInvitation, setEmailInvitation] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [participants, setParticipants] = useState([]);
 
   const handleDateChange = (event) => {
     const timestamp = event.nativeEvent.timestamp;
@@ -93,6 +94,8 @@ export default function CreateScreen({ navigation }) {
 
     const eventTimestamp = combineTime(datePickerValue, timePickerValue);
 
+    console.log('PARTICIPANTS', participants);
+
     fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -100,7 +103,8 @@ export default function CreateScreen({ navigation }) {
         title: nameEvent,
         // title, location, description, userId, role
         //todo gestion userId, add back date and time
-        timestamp: eventTimestamp,
+        date: eventTimestamp,
+        participants: participants,
         //date: selectedDate,
         //time: selectedTime,
         role: "admin",
@@ -110,9 +114,9 @@ export default function CreateScreen({ navigation }) {
       }),
     })
       .then((response) => response.json())
-      .then((createdEventData) => {
-        console.log(createdEventData);
-        if (createdEventData.result === false) {
+      .then((data) => {
+        console.log("RETOUR CREA EVENT", data);
+        if (data.result === false) {
           return;
         }
 
@@ -125,6 +129,10 @@ export default function CreateScreen({ navigation }) {
         };
 
         dispatch(addEvent(newEvent));
+
+        navigation.navigate("Event", {
+          eventId: data.saveEvent._id,
+        });
 
         fetch(`${BACKEND_URL}/strongbox/createstrongbox`, {
           method: "POST",
@@ -143,8 +151,8 @@ export default function CreateScreen({ navigation }) {
               eventId: createdEventData.saveEvent._id,
             });
             setNameEvent("");
-            setSelectedDate(new Date());
-            setSelectedTime(new Date());
+            setdatePickerValue(new Date());
+            setTimePickerValue(new Date());
             setAdressEvent(null);
             setDescriptionEvent("");
           });
@@ -158,6 +166,44 @@ export default function CreateScreen({ navigation }) {
   const showTimepicker = () => {
     setShowTimePicker(true);
   };
+
+  //FRIENDS
+  //todo modifier le fetch pour qu'il soit dynamique
+  const showGuests = () => {
+    setShowModal(!showModal);
+    fetch(
+      `${BACKEND_URL}/users/getfriends/646bcd1ee0fb1cc4a5464471`,
+    ).then((response) => response.json()).then((data) => {
+      setFriends(data.user.friends);
+    });
+  };
+
+  let friendsList = friends.map((data, i) => {
+    // const invited = participants.some( e => e.userId = data._id);
+    // let color;
+    // invited? color="red": color="blue";
+    return (
+      <View style={styles.friendContainer}>
+        <Text key={data._id} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
+      </View>
+    )
+  });
+
+  const handleGuest = (guestId) => {
+    console.log(guestId)
+    const invited = participants.includes(guestId);
+    // const invited = participants.some( e => e.userId = guestId);
+    
+
+    if (!invited) {
+      setParticipants([...participants, guestId]);
+      console.log('ADDED');
+    } else {
+      setParticipants( participants.filter(e => e !== guestId) );
+      console.log('REMOVED');
+    }
+  }
+
 
   return (
     <View style={styles.container}>
@@ -188,6 +234,7 @@ export default function CreateScreen({ navigation }) {
                   display="default"
                   is24Hour={true}
                   onChange={handleDateChange}
+                  minimumDate={Date.now()}
                   style={styles.dateTimePicker}
                 />
               )}
@@ -197,12 +244,7 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showTimepicker()}
                 style={styles.timeEventText}
               >
-                Heure:{" "}
-                {(timePickerValue.getHours() < 10 ? "0" : "") +
-                  timePickerValue.getHours()}
-                :
-                {(timePickerValue.getMinutes() < 10 ? "0" : "") +
-                  timePickerValue.getMinutes()}
+                Heure: {(timePickerValue.getHours() < 10 ? '0' : '') + timePickerValue.getHours()}:{(timePickerValue.getMinutes() < 10 ? '0' : '') + timePickerValue.getMinutes()}
               </Text>
               {showTimePicker && (
                 <DateTimePicker
@@ -256,10 +298,13 @@ export default function CreateScreen({ navigation }) {
                         }}
                       />
                     </View>
+
+                    {friendsList}
+
                     <TouchableOpacity
                       style={styles.modalValidButton}
                       activeOpacity={0.8}
-                      //onPress={}
+                    //onPress={}
                     >
                       <Text style={styles.textButtonValid}> Valider </Text>
                     </TouchableOpacity>
@@ -270,7 +315,7 @@ export default function CreateScreen({ navigation }) {
                 style={styles.buttonAddFriends}
                 activeOpacity={0.8}
                 onPress={() => {
-                  setShowModal(!showModal);
+                  showGuests();
                 }}
               >
                 <Text style={styles.textButtonAddFriends}> + invités</Text>
@@ -389,7 +434,6 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
   },
   buttonAddFriends: {
-    backgroundColor: "#FAF5FF",
     borderRadius: 10,
     borderColor: "#6B21A8",
     borderWidth: 2,
@@ -440,7 +484,7 @@ const styles = StyleSheet.create({
     color: "#DDA304",
   },
   modal: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     backgroundColor: "#FAF5FF",
     paddingTop: 30,
@@ -478,5 +522,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     color: "black",
+  },
+  participant: {
+    fontSize: 30,
+    margin: 10,
   },
 });

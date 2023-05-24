@@ -8,6 +8,9 @@ import {
   ScrollView,
   SafeAreaView,
   Button,
+  Switch,
+  Alert,
+  Modal,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +35,6 @@ export default function EventScreen({ navigation, route }) {
   const [strongboxId, setStrongboxId] = useState();
 
   const { eventId } = route.params;
-  console.log("EVENT ID", eventId);
 
   const handleCheckbox = (todo, id) => {
     console.log("TODO", todo, id);
@@ -43,22 +45,24 @@ export default function EventScreen({ navigation, route }) {
     const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
+          const newDate = new Date(data.event.date).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
           setEventTitle(data.event.title);
           setAddress(data.event.location);
           setDescription(data.event.description);
           setParticipants(data.event.participants);
           setTodoList(data.event.todoId);
           setStrongboxId(data.event.strongboxId);
+          setDate(newDate);
         });
-     const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data.strongbox.strongboxId.transactionId)
-          setTransactions(data.strongbox.strongboxId.transactionId);
-        });
+    //  const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       console.log(data.strongbox.strongboxId.transactionId)
+    //       setTransactions(data.strongbox.strongboxId.transactionId);
+    //     });
       return () => {
         fetchEvent
-        fetchGetStrongbox
+        // fetchGetStrongbox
       }
     }, [])
   );
