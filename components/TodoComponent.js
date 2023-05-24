@@ -5,9 +5,11 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Checkbox from "expo-checkbox";
+import { useSelector } from "react-redux";
+import { BACKEND_URL } from "../constants";
 
 export default function TodoComponent({
   handleCheckbox,
@@ -15,13 +17,27 @@ export default function TodoComponent({
   description,
   participants,
   id,
+  getRole,
+  reloadTodo,
 }) {
-  const [isChecked, setChecked] = useState(true);
+  const user = useSelector((state) => state.user.value);
+  const isChecked = participants.some((e) => e.email === user.email);
+
   const submitCheckbox = () => {
-    setChecked(!isChecked);
     handleCheckbox(isChecked, id);
   };
-  console.log(participants);
+  const handleDeleteTodo = () => {
+    console.log("delete");
+    fetch(`${BACKEND_URL}/todo/deletetodo`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+      body: JSON.stringify({ todoId: id }),
+    });
+    reloadTodo();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -32,7 +48,7 @@ export default function TodoComponent({
           <View style={styles.tasksContainer}>
             <Checkbox
               style={styles.checkbox}
-              value={!isChecked}
+              value={isChecked}
               onValueChange={() => submitCheckbox()}
               color={isChecked ? "#4630EB" : undefined}
             />
@@ -40,11 +56,18 @@ export default function TodoComponent({
               <View>
                 <Text>
                   {participants.map((data) => (
-                    <>{data.email} - </>
+                    <Text> {data.email}</Text>
                   ))}
                 </Text>
               </View>
             </View>
+
+            <FontAwesome
+              name="trash"
+              size={35}
+              onPress={() => handleDeleteTodo()}
+            />
+
             <FontAwesome name="user-circle" size={40} color="#6B21A8" />
           </View>
         </KeyboardAvoidingView>

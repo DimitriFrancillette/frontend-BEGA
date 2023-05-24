@@ -94,7 +94,7 @@ export default function CreateScreen({ navigation }) {
 
     const eventTimestamp = combineTime(datePickerValue, timePickerValue);
 
-    console.log('PARTICIPANTS', participants);
+    console.log("PARTICIPANTS", participants);
 
     fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
@@ -114,9 +114,8 @@ export default function CreateScreen({ navigation }) {
       }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log("RETOUR CREA EVENT", data);
-        if (data.result === false) {
+      .then((createdEventData) => {
+        if (createdEventData.result === false) {
           return;
         }
 
@@ -171,11 +170,11 @@ export default function CreateScreen({ navigation }) {
   //todo modifier le fetch pour qu'il soit dynamique
   const showGuests = () => {
     setShowModal(!showModal);
-    fetch(
-      `${BACKEND_URL}/users/getfriends/646bcd1ee0fb1cc4a5464471`,
-    ).then((response) => response.json()).then((data) => {
-      setFriends(data.user.friends);
-    });
+    fetch(`${BACKEND_URL}/users/getfriends/646bcd1ee0fb1cc4a5464471`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFriends(data.user.friends);
+      });
   };
 
   let friendsList = friends.map((data, i) => {
@@ -184,26 +183,30 @@ export default function CreateScreen({ navigation }) {
     // invited? color="red": color="blue";
     return (
       <View style={styles.friendContainer}>
-        <Text key={data._id} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
+        <Text
+          key={data._id}
+          onPress={() => handleGuest(data._id)}
+          style={styles.participant}
+        >
+          {data.firstname}
+        </Text>
       </View>
-    )
+    );
   });
 
   const handleGuest = (guestId) => {
-    console.log(guestId)
+    console.log(guestId);
     const invited = participants.includes(guestId);
     // const invited = participants.some( e => e.userId = guestId);
-    
 
     if (!invited) {
       setParticipants([...participants, guestId]);
-      console.log('ADDED');
+      console.log("ADDED");
     } else {
-      setParticipants( participants.filter(e => e !== guestId) );
-      console.log('REMOVED');
+      setParticipants(participants.filter((e) => e !== guestId));
+      console.log("REMOVED");
     }
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -244,7 +247,12 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showTimepicker()}
                 style={styles.timeEventText}
               >
-                Heure: {(timePickerValue.getHours() < 10 ? '0' : '') + timePickerValue.getHours()}:{(timePickerValue.getMinutes() < 10 ? '0' : '') + timePickerValue.getMinutes()}
+                Heure:{" "}
+                {(timePickerValue.getHours() < 10 ? "0" : "") +
+                  timePickerValue.getHours()}
+                :
+                {(timePickerValue.getMinutes() < 10 ? "0" : "") +
+                  timePickerValue.getMinutes()}
               </Text>
               {showTimePicker && (
                 <DateTimePicker
@@ -304,7 +312,7 @@ export default function CreateScreen({ navigation }) {
                     <TouchableOpacity
                       style={styles.modalValidButton}
                       activeOpacity={0.8}
-                    //onPress={}
+                      //onPress={}
                     >
                       <Text style={styles.textButtonValid}> Valider </Text>
                     </TouchableOpacity>
