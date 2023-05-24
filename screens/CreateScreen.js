@@ -95,7 +95,7 @@ export default function CreateScreen({ navigation }) {
 
     const eventTimestamp = combineTime(datePickerValue, timePickerValue);
 
-    console.log('PARTICIPANTS', participants);
+    console.log("PARTICIPANTS", participants);
 
     fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
@@ -186,24 +186,22 @@ export default function CreateScreen({ navigation }) {
       <View style={styles.friendContainer}>
         <Text key={i} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
       </View>
-    )
+    );
   });
 
   const handleGuest = (guestId) => {
-    console.log(guestId)
+    console.log(guestId);
     const invited = participants.includes(guestId);
     // const invited = participants.some( e => e.userId = guestId);
-    
 
     if (!invited) {
       setParticipants([...participants, guestId]);
-      console.log('ADDED');
+      console.log("ADDED");
     } else {
-      setParticipants( participants.filter(e => e !== guestId) );
-      console.log('REMOVED');
+      setParticipants(participants.filter((e) => e !== guestId));
+      console.log("REMOVED");
     }
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -244,7 +242,12 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showTimepicker()}
                 style={styles.timeEventText}
               >
-                Heure: {(timePickerValue.getHours() < 10 ? '0' : '') + timePickerValue.getHours()}:{(timePickerValue.getMinutes() < 10 ? '0' : '') + timePickerValue.getMinutes()}
+                Heure:
+                {(timePickerValue.getHours() < 10 ? "0" : "") +
+                  timePickerValue.getHours()}
+                :
+                {(timePickerValue.getMinutes() < 10 ? "0" : "") +
+                  timePickerValue.getMinutes()}
               </Text>
               {showTimePicker && (
                 <DateTimePicker
@@ -304,7 +307,7 @@ export default function CreateScreen({ navigation }) {
                     <TouchableOpacity
                       style={styles.modalValidButton}
                       activeOpacity={0.8}
-                    //onPress={}
+                      //onPress={}
                     >
                       <Text style={styles.textButtonValid}> Valider </Text>
                     </TouchableOpacity>

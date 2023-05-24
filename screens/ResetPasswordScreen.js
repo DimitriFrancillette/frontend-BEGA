@@ -15,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 const ResetPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const showToasts = () => {
-    Toast.success("Promised is resolved Success");
+    Toast.success("Email envoyé");
   };
   const showFailedToasts = () => {
     Toast.info("Impossible");
