@@ -42,10 +42,12 @@ export default function EventScreen({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-    const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+      const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
-          const newDate = new Date(data.event.date).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
+          const newDate = new Date(data.event.date).toLocaleString("fr-FR", {
+            timeZone: "Europe/Paris",
+          });
           setEventTitle(data.event.title);
           setAddress(data.event.location);
           setDescription(data.event.description);
@@ -54,16 +56,18 @@ export default function EventScreen({ navigation, route }) {
           setStrongboxId(data.event.strongboxId);
           setDate(newDate);
         });
-    //  const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(data.strongbox.strongboxId.transactionId)
-    //       setTransactions(data.strongbox.strongboxId.transactionId);
-    //     });
+      const fetchGetStrongbox = fetch(
+        `${BACKEND_URL}/strongbox/getstrongbox/${eventId}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          
+          setTransactions(data.strongbox.strongboxId.transactionId);
+        });
       return () => {
-        fetchEvent
-        // fetchGetStrongbox
-      }
+        fetchEvent;
+        fetchGetStrongbox;
+      };
     }, [])
   );
 
@@ -79,11 +83,14 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
-        console.log(createdTransactionData);
+        console.log("ici", createdTransactionData.saveTransaction.userId)
         if (createdTransactionData.result === false) {
           return;
         }
-        setTransactions([...transactions, createdTransactionData.saveTransaction])
+        setTransactions([
+          ...transactions,
+          createdTransactionData.saveTransaction,
+        ]);
         setAmountCagnotte(0);
       });
   };
@@ -103,11 +110,12 @@ export default function EventScreen({ navigation, route }) {
     );
   });
 
-  
-   const userList = transactions?.map(transaction => transaction.userId.firstname)
-  const uniqueUserList = [...new Set(userList)];
- 
+  const userList = transactions?.map(
+    (transaction) => transaction.userId.firstname
+  );
 
+  const uniqueUserList = [...new Set(userList)];
+  console.log(uniqueUserList);
   const people = uniqueUserList?.map((user, i) => {
     return (
       <Text key={i} style={styles.people}>
