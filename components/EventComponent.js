@@ -9,8 +9,29 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const EventComponent = ({ eventName, date, eventId, handleDelete }) => {
+const EventComponent = ({ eventName, date, eventId, date, handleDelete }) => {
   const navigation = useNavigation();
+  const tuTrouvesUnMot = new Date(date);
+  let dateString = "";
+
+  if ( tuTrouvesUnMot.getMinutes() < 10 ) {
+    dateString = `${tuTrouvesUnMot.getHours()}h0${tuTrouvesUnMot.getMinutes()}`
+  } else {
+    dateString = `${tuTrouvesUnMot.getHours()}h${tuTrouvesUnMot.getMinutes()}`
+  };
+
+
+  // const handleDelete = (eventId) => {
+  //        fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+  //          method: "DELETE",
+  //         headers: { "Content-Type": "application/json" },
+  //          body: JSON.stringify({ eventId }),
+  //        })
+  //          .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log(data)
+  //          });
+  //     };
 
   // const handleDelete = (eventId) => {
   //        fetch(`http://192.168.1.77:3000/events/deleteevent`, {
