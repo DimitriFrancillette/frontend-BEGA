@@ -26,7 +26,7 @@ export default function EventScreen({ navigation, route }) {
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
   const [description, setDescription] = useState("Ajouter une description");
-  const [participants, setParticipants] = useState();
+  const [participants, setParticipants] = useState([]);
   const [isChanged, setIsChanged] = useState(false);
   const [showCagnotte, setShowCagnotte] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
@@ -125,6 +125,7 @@ export default function EventScreen({ navigation, route }) {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data.event.participants)
           setEventTitle(data.event.title);
           setAddress(data.event.location);
           setDescription(data.event.description);
@@ -183,16 +184,23 @@ export default function EventScreen({ navigation, route }) {
     totalStrongBox += transaction.amount;
   }
 
+  const guestList = participants.map((participant, i) => {
+    return(
+      <View style={styles.oneGuestContainer}>
+      <FontAwesome
+        name="user-circle"
+        size={50}
+        color="#6B21A8"
+        style={{ marginRight: 10 }}
+      />
+      <Text>{participant.userId.firstname}</Text>
+    </View>
+
+    )
+  })
+
   return (
     <View style={styles.container}>
-      {showCreateTodo && (
-        <Modal transparent={true} visible={showCreateTodo}>
-          <CreateTodoModal
-            closeModal={() => setShowCreateTodo(false)}
-            handleTodo={handleTodo}
-          />
-        </Modal>
-      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -298,15 +306,7 @@ export default function EventScreen({ navigation, route }) {
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.showParticipants}>
                 <Text style={styles.participe}>Participants :</Text>
-                {uniqueUserList?.map((user, i) => {
-                  return (
-                    <>
-                      <Text key={i} style={styles.people}>
-                        {user}
-                      </Text>
-                    </>
-                  );
-                })}
+                {people}
               </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome
@@ -328,7 +328,7 @@ export default function EventScreen({ navigation, route }) {
         </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <View style={styles.arrowContainer}>
+          <View style={styles.arrowContainerTodo}>
             <FontAwesome
               name="arrow-left"
               size={25}
@@ -354,6 +354,14 @@ export default function EventScreen({ navigation, route }) {
                 <Text>Valider</Text>
               </TouchableOpacity>
             </View>
+          )}
+          {showCreateTodo && (
+            <Modal transparent={false} visible={showCreateTodo}>
+              <CreateTodoModal
+                closeModal={() => setShowCreateTodo(false)}
+                handleTodo={handleTodo}
+              />
+            </Modal>
           )}
         </Modal>
         {/*Modal TODO */}
@@ -391,46 +399,10 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
+             
 
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Latifa</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Oksana</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Vincent</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Dimitri</Text>
-            </View>
+            
+            {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
@@ -672,5 +644,12 @@ const styles = StyleSheet.create({
   participe: {
     color: "#6B21A8",
     fontWeight: 700,
+  },
+  arrowContainerTodo: {
+    position: "absolute",
+    zIndex: 1,
+    marginTop: 100,
+    marginLeft: 20,
+    alignSelf: "flex-start",
   },
 });

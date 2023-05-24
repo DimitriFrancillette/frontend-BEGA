@@ -51,11 +51,13 @@ export default CreateTodoComponent;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(0,0,0,0.6)",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "pink",
     flex: 1,
   },
   contents: {
-    backgroundColor: "white ",
+    backgroundColor: "yellow",
     margin: 50,
     padding: 40,
     borderRadius: 10,
