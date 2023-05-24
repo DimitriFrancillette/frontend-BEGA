@@ -8,6 +8,8 @@ import {
   ScrollView,
   SafeAreaView,
   Button,
+  Switch,
+  Alert,
   Modal,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
