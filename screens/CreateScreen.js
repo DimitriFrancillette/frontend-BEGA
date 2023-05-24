@@ -238,7 +238,7 @@ export default function CreateScreen({ navigation }) {
                   display="default"
                   is24Hour={true}
                   onChange={handleDateChange}
-                  minimumDate={Date.now()}
+                  minimumDate={new Date(Date.now())}
                   style={styles.dateTimePicker}
                 />
               )}
@@ -248,7 +248,7 @@ export default function CreateScreen({ navigation }) {
                 onPress={() => showTimepicker()}
                 style={styles.timeEventText}
               >
-                Heure:{" "}
+                Heure:
                 {(timePickerValue.getHours() < 10 ? "0" : "") +
                   timePickerValue.getHours()}
                 :
