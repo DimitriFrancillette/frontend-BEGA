@@ -139,14 +139,6 @@ export default function EventScreen({ navigation, route }) {
   );
   const uniqueUserList = [...new Set(userList)];
 
-  const people = uniqueUserList?.map((user, i) => {
-    return (
-      <Text key={i} style={styles.people}>
-        {user}
-      </Text>
-    );
-  });
-
   let totalStrongBox = 0;
   for (let transaction of transactions) {
     totalStrongBox += transaction.amount;
@@ -267,7 +259,15 @@ export default function EventScreen({ navigation, route }) {
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.showParticipants}>
                 <Text style={styles.participe}>Participants :</Text>
-                {people}
+                {uniqueUserList?.map((user, i) => {
+                  return (
+                    <>
+                      <Text key={i} style={styles.people}>
+                        {user}
+                      </Text>
+                    </>
+                  );
+                })}
               </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome

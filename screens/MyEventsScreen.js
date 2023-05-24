@@ -6,9 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from "react-native";
 import EventComponent from "../components/EventComponent";
-
+import FirstMessage from "../components/FirstMessage";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -109,8 +110,20 @@ export default function MyEventsScreen({}) {
             />
           </KeyboardAvoidingView>
         </View>
+
         <View style={styles.container}>
-          <View style={styles.eventsComponent}>{events}</View>
+          <View style={styles.eventsComponent}>
+            {eventsData.length > 0 && (
+              <Modal
+                animationType={"slide"}
+                transparent={true}
+                visible={eventsData.length === 0 ? true : false}
+              >
+                <FirstMessage />
+              </Modal>
+            )}
+            {events}
+          </View>
         </View>
       </ScrollView>
     </>
