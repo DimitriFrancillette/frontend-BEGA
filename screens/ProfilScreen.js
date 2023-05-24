@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { addUser, disconnectUser } from "../reducers/user";
 import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import ToastManager, { Toast } from "toastify-react-native";
 
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -28,6 +29,13 @@ export default function ProfilScreen({ navigation }) {
   const [emailError, setEmailError] = useState(false);
   const [fieldError, setFieldError] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
+
+  const showToasts = () => {
+    Toast.success("Profil modifié");
+  };
+  const badToast = () => {
+    Toast.error("Profil modifié");
+  };
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
@@ -47,7 +55,16 @@ export default function ProfilScreen({ navigation }) {
         password,
         userId: user.userId,
       }),
-    });
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.result) {
+          showToasts();
+        } else {
+          badToast();
+        }
+      })
+      .catch((e) => badToast());
   };
 
   useEffect(() => {
@@ -129,6 +146,7 @@ export default function ProfilScreen({ navigation }) {
 
   return (
     <View style={styles.container1}>
+      <ToastManager />
       <ScrollView style={styles.scrollView}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Profil</Text>
