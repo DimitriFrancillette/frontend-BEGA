@@ -48,12 +48,12 @@ export default function EventScreen({ navigation, route }) {
     setReloadTodo(!reloadTodo);
     console.log("TODO", isDone, todoId);
   };
-
   useFocusEffect(
     useCallback(() => {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           const newDate = new Date(data.event.date).toLocaleString("fr-FR", {
             timeZone: "Europe/Paris",
           });
@@ -70,7 +70,6 @@ export default function EventScreen({ navigation, route }) {
       )
         .then((response) => response.json())
         .then((data) => {
-          
           setTransactions(data.strongbox.strongboxId.transactionId);
         });
       return () => {
@@ -109,7 +108,7 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
-        console.log("ici", createdTransactionData.saveTransaction.userId)
+        console.log("ici", createdTransactionData.saveTransaction.userId);
         if (createdTransactionData.result === false) {
           return;
         }
@@ -487,12 +486,13 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   inputDateContainer: {
-    width: "50%",
+    width: "55%",
     borderColor: "#6B21A8",
     borderWidth: 1,
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
+    alignItems: "center",
   },
   inputContainer: {
     width: "100%",
