@@ -4,10 +4,12 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const EventComponent = ({ eventName, description, eventId, date }) => {
+const EventComponent = ({ eventName, date, eventId, date, handleDelete }) => {
   const navigation = useNavigation();
   const tuTrouvesUnMot = new Date(date);
   let dateString = "";
@@ -19,13 +21,55 @@ const EventComponent = ({ eventName, description, eventId, date }) => {
   };
 
 
+  // const handleDelete = (eventId) => {
+  //        fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+  //          method: "DELETE",
+  //         headers: { "Content-Type": "application/json" },
+  //          body: JSON.stringify({ eventId }),
+  //        })
+  //          .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log(data)
+  //          });
+  //     };
+
+  // const handleDelete = (eventId) => {
+  //        fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+  //          method: "DELETE",
+  //         headers: { "Content-Type": "application/json" },
+  //          body: JSON.stringify({ eventId }),
+  //        })
+  //          .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log(data)
+  //          });
+  //     };
+
+  const createAlert = () =>
+    Alert.alert("Confirmation", "Voulez-vous supprimer l'évènement?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          handleDelete(eventId);
+        },
+      },
+    ]);
+
+  const handleClick = () => {
+    createAlert(eventId);
+  };
+
   return (
     <View style={styles.eventContainer}>
-      <View>
-      <Text style={styles.eventTitle}>{eventName}</Text>
-      <Text style={styles.eventTitle}>{dateString}</Text>
-      </View>
-      {/* <Text style={styles.date}>
+      <TouchableWithoutFeedback onLongPress={() => handleClick()}>
+        <View>
+          <Text style={styles.eventTitle}>{eventName}</Text>
+          {/* <Text style={styles.date}>
           {props.date.toLocaleString("fr-FR", {
             weekday: "short",
             year: "numeric",
@@ -33,15 +77,17 @@ const EventComponent = ({ eventName, description, eventId, date }) => {
             day: "numeric",
           })}
         </Text> */}
-      <KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.buttonInfos}
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate("Event", { eventId })}
-        >
-          <Text style={styles.textButtonInfos}>Infos</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+          <KeyboardAvoidingView>
+            <TouchableOpacity
+              style={styles.buttonInfos}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate("Event", { eventId })}
+            >
+              <Text style={styles.textButtonInfos}>Infos</Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
