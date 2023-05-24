@@ -79,8 +79,10 @@ export default function TodoComponent({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
     backgroundColor: "#FAF5FF",
-    paddingTop: 5,
+    padding: 16,
   },
   scrollView: {
     width: "100%",
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignItems: "center",
   },
-
   checkbox: {
     height: 40,
     width: 40,
@@ -97,14 +98,12 @@ const styles = StyleSheet.create({
   eventInfosContainer: {
     width: "90%",
   },
-
   tasksContainer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   inputContainer: {
     width: "75%",
     borderColor: "#6B21A8",
