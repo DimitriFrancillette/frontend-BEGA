@@ -72,7 +72,7 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+  <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.arrowContainer}>
           <FontAwesome
@@ -87,9 +87,6 @@ export default function SignInScreen({ navigation }) {
           source={require("../assets/logo-bega.png")}
         />
         <View>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
             <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Adresse email"
@@ -134,10 +131,9 @@ export default function SignInScreen({ navigation }) {
                 J'ai oublié mon mot de passe
               </Text>
             </TouchableOpacity>
-          </KeyboardAvoidingView>
         </View>
       </ScrollView>
-    </View>
+  </KeyboardAvoidingView>
   );
 }
 

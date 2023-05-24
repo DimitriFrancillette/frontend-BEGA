@@ -30,6 +30,23 @@ export default function MyEventsScreen({}) {
     setEventsFiltered(filter);
   };
 
+  // const handleDelete = (eventId) => {
+  //   fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+  //     methode: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ eventId }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //      if (data.result) {
+  //         fetch(`http://192.168.1.77:3000/events/findallevents/${user.userId}`)
+  //          .then((response) => response.json())
+  //          .then((data) => {
+  //             setEventsData(data.events);
+  //           });
+  //       }
+  //    });
+  // };
 
   useFocusEffect(
     useCallback(() => {
@@ -45,20 +62,6 @@ export default function MyEventsScreen({}) {
     }, [])
   );
 
-  
-
-  const handleDelete = (eventId) => {
-    fetch(`http://192.168.1.77:3000/events/deleteevent`, {
-      method: "DELETE",
-     headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ eventId }),
-    })
-      .then((response) => response.json())
-     .then((data) => {
-       setEventsData(eventsData.filter(e => e._id !== eventId))
-      });
- };
-
   let events = [];
   if (eventsFiltered.length > 0) {
     events = eventsFiltered.map((data, i) => {
@@ -70,7 +73,6 @@ export default function MyEventsScreen({}) {
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
-          handleDelete={handleDelete}
         />
       );
     });
@@ -84,7 +86,6 @@ export default function MyEventsScreen({}) {
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
-          handleDelete={handleDelete}
         />
       );
     });

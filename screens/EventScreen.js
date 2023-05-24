@@ -487,11 +487,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
-<<<<<<< HEAD
-    alignItems:"center"
-=======
     alignItems: "center",
->>>>>>> 5e64ea5c3d5442235b27bbcb2244e7564ff49afa
   },
   inputContainer: {
     width: "100%",
