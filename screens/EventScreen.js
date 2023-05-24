@@ -48,12 +48,12 @@ export default function EventScreen({ navigation, route }) {
     setReloadTodo(!reloadTodo);
     console.log("TODO", isDone, todoId);
   };
-
   useFocusEffect(
     useCallback(() => {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           const newDate = new Date(data.event.date).toLocaleString("fr-FR", {
             timeZone: "Europe/Paris",
           });
@@ -487,7 +487,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
+<<<<<<< HEAD
     alignItems:"center"
+=======
+    alignItems: "center",
+>>>>>>> 5e64ea5c3d5442235b27bbcb2244e7564ff49afa
   },
   inputContainer: {
     width: "100%",

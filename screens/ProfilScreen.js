@@ -65,6 +65,7 @@ export default function ProfilScreen({ navigation }) {
         }
       })
       .catch((e) => badToast());
+    console.log("Profil", user);
   };
 
   useEffect(() => {
