@@ -113,7 +113,7 @@ export default function MyEventsScreen({}) {
 
         <View style={styles.container}>
           <View style={styles.eventsComponent}>
-            {eventsData.length > 0 ? <FirstMessage /> : events}
+            {eventsData.length === 0 ? <FirstMessage /> : events}
           </View>
         </View>
       </ScrollView>

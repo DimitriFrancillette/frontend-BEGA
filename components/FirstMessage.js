@@ -13,7 +13,7 @@ const FirstMessage = () => {
 export default FirstMessage;
 const styles = StyleSheet.create({
   container: {
-    height: "150%",
+    height: 100,
     width: "80%",
     backgroundColor: "#6B21A8",
     color: "#ffff",
