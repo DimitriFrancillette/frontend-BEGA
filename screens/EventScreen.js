@@ -49,6 +49,36 @@ export default function EventScreen({ navigation, route }) {
     console.log("TODO", isDone, todoId);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const newDate = new Date(data.event.date).toLocaleString("fr-FR", {
+            timeZone: "Europe/Paris",
+          });
+          setEventTitle(data.event.title);
+          setAddress(data.event.location);
+          setDescription(data.event.description);
+          setParticipants(data.event.participants);
+          setTodoList(data.event.todoId);
+          setStrongboxId(data.event.strongboxId);
+          setDate(newDate);
+        });
+      const fetchGetStrongbox = fetch(
+        `${BACKEND_URL}/strongbox/getstrongbox/${eventId}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          
+          setTransactions(data.strongbox.strongboxId.transactionId);
+        });
+      return () => {
+        fetchEvent;
+        fetchGetStrongbox;
+      };
+    }, [])
+  );
   const handleTodo = (description, taskName) => {
     fetch(`${BACKEND_URL}/todo/addtodo`, {
       headers: {
@@ -79,6 +109,7 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
+        console.log("ici", createdTransactionData.saveTransaction.userId)
         if (createdTransactionData.result === false) {
           return;
         }
@@ -137,8 +168,9 @@ export default function EventScreen({ navigation, route }) {
   const userList = transactions?.map(
     (transaction) => transaction.userId.firstname
   );
-  const uniqueUserList = [...new Set(userList)];
 
+  const uniqueUserList = [...new Set(userList)];
+  console.log(uniqueUserList);
   const people = uniqueUserList?.map((user, i) => {
     return (
       <Text key={i} style={styles.people}>
@@ -267,7 +299,15 @@ export default function EventScreen({ navigation, route }) {
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.showParticipants}>
                 <Text style={styles.participe}>Participants :</Text>
-                {people}
+                {uniqueUserList?.map((user, i) => {
+                  return (
+                    <>
+                      <Text key={i} style={styles.people}>
+                        {user}
+                      </Text>
+                    </>
+                  );
+                })}
               </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome

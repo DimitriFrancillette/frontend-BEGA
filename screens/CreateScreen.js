@@ -115,6 +115,7 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((createdEventData) => {
+        console.log("RETOUR CREA EVENT", createdEventData);
         if (createdEventData.result === false) {
           return;
         }
@@ -126,12 +127,6 @@ export default function CreateScreen({ navigation }) {
           location: createdEventData.location,
           description: createdEventData.description,
         };
-
-        dispatch(addEvent(newEvent));
-
-        navigation.navigate("Event", {
-          eventId: data.saveEvent._id,
-        });
 
         fetch(`${BACKEND_URL}/strongbox/createstrongbox`, {
           method: "POST",
@@ -146,6 +141,8 @@ export default function CreateScreen({ navigation }) {
             if (createdStrongboxData.result === false) {
               return;
             }
+            dispatch(addEvent(newEvent));
+
             navigation.navigate("Event", {
               eventId: createdEventData.saveEvent._id,
             });
@@ -166,15 +163,18 @@ export default function CreateScreen({ navigation }) {
     setShowTimePicker(true);
   };
 
+  
+  
+
   //FRIENDS
   //todo modifier le fetch pour qu'il soit dynamique
   const showGuests = () => {
     setShowModal(!showModal);
-    fetch(`${BACKEND_URL}/users/getfriends/646bcd1ee0fb1cc4a5464471`)
-      .then((response) => response.json())
-      .then((data) => {
-        setFriends(data.user.friends);
-      });
+    fetch(
+      `${BACKEND_URL}/users/getfriends/${user.userId}`,
+    ).then((response) => response.json()).then((data) => {
+      setFriends(data.user.friends);
+    });
   };
 
   let friendsList = friends.map((data, i) => {
@@ -183,13 +183,7 @@ export default function CreateScreen({ navigation }) {
     // invited? color="red": color="blue";
     return (
       <View style={styles.friendContainer}>
-        <Text
-          key={data._id}
-          onPress={() => handleGuest(data._id)}
-          style={styles.participant}
-        >
-          {data.firstname}
-        </Text>
+        <Text key={i} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
       </View>
     );
   });
