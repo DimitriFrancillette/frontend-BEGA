@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../reducers/event";
 import { BACKEND_URL } from "../constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import ToastManager, { Toast } from "toastify-react-native";
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -163,8 +164,12 @@ export default function CreateScreen({ navigation }) {
     setShowTimePicker(true);
   };
 
-  
-  
+  const showToasts = () => {
+    Toast.success("Profil modifié");
+  };
+  const badToast = () => {
+    Toast.error("Profil modifié");
+  };
 
   //FRIENDS
   //todo modifier le fetch pour qu'il soit dynamique
@@ -196,14 +201,17 @@ export default function CreateScreen({ navigation }) {
     if (!invited) {
       setParticipants([...participants, guestId]);
       console.log("ADDED");
+      showToasts();
     } else {
       setParticipants(participants.filter((e) => e !== guestId));
       console.log("REMOVED");
+      badToast();
     }
   };
 
   return (
     <View style={styles.container}>
+      <ToastManager />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}

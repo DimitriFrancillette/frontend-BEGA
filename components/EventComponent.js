@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const EventComponent = ({ eventName, date, eventId, date, handleDelete }) => {
+const EventComponent = ({ eventName, date, eventId, handleDelete }) => {
   const navigation = useNavigation();
   const tuTrouvesUnMot = new Date(date);
   let dateString = "";
@@ -69,6 +69,7 @@ const EventComponent = ({ eventName, date, eventId, date, handleDelete }) => {
       <TouchableWithoutFeedback onLongPress={() => handleClick()}>
         <View>
           <Text style={styles.eventTitle}>{eventName}</Text>
+          <Text style={styles.eventTitle}>{dateString}</Text>
           {/* <Text style={styles.date}>
           {props.date.toLocaleString("fr-FR", {
             weekday: "short",
