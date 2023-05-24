@@ -1,4 +1,3 @@
-import { BACK_API } from "@env";
 import {
   View,
   Text,
