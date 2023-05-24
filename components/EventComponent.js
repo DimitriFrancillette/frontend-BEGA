@@ -7,12 +7,24 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const EventComponent = ({ eventName, description, eventId }) => {
+const EventComponent = ({ eventName, description, eventId, date }) => {
   const navigation = useNavigation();
+  const tuTrouvesUnMot = new Date(date);
+  let dateString = "";
+
+  if ( tuTrouvesUnMot.getMinutes() < 10 ) {
+    dateString = `${tuTrouvesUnMot.getHours()}h0${tuTrouvesUnMot.getMinutes()}`
+  } else {
+    dateString = `${tuTrouvesUnMot.getHours()}h${tuTrouvesUnMot.getMinutes()}`
+  };
+
 
   return (
     <View style={styles.eventContainer}>
+      <View>
       <Text style={styles.eventTitle}>{eventName}</Text>
+      <Text style={styles.eventTitle}>{dateString}</Text>
+      </View>
       {/* <Text style={styles.date}>
           {props.date.toLocaleString("fr-FR", {
             weekday: "short",

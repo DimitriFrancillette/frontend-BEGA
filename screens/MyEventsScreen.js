@@ -69,6 +69,7 @@ export default function MyEventsScreen({}) {
         <EventComponent
           key={i}
           eventName={data.title}
+          date={data.date}
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
@@ -81,6 +82,7 @@ export default function MyEventsScreen({}) {
         <EventComponent
           key={i}
           eventName={data.title}
+          date={data.date}
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
@@ -113,7 +115,7 @@ export default function MyEventsScreen({}) {
 
         <View style={styles.container}>
           <View style={styles.eventsComponent}>
-            {eventsData.length > 0 ? (
+            {eventsData.length === 0 ? (
                 <FirstMessage />
             ): (events)}
           </View>
