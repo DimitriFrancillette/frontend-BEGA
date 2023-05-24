@@ -70,7 +70,6 @@ export default function EventScreen({ navigation, route }) {
       )
         .then((response) => response.json())
         .then((data) => {
-          
           setTransactions(data.strongbox.strongboxId.transactionId);
         });
       return () => {
@@ -109,7 +108,7 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
-        console.log("ici", createdTransactionData.saveTransaction.userId)
+        console.log("ici", createdTransactionData.saveTransaction.userId);
         if (createdTransactionData.result === false) {
           return;
         }
@@ -186,14 +185,6 @@ export default function EventScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {showCreateTodo && (
-        <Modal transparent={true} visible={showCreateTodo}>
-          <CreateTodoModal
-            closeModal={() => setShowCreateTodo(false)}
-            handleTodo={handleTodo}
-          />
-        </Modal>
-      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -299,15 +290,7 @@ export default function EventScreen({ navigation, route }) {
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.showParticipants}>
                 <Text style={styles.participe}>Participants :</Text>
-                {uniqueUserList?.map((user, i) => {
-                  return (
-                    <>
-                      <Text key={i} style={styles.people}>
-                        {user}
-                      </Text>
-                    </>
-                  );
-                })}
+                {people}
               </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome
@@ -329,7 +312,7 @@ export default function EventScreen({ navigation, route }) {
         </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <View style={styles.arrowContainer}>
+          <View style={styles.arrowContainerTodo}>
             <FontAwesome
               name="arrow-left"
               size={25}
@@ -355,6 +338,17 @@ export default function EventScreen({ navigation, route }) {
                 <Text>Valider</Text>
               </TouchableOpacity>
             </View>
+          )}
+          {showCreateTodo && (
+            <Modal
+              transparent={false}
+              visible={showCreateTodo}
+            >
+              <CreateTodoModal
+                closeModal={() => setShowCreateTodo(false)}
+                handleTodo={handleTodo}
+              />
+            </Modal>
           )}
         </Modal>
         {/*Modal TODO */}
@@ -487,12 +481,13 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   inputDateContainer: {
-    width: "50%",
+    width: "55%",
     borderColor: "#6B21A8",
     borderWidth: 1,
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
+    alignItems:"center"
   },
   inputContainer: {
     width: "100%",
@@ -673,4 +668,11 @@ const styles = StyleSheet.create({
     color: "#6B21A8",
     fontWeight: 700,
   },
+  arrowContainerTodo:{
+    position: "absolute",
+    zIndex: 1,
+    marginTop: 100,
+    marginLeft: 20,
+    alignSelf: "flex-start",
+  }
 });
