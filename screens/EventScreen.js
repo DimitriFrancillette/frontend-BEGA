@@ -26,7 +26,7 @@ export default function EventScreen({ navigation, route }) {
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
   const [description, setDescription] = useState("Ajouter une description");
-  const [participants, setParticipants] = useState();
+  const [participants, setParticipants] = useState([]);
   const [isChanged, setIsChanged] = useState(false);
   const [showCagnotte, setShowCagnotte] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
@@ -125,6 +125,7 @@ export default function EventScreen({ navigation, route }) {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data.event.participants)
           setEventTitle(data.event.title);
           setAddress(data.event.location);
           setDescription(data.event.description);
@@ -182,6 +183,21 @@ export default function EventScreen({ navigation, route }) {
   for (let transaction of transactions) {
     totalStrongBox += transaction.amount;
   }
+
+  const guestList = participants.map((participant, i) => {
+    return(
+      <View style={styles.oneGuestContainer}>
+      <FontAwesome
+        name="user-circle"
+        size={50}
+        color="#6B21A8"
+        style={{ marginRight: 10 }}
+      />
+      <Text>{participant.userId.firstname}</Text>
+    </View>
+
+    )
+  })
 
   return (
     <View style={styles.container}>
@@ -340,10 +356,7 @@ export default function EventScreen({ navigation, route }) {
             </View>
           )}
           {showCreateTodo && (
-            <Modal
-              transparent={false}
-              visible={showCreateTodo}
-            >
+            <Modal transparent={false} visible={showCreateTodo}>
               <CreateTodoModal
                 closeModal={() => setShowCreateTodo(false)}
                 handleTodo={handleTodo}
@@ -386,46 +399,10 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
+             
 
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Latifa</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Oksana</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Vincent</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Dimitri</Text>
-            </View>
+            
+            {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
@@ -487,11 +464,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
-<<<<<<< HEAD
-    alignItems:"center"
-=======
     alignItems: "center",
->>>>>>> 5e64ea5c3d5442235b27bbcb2244e7564ff49afa
   },
   inputContainer: {
     width: "100%",
@@ -672,11 +645,11 @@ const styles = StyleSheet.create({
     color: "#6B21A8",
     fontWeight: 700,
   },
-  arrowContainerTodo:{
+  arrowContainerTodo: {
     position: "absolute",
     zIndex: 1,
     marginTop: 100,
     marginLeft: 20,
     alignSelf: "flex-start",
-  }
+  },
 });

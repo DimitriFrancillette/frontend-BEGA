@@ -48,7 +48,7 @@ export default function MyEventsScreen({}) {
   
 
   const handleDelete = (eventId) => {
-    fetch(`http://192.168.1.77:3000/events/deleteevent`, {
+    fetch(`${BACKEND_URL}/events/deleteevent`, {
       method: "DELETE",
      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ eventId }),
@@ -112,7 +112,7 @@ export default function MyEventsScreen({}) {
 
         <View style={styles.container}>
           <View style={styles.eventsComponent}>
-            {eventsData.length > 0 ? (
+            {eventsData.length < 1 ? (
                 <FirstMessage />
             ): (events)}
           </View>
