@@ -111,7 +111,6 @@ export default function CreateScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((createdEventData) => {
-        console.log(createdEventData);
         if (createdEventData.result === false) {
           return;
         }

@@ -16,6 +16,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import CreateTodoModal from "../components/CreateTodoComponent";
 
 export default function EventScreen({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
@@ -31,38 +32,38 @@ export default function EventScreen({ navigation, route }) {
   const [transactions, setTransactions] = useState([]);
   const [amountCagnotte, setAmountCagnotte] = useState(0);
   const [strongboxId, setStrongboxId] = useState();
+  const [showCreateTodo, setShowCreateTodo] = useState(false);
+  const [reloadTodo, setReloadTodo] = useState(false);
 
   const { eventId } = route.params;
-  console.log("EVENT ID", eventId);
-
-  const handleCheckbox = (todo, id) => {
-    console.log("TODO", todo, id);
+  ////////////////////todo/////////////////////////////
+  const handleCheckbox = (isDone, todoId) => {
+    fetch(`${BACKEND_URL}/todo/updatetodo`, {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ todoId, userId: user.userId }),
+    });
+    setReloadTodo(!reloadTodo);
+    console.log("TODO", isDone, todoId);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-    const fetchEvent =  fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setEventTitle(data.event.title);
-          setAddress(data.event.location);
-          setDescription(data.event.description);
-          setParticipants(data.event.participants);
-          setTodoList(data.event.todoId);
-          setStrongboxId(data.event.strongboxId);
-        });
-     const fetchGetStrongbox = fetch(`${BACKEND_URL}/strongbox/getstrongbox/${eventId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data.strongbox.strongboxId.transactionId)
-          setTransactions(data.strongbox.strongboxId.transactionId);
-        });
-      return () => {
-        fetchEvent
-        fetchGetStrongbox
-      }
-    }, [])
-  );
+  const handleTodo = (description, taskName) => {
+    fetch(`${BACKEND_URL}/todo/addtodo`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ description, taskName, eventId }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setTodoList([...todoList, result.saveTodo]);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
+  ////////////////////todo/////////////////////////////
 
   const handleParticipate = () => {
     fetch(`${BACKEND_URL}/transaction/createtransaction`, {
@@ -76,15 +77,44 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
-        console.log(createdTransactionData);
         if (createdTransactionData.result === false) {
           return;
         }
-        setTransactions([...transactions, createdTransactionData.saveTransaction])
+        setTransactions([
+          ...transactions,
+          createdTransactionData.saveTransaction,
+        ]);
         setAmountCagnotte(0);
       });
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setEventTitle(data.event.title);
+          setAddress(data.event.location);
+          setDescription(data.event.description);
+          setParticipants(data.event.participants);
+          setTodoList(data.event.todoId);
+          setStrongboxId(data.event.strongboxId);
+        });
+      const fetchGetStrongbox = fetch(
+        `${BACKEND_URL}/strongbox/getstrongbox/${eventId}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setTransactions(data.strongbox.strongboxId.transactionId);
+        });
+
+      return () => {
+        fetchEvent;
+        fetchGetStrongbox;
+      };
+    }, [reloadTodo])
+  );
+  ///////////////////////todo//////////////////////////////////////
   const todo = todoList?.map((data) => {
     return (
       <Todo
@@ -96,14 +126,16 @@ export default function EventScreen({ navigation, route }) {
         id={data._id}
         isDone={data.isDone}
         participants={data.userId}
+        reloadTodo={() => setReloadTodo(!reloadTodo)}
       />
     );
   });
+  ///////////////////////todo//////////////////////////////////////
 
-  
-   const userList = transactions?.map(transaction => transaction.userId.firstname)
+  const userList = transactions?.map(
+    (transaction) => transaction.userId.firstname
+  );
   const uniqueUserList = [...new Set(userList)];
- 
 
   const people = uniqueUserList?.map((user, i) => {
     return (
@@ -120,6 +152,14 @@ export default function EventScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      {showCreateTodo && (
+        <Modal transparent={true} visible={showCreateTodo}>
+          <CreateTodoModal
+            closeModal={() => setShowCreateTodo(false)}
+            handleTodo={handleTodo}
+          />
+        </Modal>
+      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -259,11 +299,21 @@ export default function EventScreen({ navigation, route }) {
             <Text style={styles.title}>To Do List</Text>
           </View>
           {todo}
-          <TouchableOpacity style={styles.plusButton}>
-            <Text>
-              <FontAwesome name="plus" size={50} color="#6B21A8" />
-            </Text>
-          </TouchableOpacity>
+          {!showCreateTodo && (
+            <View style={{ display: "flex" }}>
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => setShowCreateTodo(true)}
+              >
+                <Text>
+                  <FontAwesome name="plus" size={50} color="#6B21A8" />
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowTodo(false)}>
+                <Text>Valider</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </Modal>
         {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
