@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../reducers/user";
-import { BACKEND_URL } from "../constants"
+import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const EMAIL_REGEX =
@@ -133,7 +133,7 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.forgotText}>
                 J'ai oublié mon mot de passe
               </Text>
-            </TouchableOpacity> 
+            </TouchableOpacity>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
