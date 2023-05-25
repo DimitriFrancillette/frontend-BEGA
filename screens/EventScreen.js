@@ -223,7 +223,7 @@ export default function EventScreen({ navigation, route }) {
           behavior="padding"
           keyboardVerticalOffset={60}
         >
-          <View style={styles.inputDateContainer}>
+          <View style={styles.inputContainer}>
             <TextInput
               placeholder="Date"
               onChangeText={(value) => {
@@ -437,17 +437,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   eventInfosContainer: {
+    marginTop: 40,
     justifyContent: "center",
     alignItems: "flex-start",
     width: "90%",
-  },
-  inputDateContainer: {
-    width: "50%",
-    borderColor: "#6B21A8",
-    borderWidth: 1,
-    borderRadius: 25,
-    padding: 10,
-    marginTop: 10,
   },
   inputContainer: {
     width: "100%",

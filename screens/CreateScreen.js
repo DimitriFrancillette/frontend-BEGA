@@ -211,7 +211,7 @@ export default function CreateScreen({ navigation }) {
               onChangeText={(value) => setNameEvent(value)}
               value={nameEvent}
               style={styles.inputNameEvent}
-              placeholder="nom de l'évènement"
+              placeholder="Nom de l'évènement"
             />
             <View style={styles.dateEvent}>
               <Text
@@ -259,7 +259,7 @@ export default function CreateScreen({ navigation }) {
               onChangeText={(value) => setAdressEvent(value)}
               value={adressEvent}
               style={styles.inputAdressEvent}
-              placeholder="lieu de l'évènement"
+              placeholder="Lieu de l'évènement"
             />
             <TextInput
               onChangeText={(value) => setDescriptionEvent(value)}
