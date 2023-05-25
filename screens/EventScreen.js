@@ -23,7 +23,7 @@ export default function EventScreen({ navigation, route }) {
   const [date, setDate] = useState("Date & Heure");
   const [address, setAddress] = useState("Nom & adresse du lieu rendez-vous");
   const [description, setDescription] = useState("Ajouter une description");
-  const [participants, setParticipants] = useState();
+  const [participants, setParticipants] = useState([]);
   const [isChanged, setIsChanged] = useState(false);
   const [showCagnotte, setShowCagnotte] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
@@ -178,20 +178,20 @@ export default function EventScreen({ navigation, route }) {
     totalStrongBox += transaction.amount;
   }
 
-  // const guestList = participants.map((participant, i) => {
-  //   return(
-  //     <View style={styles.oneGuestContainer}>
-  //     <FontAwesome
-  //       name="user-circle"
-  //       size={50}
-  //       color="#6B21A8"
-  //       style={{ marginRight: 10 }}
-  //     />
-  //     <Text>{participant.userId.firstname}</Text>
-  //   </View>
+   const guestList = participants.map((participant, i) => {
+     return(
+       <View style={styles.oneGuestContainer}>
+       <FontAwesome
+         name="user-circle"
+         size={50}
+         color="#6B21A8"
+         style={{ marginRight: 10 }}
+       />
+       <Text>{participant.userId.firstname}</Text>
+     </View>
 
-  //   )
-  // })
+     )
+   })
 
   return (
     <View style={styles.container}>
@@ -407,7 +407,7 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-            {/* {guestList} */}
+             {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
