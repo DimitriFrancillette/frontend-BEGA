@@ -9,15 +9,14 @@ import {
   Text,
   KeyboardAvoidingView,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import AskFriendMessage from "../components/askFriendMessage";
 import { useSelector } from "react-redux";
 import { BACKEND_URL } from "../constants";
-import { useNavigation } from "@react-navigation/native";
 import ToastManager, { Toast } from "toastify-react-native";
 
 const MessageScreen = () => {
-  const navigation = useNavigation();
   const user = useSelector((state) => state.user.value);
   const [messagesList, setMessagesList] = useState();
   const [reload, setReload] = useState(false);
@@ -55,12 +54,12 @@ const MessageScreen = () => {
         "Content-Type": "application/json",
       },
       method: "Post",
-      body: JSON.stringify({ email: search }),
+      body: JSON.stringify({ email: value }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setListfriend(data.user);
+        setListfriend(value ? data.user : []);
       });
   };
 
@@ -126,131 +125,115 @@ const MessageScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ToastManager />
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.arrowContainer}>
-          <FontAwesome
-            name="arrow-left"
-            size={30}
-            color="#d48221"
-            onPress={() => navigation.navigate("Home")}
-          />
-        </View>
-        <Image
-          style={styles.logo}
-          source={require("../assets/logo-bega.png")}
-        />
-        <View style={{ backgroundColor: "#7935b0" }}>
-          <Text style={styles.title}>Ajouter vos ami(e)s</Text>
-          <KeyboardAvoidingView style={{ width: "100%" }}>
-            <TextInput
-              onChangeText={(value) => searchFriend(value)}
-              value={search}
-              style={styles.input}
-              placeholder="Chercher des ami(e)s"
-            />
-          </KeyboardAvoidingView>
-          <View style={styles.container}>
-            {listfriend?.map((data, i) => {
-              return (
-                <View key={i} >
-                  <Text style={styles.title}>{data.email} </Text>
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => askFriend(data._id)}>
-                      <Text style={styles.textButton}>ENVOYER UNE INVITATION</Text>
+      <SafeAreaView>
+        <ToastManager />
+        <Text style={styles.title}>Invites tes ami(e)s</Text>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.friendsContainer}>
+            <View style={styles.inviteContainer}>
+              <KeyboardAvoidingView
+                behavior="padding"
+                keyboardVerticalOffset={60}
+              >
+                <TextInput
+                  onChangeText={(value) => searchFriend(value)}
+                  value={search}
+                  style={styles.input}
+                  placeholder="Chercher des ami(e)s"
+                />
+              </KeyboardAvoidingView>
+              {listfriend?.map((data, i) => {
+                return (
+                  <View key={i} style={styles.invitation}>
+                    <Text style={styles.email}>{data.email} </Text>
+                    <TouchableOpacity
+                      onPress={() => askFriend(data._id)}
+                      style={styles.buttonContainer}
+                    >
+                      <Text style={styles.textButton}>Inviter</Text>
                     </TouchableOpacity>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
+            <View style={styles.messagesContainer}>
+              {messagesList?.map((data, i) => {
+                return (
+                  <AskFriendMessage
+                    key={i}
+                    message={data.message}
+                    userId={data.userId}
+                    acceptFriend={acceptFriend}
+                    refuseFriend={refuseFriend}
+                  />
+                );
+              })}
+            </View>
           </View>
-        </View>
-        <View>
-          {messagesList?.map((data, i) => {
-            return (
-              <AskFriendMessage
-                key={i}
-                message={data.message}
-                userId={data.userId}
-                acceptFriend={acceptFriend}
-                refuseFriend={refuseFriend}
-              />
-            );
-          })}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#7935b0",
-    color: '#FDBA74',
-    alignItems: "center",
-    justifyContent: "flex-start",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#FAF5FF",
   },
   scrollView: {
     width: "100%",
   },
-  arrowContainer: {
-    position: "absolute",
-    zIndex: 1,
-    marginTop: 70,
-    marginLeft: 20,
-    alignSelf: "flex-start",
-    color: '#FDBA74',
+  friendsContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
   },
-  logo: {
-    width: 400,
-    height: 200,
+  inviteContainer: {
+    width: "80%",
+  },
+  invitation: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+    padding: 4,
   },
   buttonContainer: {
     backgroundColor: "#6B21A8",
     color: '#FDBA74',
     borderRadius: 10,
-    padding: 5,
+    padding: 8,
     alignSelf: "center",
   },
   textButton: {
-    color: "#FDBA74",
-    backgroundColor:'#6B21A8',
-    fontFamily: "Inter",
+    color: "white",
     fontSize: 12,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    height: 25,
-  },
-  forgotText: {
-    marginTop: 20,
-    color: "#DDA304",
-    height: 30,
-    fontWeight: "600",
-    fontSize: 16,
-    textDecorationLine: "underline",
-    alignSelf: "center",
+    fontWeight: "bold",
   },
   title: {
-    fontSize: 25,
+    fontSize: 38,
     fontWeight: 700,
     fontFamily: "Inter",
     textAlign: "center",
-    color: '#d48221',
+    marginBottom: 30,
+  },
+  email: {
+    color: "#d48221",
   },
   input: {
-    width: "80%",
-    fontFamily: "Inter",
-    alignSelf: "center",
-    color:"#6B21A8",
-    marginHorizontal: "5%",
-    borderRadius: 10,
+    width: "100%",
+    borderColor: "#6B21A8",
+    borderWidth: 1,
+    borderRadius: 25,
     padding: 10,
-    marginBottom: 10,
-    height: 40,
-    marginTop: 25,
-    backgroundColor: "#e9d5ff",
-    fontSize: 18,
+    marginTop: 10,
+  },
+  messagesContainer: {
+    marginTop: 20,
   },
 });
 

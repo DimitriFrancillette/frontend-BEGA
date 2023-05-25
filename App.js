@@ -9,7 +9,7 @@ import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
-import MessageScreen from "./screens/MessageScreen";
+import FriendsScreen from "./screens/FriendsScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
@@ -88,7 +88,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Mes Events" component={MyEventsScreen} />
       <Tab.Screen name="Créer" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
-      <Tab.Screen name="Amis" component={MessageScreen} />
+      <Tab.Screen name="Amis" component={FriendsScreen} />
     </Tab.Navigator>
   );
 };
