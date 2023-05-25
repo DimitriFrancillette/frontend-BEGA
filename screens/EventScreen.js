@@ -7,13 +7,10 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  Button,
-  Switch,
-  Alert,
   Modal,
 } from "react-native";
-import { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useCallback } from "react";
+import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { BACKEND_URL } from "../constants";
 import Todo from "../components/TodoComponent";
@@ -46,14 +43,13 @@ export default function EventScreen({ navigation, route }) {
       body: JSON.stringify({ todoId, userId: user.userId }),
     });
     setReloadTodo(!reloadTodo);
-    console.log("TODO", isDone, todoId);
   };
+
   useFocusEffect(
     useCallback(() => {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           const newDate = new Date(data.event.date).toLocaleString("fr-FR", {
             timeZone: "Europe/Paris",
           });
@@ -108,7 +104,6 @@ export default function EventScreen({ navigation, route }) {
     })
       .then((response) => response.json())
       .then((createdTransactionData) => {
-        console.log("ici", createdTransactionData.saveTransaction.userId);
         if (createdTransactionData.result === false) {
           return;
         }
@@ -125,7 +120,6 @@ export default function EventScreen({ navigation, route }) {
       const fetchEvent = fetch(`${BACKEND_URL}/events/findevent/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.event.participants)
           setEventTitle(data.event.title);
           setAddress(data.event.location);
           setDescription(data.event.description);
@@ -148,9 +142,10 @@ export default function EventScreen({ navigation, route }) {
     }, [reloadTodo])
   );
   ///////////////////////todo//////////////////////////////////////
-  const todo = todoList?.map((data) => {
+  const todo = todoList?.map((data, i) => {
     return (
       <Todo
+        key={i}
         navigation={navigation}
         closeModal={() => setShowTodo(!showTodo)}
         handleCheckbox={handleCheckbox}
@@ -170,7 +165,6 @@ export default function EventScreen({ navigation, route }) {
   );
 
   const uniqueUserList = [...new Set(userList)];
-  console.log(uniqueUserList);
   const people = uniqueUserList?.map((user, i) => {
     return (
       <Text key={i} style={styles.people}>
@@ -201,6 +195,14 @@ export default function EventScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      {showCreateTodo && (
+        <Modal transparent={true} visible={showCreateTodo}>
+          <CreateTodoModal
+            closeModal={() => setShowCreateTodo(false)}
+            handleTodo={handleTodo}
+          />
+        </Modal>
+      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -306,7 +308,15 @@ export default function EventScreen({ navigation, route }) {
               <Text style={styles.total}> Total : {totalStrongBox} €</Text>
               <View style={styles.showParticipants}>
                 <Text style={styles.participe}>Participants :</Text>
-                {people}
+                {uniqueUserList?.map((user, i) => {
+                  return (
+                    <>
+                      <Text key={i} style={styles.people}>
+                        {user}
+                      </Text>
+                    </>
+                  );
+                })}
               </View>
               <View style={styles.arrowContainerCagnotte}>
                 <FontAwesome
@@ -328,7 +338,7 @@ export default function EventScreen({ navigation, route }) {
         </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <View style={styles.arrowContainerTodo}>
+          <View style={styles.arrowContainer}>
             <FontAwesome
               name="arrow-left"
               size={25}
@@ -354,14 +364,6 @@ export default function EventScreen({ navigation, route }) {
                 <Text>Valider</Text>
               </TouchableOpacity>
             </View>
-          )}
-          {showCreateTodo && (
-            <Modal transparent={false} visible={showCreateTodo}>
-              <CreateTodoModal
-                closeModal={() => setShowCreateTodo(false)}
-                handleTodo={handleTodo}
-              />
-            </Modal>
           )}
         </Modal>
         {/*Modal TODO */}
@@ -399,15 +401,12 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-             
-
-            
             {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                // onPress={() => handleRemove()}
+                // onPress={() => }
                 activeOpacity={0.8}
               >
                 <Text style={styles.buttonText}>Ajouter</Text>
@@ -458,13 +457,12 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   inputDateContainer: {
-    width: "55%",
+    width: "50%",
     borderColor: "#6B21A8",
     borderWidth: 1,
     borderRadius: 25,
     padding: 10,
     marginTop: 10,
-    alignItems: "center",
   },
   inputContainer: {
     width: "100%",
@@ -644,12 +642,5 @@ const styles = StyleSheet.create({
   participe: {
     color: "#6B21A8",
     fontWeight: 700,
-  },
-  arrowContainerTodo: {
-    position: "absolute",
-    zIndex: 1,
-    marginTop: 100,
-    marginLeft: 20,
-    alignSelf: "flex-start",
   },
 });

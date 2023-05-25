@@ -79,10 +79,12 @@ export default function ProfilScreen({ navigation }) {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data.result) {
           setEmail(data.user.email);
           setFirstname(data.user.firstname);
           setLastname(data.user.lastname);
+          setPassword(data.user.password);
         }
       });
     return () => fetchDataUser;
