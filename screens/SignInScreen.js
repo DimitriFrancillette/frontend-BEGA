@@ -63,7 +63,7 @@ export default function SignInScreen({ navigation }) {
           };
 
           dispatch(addUser(newUser));
-          navigation.navigate("TabNavigator", { screen: "MyEvents" });
+          navigation.navigate("TabNavigator", { screen: "Mes Events" });
 
           setEmail("");
           setPassword("");
@@ -82,10 +82,10 @@ export default function SignInScreen({ navigation }) {
             onPress={() => navigation.navigate("Home")}
           />
         </View>
-        <Image
-          style={styles.logo}
-          source={require("../assets/logo-bega.png")}
-        />
+          <Image
+            style={styles.logo}
+            source={require("../assets/logo-bega.png")}
+          />
         <View>
             <View style={styles.inputContainer}>
               <TextInput
@@ -118,7 +118,7 @@ export default function SignInScreen({ navigation }) {
             )}
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={() => handleSubmit()}>
-                <Text style={styles.textButton}>se connecter</Text>
+                <Text style={styles.textButton}>Se connecter</Text>
               </TouchableOpacity>
             </View>
 
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: "100%",
+    resizeMode: 'contain'
   },
 
   inputContainer: {

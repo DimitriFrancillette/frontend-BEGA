@@ -5,18 +5,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 
 const CreateTodoComponent = ({ closeModal, handleTodo }) => {
-  const [taskName, setTaskName] = useState("");
+  // const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
 
   const handleCreateTodo = () => {
-    if (taskName === "" || description === "") {
+    if (description === "") {
       closeModal();
       return;
     } else {
-      handleTodo(description, taskName);
+      handleTodo(description, "");
       closeModal();
     }
   };
@@ -25,22 +26,15 @@ const CreateTodoComponent = ({ closeModal, handleTodo }) => {
     <View style={styles.container}>
       <View style={styles.contents}>
         <TextInput
-          onChangeText={(value) => setTaskName(value)}
-          value={taskName}
-          style={styles.input}
-          placeholder="title"
-        />
-
-        <TextInput
           multiline={true}
           numberOfLines={4}
           onChangeText={(text) => setDescription(text)}
           value={description}
           style={styles.input}
-          placeholder="description"
+          placeholder="Description"
         />
         <TouchableOpacity onPress={handleCreateTodo} style={styles.button}>
-          <Text style={styles.textButton}>Valider</Text>
+          <Text style={styles.textButton}>OK</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -53,34 +47,39 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: "pink",
+    backgroundColor: "#55555580",
     flex: 1,
   },
   contents: {
-    backgroundColor: "yellow",
-    margin: 50,
-    padding: 40,
+    width: "90%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#FAF5FF",
     borderRadius: 10,
-    height: "70%",
+    padding: 30,
+    position: "absolute",
+    top: "40%",
+    left: "5%",
   },
   input: {
-    width: "90%",
-    marginHorizontal: "5%",
+    width: "80%",
+    borderColor: "#6B21A8",
+    borderWidth: 1,
+    borderRadius: 25,
     padding: 10,
-    marginBottom: 10,
-    height: 40,
-    marginTop: 25,
-    backgroundColor: "#ffff",
-    fontSize: 18,
   },
   button: {
+    width: 42,
+    height: 42,
     backgroundColor: "#6B21A8",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 50,
-    width: 110,
+    paddingTop: 12,
+    borderRadius: 100,
   },
   textButton: {
-    alignItems: "center",
+    textAlign: "center",
+    color: "white",
+    fontWeight: 700,
   },
 });

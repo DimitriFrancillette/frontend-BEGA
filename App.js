@@ -61,10 +61,10 @@ const TabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName = "";
-          if (route.name === "MyEvents") {
+          if (route.name === "Mes Events") {
             iconName = "calendar";
           }
-          if (route.name === "Create") {
+          if (route.name === "Créer") {
             iconName = "plus";
           } else if (route.name === "Profil") {
             iconName = "user-circle";
@@ -85,8 +85,8 @@ const TabNavigator = () => {
         component={EventStackNavigator}
         options={{ tabBarButton: () => null }}
       /> */}
-      <Tab.Screen name="MyEvents" component={MyEventsScreen} />
-      <Tab.Screen name="Create" component={CreateScreen} />
+      <Tab.Screen name="Mes Events" component={MyEventsScreen} />
+      <Tab.Screen name="Créer" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
       <Tab.Screen name="Amis" component={MessageScreen} />
     </Tab.Navigator>

@@ -178,16 +178,23 @@ export default function EventScreen({ navigation, route }) {
     totalStrongBox += transaction.amount;
   }
 
+  // const guestList = participants.map((participant, i) => {
+  //   return(
+  //     <View style={styles.oneGuestContainer}>
+  //     <FontAwesome
+  //       name="user-circle"
+  //       size={50}
+  //       color="#6B21A8"
+  //       style={{ marginRight: 10 }}
+  //     />
+  //     <Text>{participant.userId.firstname}</Text>
+  //   </View>
+
+  //   )
+  // })
+
   return (
     <View style={styles.container}>
-      {showCreateTodo && (
-        <Modal transparent={true} visible={showCreateTodo}>
-          <CreateTodoModal
-            closeModal={() => setShowCreateTodo(false)}
-            handleTodo={handleTodo}
-          />
-        </Modal>
-      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -197,7 +204,7 @@ export default function EventScreen({ navigation, route }) {
             name="arrow-left"
             size={25}
             color="#000000"
-            onPress={() => navigation.navigate("MyEvents")}
+            onPress={() => navigation.navigate("Mes Events")}
           />
         </View> */}
         <View style={styles.titleContainer}>
@@ -206,7 +213,7 @@ export default function EventScreen({ navigation, route }) {
             size={25}
             color="#000000"
             style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("MyEvents")}
+            onPress={() => navigation.navigate("Mes Events")}
           />
           <TextInput
             placeholder="Nom"
@@ -223,7 +230,7 @@ export default function EventScreen({ navigation, route }) {
           behavior="padding"
           keyboardVerticalOffset={60}
         >
-          <View style={styles.inputDateContainer}>
+          <View style={styles.inputContainer}>
             <TextInput
               placeholder="Date"
               onChangeText={(value) => {
@@ -314,7 +321,7 @@ export default function EventScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
-                //onPress={}
+                onPress={() => setShowCagnotte(false)}
               >
                 <Text style={styles.textButtonValid}> Valider </Text>
               </TouchableOpacity>
@@ -323,33 +330,47 @@ export default function EventScreen({ navigation, route }) {
         </SafeAreaView>
         {/*Modal TODO */}
         <Modal animationType={"slide"} transparent={false} visible={showTodo}>
-          <View style={styles.arrowContainer}>
-            <FontAwesome
-              name="arrow-left"
-              size={25}
-              color="#000000"
-              onPress={() => setShowTodo(!showTodo)}
-            />
-          </View>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>To Do List</Text>
-          </View>
-          {todo}
-          {!showCreateTodo && (
-            <View style={{ display: "flex" }}>
-              <TouchableOpacity
-                style={styles.plusButton}
-                onPress={() => setShowCreateTodo(true)}
-              >
-                <Text>
-                  <FontAwesome name="plus" size={50} color="#6B21A8" />
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowTodo(false)}>
-                <Text>Valider</Text>
-              </TouchableOpacity>
+          <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.modalTodo}>
+              <View style={styles.arrowContainerTodo}>
+                <FontAwesome
+                  name="arrow-left"
+                  size={25}
+                  color="#000000"
+                  onPress={() => setShowTodo(!showTodo)}
+                />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>Liste des To Do</Text>
+              </View>
+              {todo}
+              {!showCreateTodo && (
+                <>
+                  <TouchableOpacity
+                    style={styles.plusButton}
+                    onPress={() => setShowCreateTodo(true)}
+                  >
+                    <Text style={styles.plusButtonText}>Nouvelle tâche</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.todoValidButton}
+                    activeOpacity={0.8}
+                    onPress={() => setShowTodo(false)}
+                  >
+                    <Text style={styles.textButtonValid}> Valider </Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
-          )}
+            {showCreateTodo && (
+              <Modal animationType={"fade"} transparent={true} visible={showCreateTodo}>
+                <CreateTodoModal
+                  closeModal={() => setShowCreateTodo(false)}
+                  handleTodo={handleTodo}
+                />
+              </Modal>
+            )}
+          </SafeAreaView>
         </Modal>
         {/*Modal TODO */}
         <View style={styles.buttonsContainer}>
@@ -386,51 +407,12 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Latifa</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Oksana</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Vincent</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Dimitri</Text>
-            </View>
+            {/* {guestList} */}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                // onPress={() => handleRemove()}
+                // onPress={() => }
                 activeOpacity={0.8}
               >
                 <Text style={styles.buttonText}>Ajouter</Text>
@@ -458,8 +440,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   arrowContainer: {
-    position: "absolute",
     zIndex: 1,
+    marginTop: 20,
     marginLeft: 20,
     alignSelf: "flex-start",
   },
@@ -467,10 +449,11 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    marginBottom: 30,
   },
   title: {
     width: "100%",
-    fontSize: 28,
+    fontSize: 36,
     fontWeight: "600",
     fontFamily: "Roboto",
     textAlign: "center",
@@ -479,14 +462,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     width: "90%",
-  },
-  inputDateContainer: {
-    width: "50%",
-    borderColor: "#6B21A8",
-    borderWidth: 1,
-    borderRadius: 25,
-    padding: 10,
-    marginTop: 10,
   },
   inputContainer: {
     width: "100%",
@@ -564,9 +539,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  plusButton: {
-    alignItems: "center",
-  },
   text: {
     color: "#3f2949",
     marginTop: 10,
@@ -575,6 +547,41 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 50,
     right: 30,
+  },
+  modalTodo: {
+    height: "100%",
+    display: "flex",
+    paddingTop: 20,
+    alignItems: "center",
+  },
+  arrowContainerTodo: {
+    position: "absolute",
+    zIndex: 1,
+    marginTop: 30,
+    marginLeft: 20,
+    alignSelf: "flex-start",
+  },
+  plusButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    padding: 14,
+    alignItems: "center",
+    marginTop: 50,
+  },
+  plusButtonText: {
+    color: "white",
+  },
+  todoValidButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    paddingTop: 8,
+    alignItems: "center",
+    display: "flex",
+    position: "absolute",
+    bottom: 70,
+    paddingHorizontal: 40,
   },
   modalCagnotte: {
     height: "100%",

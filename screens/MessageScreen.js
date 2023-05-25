@@ -153,7 +153,7 @@ const MessageScreen = () => {
           <View style={styles.container}>
             {listfriend?.map((data, i) => {
               return (
-                <View>
+                <View key={i} >
                   <Text style={styles.title}>{data.email} </Text>
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => askFriend(data._id)}>

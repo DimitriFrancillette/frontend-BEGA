@@ -18,6 +18,7 @@ import { addEvent } from "../reducers/event";
 import { BACKEND_URL } from "../constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ToastManager, { Toast } from "toastify-react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -157,7 +158,7 @@ export default function CreateScreen({ navigation }) {
   };
 
   //FRIENDS
-  //todo modifier le fetch pour qu'il soit dynamique
+
   const showGuests = () => {
     setShowModal(!showModal);
     fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
@@ -168,14 +169,17 @@ export default function CreateScreen({ navigation }) {
   };
 
   let friendsList = friends.map((data, i) => {
-    // const invited = participants.some( e => e.userId = data._id);
-    // let color;
-    // invited? color="red": color="blue";
+    let inviteIcon = "user-plus";
+
+    const invited = participants.includes(data._id);
+
+    !invited ? inviteIcon = "user-plus" : inviteIcon = "minus";
     return (
       <View style={styles.friendContainer} key={i}>
         <Text onPress={() => handleGuest(data._id)} style={styles.participant}>
           {data.firstname}
         </Text>
+        <FontAwesome onPress={() => handleGuest(data._id)} name={inviteIcon} size={30} color="#6B21A8" />
       </View>
     );
   });
@@ -210,7 +214,7 @@ export default function CreateScreen({ navigation }) {
               onChangeText={(value) => setNameEvent(value)}
               value={nameEvent}
               style={styles.inputNameEvent}
-              placeholder="nom de l'évènement"
+              placeholder="Nom de l'évènement"
             />
             <View style={styles.dateEvent}>
               <Text
@@ -258,7 +262,7 @@ export default function CreateScreen({ navigation }) {
               onChangeText={(value) => setAdressEvent(value)}
               value={adressEvent}
               style={styles.inputAdressEvent}
-              placeholder="lieu de l'évènement"
+              placeholder="Lieu de l'évènement"
             />
             <TextInput
               onChangeText={(value) => setDescriptionEvent(value)}
@@ -279,7 +283,8 @@ export default function CreateScreen({ navigation }) {
                   }}
                 >
                   <View style={styles.modal}>
-                    <TextInput
+                  <Text style={styles.title}> Liste d'amis</Text>
+                    {/* <TextInput
                       onChangeText={(value) => setEmailInvitation(value)}
                       value={emailInvitation}
                       style={styles.inputEmailInvitation}
@@ -294,14 +299,16 @@ export default function CreateScreen({ navigation }) {
                           setShowModal(!showModal);
                         }}
                       />
-                    </View>
+                    </View> */}
 
                     {friendsList}
 
                     <TouchableOpacity
                       style={styles.modalValidButton}
                       activeOpacity={0.8}
-                      //onPress={}
+                      onPress={() => {
+                        setShowModal(!showModal);
+                      }}
                     >
                       <Text style={styles.textButtonValid}> Valider </Text>
                     </TouchableOpacity>
@@ -505,7 +512,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingTop: 8,
     alignItems: "center",
-    display: "flex",
     position: "absolute",
     bottom: 70,
     paddingHorizontal: 40,
@@ -525,4 +531,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
     margin: 10,
   },
+  friendContainer: {
+    marginTop: 20,
+    width:'70%',
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    paddingLeft:10,
+    paddingRight:10,
+    justifyContent: 'space-between',
+    alignItems: "center",
+  }
 });

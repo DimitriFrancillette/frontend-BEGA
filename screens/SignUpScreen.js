@@ -72,7 +72,7 @@ export default function SignUpScreen({ navigation }) {
             token: data.user.authTokens[0].authToken,
           };
           dispatch(addUser(newUser));
-          navigation.navigate("TabNavigator", { screen: "MyEvents" });
+          navigation.navigate("TabNavigator", { screen: "Mes Events" });
 
           setFirstname("");
           setLastname("");
@@ -100,7 +100,7 @@ export default function SignUpScreen({ navigation }) {
           style={styles.logo}
           source={require("../assets/logo-bega.png")}
         />
-        <View>
+        <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Prénom"
@@ -167,7 +167,7 @@ export default function SignUpScreen({ navigation }) {
                 style={styles.buttonSignUp}
                 activeOpacity={0.8}
               >
-                <Text style={styles.textButton}>s'enregistrer</Text>
+                <Text style={styles.textButton}>S'enregistrer</Text>
               </TouchableOpacity>
             </View>
          </View>
@@ -198,6 +198,13 @@ const styles = StyleSheet.create({
 
   logo: {
     width: "100%",
+    height: 250,
+    marginTop: 80,
+    resizeMode: 'contain'
+  },
+
+  formContainer: {
+
   },
 
   inputContainer: {
@@ -222,6 +229,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "#6B21A8",
     borderRadius: 10,
+    marginTop: 30,
     paddingTop: 8,
     paddingLeft: 20,
     paddingRight: 20,

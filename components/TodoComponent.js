@@ -27,7 +27,6 @@ export default function TodoComponent({
     handleCheckbox(isChecked, id);
   };
   const handleDeleteTodo = () => {
-    console.log("delete");
     fetch(`${BACKEND_URL}/todo/deletetodo`, {
       headers: {
         "Content-Type": "application/json",
@@ -40,86 +39,59 @@ export default function TodoComponent({
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <KeyboardAvoidingView style={styles.eventInfosContainer}>
-          <Text style={styles.titleTodo}>
-            {title} {description}
-          </Text>
-          <View style={styles.tasksContainer}>
-            <Checkbox
-              style={styles.checkbox}
-              value={isChecked}
-              onValueChange={() => submitCheckbox()}
-              color={isChecked ? "#4630EB" : undefined}
-            />
-            <View style={styles.inputContainer}>
-              <View>
-                <Text>
-                  {participants.map((data, i) => (
-                    <Text key={i}> {data.email}</Text>
-                  ))}
-                </Text>
-              </View>
-            </View>
+      <Text style={styles.titleTodo}>
+        {title} {description}
+      </Text>
+      <View style={styles.tasksContainer}>
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={() => submitCheckbox()}
+          color={isChecked ? "green" : undefined}
+        />
+        <Text>
+          {participants.map((data, i) => (
+            <Text key={i}> {data.email}</Text>
+          ))}
+        </Text>
 
-            <FontAwesome
-              name="trash"
-              size={35}
-              onPress={() => handleDeleteTodo()}
-            />
+        <FontAwesome
+          name="trash"
+          size={25}
+          onPress={() => handleDeleteTodo()}
+          color="#6B21A8"
+        />
 
-            <FontAwesome name="user-circle" size={40} color="#6B21A8" />
-          </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        {/* <FontAwesome name="user-circle" size={40} color="#6B21A8" /> */}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "column",
-    backgroundColor: "#FAF5FF",
-    padding: 16,
-  },
-  scrollView: {
     width: "100%",
-  },
-  scrollViewContentContainer: {
-    // flex: 1,
-    alignItems: "center",
+    padding: 16,
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
   },
   checkbox: {
-    height: 40,
-    width: 40,
-  },
-  eventInfosContainer: {
-    width: "90%",
+    height: 32,
+    width: 32,
   },
   tasksContainer: {
     width: "100%",
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  inputContainer: {
-    width: "75%",
-    borderColor: "#6B21A8",
-    borderWidth: 1,
-    borderRadius: 25,
-    padding: 10,
-    marginTop: 10,
   },
 
   // -----------------------------------
 
   titleTodo: {
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 20,
     fontFamily: "Roboto",
     textAlign: "center",
-    color: "green",
   },
 });
