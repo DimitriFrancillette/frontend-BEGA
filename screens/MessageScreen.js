@@ -32,7 +32,7 @@ const MessageScreen = () => {
   };
 
   const askFriend = (userId) => {
-    console.log("iCCCCCIIIII", userId);
+    console.log("iCCCCCIIIII", user.userId);
     fetch(`${BACKEND_URL}/askfriend/`, {
       headers: {
         Accept: "application/json",
