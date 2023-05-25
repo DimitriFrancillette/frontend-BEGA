@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const EventComponent = ({ eventName, eventId, date, handleDelete }) => {
+const EventComponent = ({ eventName, date, eventId, handleDelete }) => {
   const navigation = useNavigation();
   const tuTrouvesUnMot = new Date(date);
   let dateString = "";

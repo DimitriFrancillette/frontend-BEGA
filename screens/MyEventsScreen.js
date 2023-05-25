@@ -30,24 +30,6 @@ export default function MyEventsScreen({}) {
     setEventsFiltered(filter);
   };
 
-  // const handleDelete = (eventId) => {
-  //   fetch(`http://192.168.1.77:3000/events/deleteevent`, {
-  //     methode: "DELETE",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ eventId }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //      if (data.result) {
-  //         fetch(`http://192.168.1.77:3000/events/findallevents/${user.userId}`)
-  //          .then((response) => response.json())
-  //          .then((data) => {
-  //             setEventsData(data.events);
-  //           });
-  //       }
-  //    });
-  // };
-
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
@@ -61,6 +43,18 @@ export default function MyEventsScreen({}) {
       return () => fetchEvents;
     }, [])
   );
+
+  const handleDelete = (eventId) => {
+    fetch(`${BACKEND_URL}/events/deleteevent`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setEventsData(eventsData.filter((e) => e._id !== eventId));
+      });
+  };
 
   let events = [];
   if (eventsFiltered.length > 0) {
@@ -115,9 +109,7 @@ export default function MyEventsScreen({}) {
 
         <View style={styles.container}>
           <View style={styles.eventsComponent}>
-            {eventsData.length === 0 ? (
-                <FirstMessage />
-            ): (events)}
+            {eventsData.length === 0 ? <FirstMessage /> : events}
           </View>
         </View>
       </ScrollView>
