@@ -268,7 +268,7 @@ export default function ProfilScreen({ navigation }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={handleDeleteProfil()}
+              onPress={() => handleDeleteProfil()}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>Supprimer mon compte</Text>
