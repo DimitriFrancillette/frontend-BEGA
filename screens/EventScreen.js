@@ -160,6 +160,7 @@ export default function EventScreen({ navigation, route }) {
   });
   ///////////////////////todo//////////////////////////////////////
 
+  // JE COMMENCE MAINTENANT POUR AJOUTER DES PARTICIPANTS CECI EST MARQUEUR CTRL+Z
   const userList = transactions?.map(
     (transaction) => transaction.userId.firstname
   );
@@ -178,23 +179,31 @@ export default function EventScreen({ navigation, route }) {
     totalStrongBox += transaction.amount;
   }
 
-   const guestList = participants.map((participant, i) => {
-     return(
-       <View style={styles.oneGuestContainer}>
-       <FontAwesome
-         name="user-circle"
-         size={50}
-         color="#6B21A8"
-         style={{ marginRight: 10 }}
-       />
-       <Text>{participant.userId.firstname}</Text>
-     </View>
+  const guestList = participants.map((participant, i) => {
+    return(
+      <View key={i} style={styles.oneGuestContainer}>
+      <FontAwesome
+        name="user-circle"
+        size={50}
+        color="#6B21A8"
+        style={{ marginRight: 10 }}
+      />
+      <Text>{participant.userId.firstname}</Text>
+    </View>
 
-     )
-   })
+    )
+  })
 
   return (
     <View style={styles.container}>
+      {showCreateTodo && (
+        <Modal transparent={true} visible={showCreateTodo}>
+          <CreateTodoModal
+            closeModal={() => setShowCreateTodo(false)}
+            handleTodo={handleTodo}
+          />
+        </Modal>
+      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -321,7 +330,7 @@ export default function EventScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
-                onPress={() => setShowCagnotte(false)}
+                //onPress={}
               >
                 <Text style={styles.textButtonValid}> Valider </Text>
               </TouchableOpacity>
@@ -350,7 +359,9 @@ export default function EventScreen({ navigation, route }) {
                     style={styles.plusButton}
                     onPress={() => setShowCreateTodo(true)}
                   >
-                    <Text style={styles.plusButtonText}>Nouvelle tâche</Text>
+                    <Text>
+                      Nouvelle tâche
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.todoValidButton}
@@ -362,14 +373,6 @@ export default function EventScreen({ navigation, route }) {
                 </>
               )}
             </View>
-            {showCreateTodo && (
-              <Modal animationType={"fade"} transparent={true} visible={showCreateTodo}>
-                <CreateTodoModal
-                  closeModal={() => setShowCreateTodo(false)}
-                  handleTodo={handleTodo}
-                />
-              </Modal>
-            )}
           </SafeAreaView>
         </Modal>
         {/*Modal TODO */}
@@ -407,7 +410,7 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-             {guestList}
+            {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
@@ -449,7 +452,6 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    marginBottom: 30,
   },
   title: {
     width: "100%",
@@ -459,6 +461,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   eventInfosContainer: {
+    marginTop: 40,
     justifyContent: "center",
     alignItems: "flex-start",
     width: "90%",
