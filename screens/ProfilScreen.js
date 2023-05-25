@@ -149,9 +149,8 @@ export default function ProfilScreen({ navigation }) {
       },
       method: "DELETE",
       body: JSON.stringify({ email })
-    }
-  )
-};
+  }
+  )};
 
   return (
     <View style={styles.container1}>
@@ -268,7 +267,7 @@ export default function ProfilScreen({ navigation }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={handleDeleteProfil()}
+              onPress={() => handleDeleteProfil()}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>Supprimer mon compte</Text>

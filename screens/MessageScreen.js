@@ -25,10 +25,10 @@ const MessageScreen = () => {
   const [listfriend, setListfriend] = useState();
 
   const showToasts = () => {
-    Toast.success("Un nouvel ami youpi");
+    Toast.success("Vous venez d'ajouter un(e) ami(e) !");
   };
   const badToast = () => {
-    Toast.error("Aurevoir !");
+    Toast.error("Au revoir !");
   };
 
   const askFriend = (userId) => {
@@ -132,7 +132,7 @@ const MessageScreen = () => {
           <FontAwesome
             name="arrow-left"
             size={30}
-            color="#DDA304"
+            color="#d48221"
             onPress={() => navigation.navigate("Home")}
           />
         </View>
@@ -140,14 +140,14 @@ const MessageScreen = () => {
           style={styles.logo}
           source={require("../assets/logo-bega.png")}
         />
-        <View style={{ backgroundColor: "#C7ABDE" }}>
-          <Text style={styles.title}>Search a friend</Text>
+        <View style={{ backgroundColor: "#7935b0" }}>
+          <Text style={styles.title}>Ajouter vos ami(e)s</Text>
           <KeyboardAvoidingView style={{ width: "100%" }}>
             <TextInput
               onChangeText={(value) => searchFriend(value)}
               value={search}
               style={styles.input}
-              placeholder="search friends"
+              placeholder="Chercher des ami(e)s"
             />
           </KeyboardAvoidingView>
           <View style={styles.container}>
@@ -157,7 +157,7 @@ const MessageScreen = () => {
                   <Text style={styles.title}>{data.email} </Text>
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => askFriend(data._id)}>
-                      <Text style={styles.textButton}>demander en ami</Text>
+                      <Text style={styles.textButton}>ENVOYER UNE INVITATION</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#7935b0",
+    color: '#FDBA74',
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -199,29 +200,28 @@ const styles = StyleSheet.create({
     marginTop: 70,
     marginLeft: 20,
     alignSelf: "flex-start",
+    color: '#FDBA74',
   },
   logo: {
     width: 400,
     height: 200,
   },
-
   buttonContainer: {
     backgroundColor: "#6B21A8",
+    color: '#FDBA74',
     borderRadius: 10,
-    marginTop: 20,
-    paddingTop: 8,
-    paddingLeft: 20,
-    paddingRight: 20,
+    padding: 5,
     alignSelf: "center",
   },
-
   textButton: {
-    color: "#DDA304",
-    height: 30,
-    fontWeight: "600",
-    fontSize: 16,
+    color: "#FDBA74",
+    backgroundColor:'#6B21A8',
+    fontFamily: "Inter",
+    fontSize: 12,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    height: 25,
   },
-
   forgotText: {
     marginTop: 20,
     color: "#DDA304",
@@ -233,18 +233,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    fontWeight: 600,
-    fontFamily: "Roboto",
+    fontWeight: 700,
+    fontFamily: "Inter",
     textAlign: "center",
+    color: '#d48221',
   },
   input: {
-    width: "90%",
+    width: "80%",
+    fontFamily: "Inter",
+    alignSelf: "center",
+    color:"#6B21A8",
     marginHorizontal: "5%",
+    borderRadius: 10,
     padding: 10,
     marginBottom: 10,
     height: 40,
     marginTop: 25,
-    backgroundColor: "#ffff",
+    backgroundColor: "#e9d5ff",
     fontSize: 18,
   },
 });
