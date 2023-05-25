@@ -56,7 +56,7 @@ const ResetPassword = ({ navigation }) => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Enter your email"
+            placeholder="Adresse email"
             onChangeText={(value) => setEmail(value)}
             value={email}
             style={styles.input}
@@ -67,7 +67,7 @@ const ResetPassword = ({ navigation }) => {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleSubmitPassword}>
-            <Text style={styles.textButton}>Reset your password</Text>
+            <Text style={styles.textButton}>Réinitialiser mon mot de passe</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: "100%",
+    resizeMode: 'contain',
   },
 
   inputContainer: {

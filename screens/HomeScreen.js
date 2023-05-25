@@ -21,7 +21,7 @@ export default function HomeScreen({ navigation }) {
         activeOpacity={0.8}
         onPress={() => navigation.navigate("SignIn")}
       >
-        <Text style={styles.textButton}>Connection</Text>
+        <Text style={styles.textButton}>Connexion</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonSignUp}
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 
   logo: {
     width: "100%",
-    height: "40%",
+    resizeMode: 'contain'
   },
   buttonSignIn: {
     backgroundColor: "#6B21A8",
