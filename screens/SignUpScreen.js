@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Platform,
 } from "react-native";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -83,7 +84,9 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.arrowContainer}>
           <FontAwesome
@@ -98,9 +101,6 @@ export default function SignUpScreen({ navigation }) {
           source={require("../assets/logo-bega.png")}
         />
         <View>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
             <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Prénom"
@@ -170,10 +170,9 @@ export default function SignUpScreen({ navigation }) {
                 <Text style={styles.textButton}>s'enregistrer</Text>
               </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
-        </View>
+         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -9,6 +9,7 @@ import ProfilScreen from "./screens/ProfilScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import MessageScreen from "./screens/MessageScreen";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
@@ -68,7 +69,9 @@ const TabNavigator = () => {
           } else if (route.name === "Profil") {
             iconName = "user-circle";
           }
-
+          if (route.name === "Messages") {
+            iconName = "comment";
+          }
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#6B21A8",
@@ -85,6 +88,7 @@ const TabNavigator = () => {
       <Tab.Screen name="MyEvents" component={MyEventsScreen} />
       <Tab.Screen name="Create" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
+      <Tab.Screen name="Messages" component={MessageScreen} />
     </Tab.Navigator>
   );
 };
@@ -113,6 +117,7 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/* remettre tabnavigator en dernier, juste pour les tests c'est pratique */}
+
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />

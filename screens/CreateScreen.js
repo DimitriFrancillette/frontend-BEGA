@@ -87,13 +87,7 @@ export default function CreateScreen({ navigation }) {
   // };
 
   const handleSubmit = () => {
-    if (
-      nameEvent === "" ||
-      selectedDate === "" ||
-      selectedTime === "" ||
-      adressEvent === "" ||
-      descriptionEvent === ""
-    ) {
+    if (nameEvent === "" || adressEvent === "" || descriptionEvent === "") {
       setError("merci de compléter tous les champs ");
       setSubmitted(true);
       return;
@@ -163,7 +157,7 @@ export default function CreateScreen({ navigation }) {
   };
 
   //FRIENDS
-  //todo modifier le fetch pour qu'il soit dynamique
+
   const showGuests = () => {
     setShowModal(!showModal);
     fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
@@ -174,6 +168,7 @@ export default function CreateScreen({ navigation }) {
   };
 
   let friendsList = friends.map((data, i) => {
+    console.log("create", data.firstname);
     // const invited = participants.some( e => e.userId = data._id);
     // let color;
     // invited? color="red": color="blue";

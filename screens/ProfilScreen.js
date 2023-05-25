@@ -79,10 +79,12 @@ export default function ProfilScreen({ navigation }) {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data.result) {
           setEmail(data.user.email);
           setFirstname(data.user.firstname);
           setLastname(data.user.lastname);
+          setPassword(data.user.password);
         }
       });
     return () => fetchDataUser;
@@ -123,12 +125,6 @@ export default function ProfilScreen({ navigation }) {
     createAlert(updateUser);
   };
 
-  const handleRemove = () => {
-    //todo fetch vers le back à faire pour changer les infos dans la DB
-    console.log("REMOVED!");
-    navigation.navigate("Home");
-  };
-
   const handleDisconnect = () => {
     fetch(`${BACKEND_URL}/users/logout`, {
       headers: {
@@ -144,6 +140,18 @@ export default function ProfilScreen({ navigation }) {
   };
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const handleDeleteProfil = () => {
+    fetch(`${BACKEND_URL}/users/deleteprofil`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+      body: JSON.stringify({ email })
+    }
+  )
+};
 
   return (
     <View style={styles.container1}>
@@ -260,7 +268,7 @@ export default function ProfilScreen({ navigation }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => handleRemove()}
+              onPress={handleDeleteProfil()}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>Supprimer mon compte</Text>

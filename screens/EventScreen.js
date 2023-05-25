@@ -386,51 +386,12 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Latifa</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Oksana</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Vincent</Text>
-            </View>
-
-            <View style={styles.oneGuestContainer}>
-              <FontAwesome
-                name="user-circle"
-                size={50}
-                color="#6B21A8"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Dimitri</Text>
-            </View>
+            {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                // onPress={() => handleRemove()}
+                // onPress={() => }
                 activeOpacity={0.8}
               >
                 <Text style={styles.buttonText}>Ajouter</Text>
