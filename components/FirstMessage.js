@@ -4,8 +4,8 @@ import { View, Text, StyleSheet } from "react-native";
 const FirstMessage = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text1}>Tu n'as pas encore d'évènements prévus ?</Text>
-      <Text style={styles.text1}>Créé un event et invite tes copains !</Text>
+      <Text style={styles.text1}>Tu n'as pas encore d'évènements ici.</Text>
+      <Text style={styles.text1}>Invites tes amis puis créer un évènement !</Text>
     </View>
   );
 };

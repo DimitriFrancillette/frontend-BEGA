@@ -112,7 +112,7 @@ export default function MyEventsScreen({}) {
             activeOpacity={0.8}
             onPress={handleOrdersDateByNew}
           >
-            <FontAwesome name="clock-o" size={28} color="#6B21A8" />
+            <FontAwesome name="arrow-down" size={28} color="#6B21A8" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -120,18 +120,18 @@ export default function MyEventsScreen({}) {
             activeOpacity={0.8}
             onPress={handleOrdersDateByOld}
           >
-            <FontAwesome name="clock-o" size={28} color="green" />
+            <FontAwesome name="arrow-up" size={28} color="#6B21A8" />
           </TouchableOpacity>
         )}
 
         <View style={{ backgroundColor: "#FAF5FF" }}>
-          <Text style={styles.title}>My Events</Text>
+          <Text style={styles.title}>Mes Events</Text>
           <KeyboardAvoidingView style={{ width: "100%" }}>
             <TextInput
               onChangeText={(value) => filterEvents(value)}
               value={search}
               style={styles.input}
-              placeholder="search events"
+              placeholder="Chercher un évènement"
             />
           </KeyboardAvoidingView>
         </View>
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 600,
     fontFamily: "Roboto",
+    marginTop: 40,
     textAlign: "center",
   },
   input: {
@@ -220,9 +221,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonPastEvents: {
-    top: 60,
-    left: 20,
+    top: 50,
+    left: 10,
     width: 42,
+    height: 42,
     backgroundColor: "#DDA304",
     borderRadius: 100,
     paddingVertical: 8,
