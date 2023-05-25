@@ -55,8 +55,8 @@ export default function TodoComponent({
             <View style={styles.inputContainer}>
               <View>
                 <Text>
-                  {participants.map((data) => (
-                    <Text> {data.email}</Text>
+                  {participants.map((data, i) => (
+                    <Text key={i}> {data.email}</Text>
                   ))}
                 </Text>
               </View>
@@ -79,8 +79,8 @@ export default function TodoComponent({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
+    alignItems: "center",
+    flexDirection: "column",
     backgroundColor: "#FAF5FF",
     padding: 16,
   },

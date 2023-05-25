@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser } from "../reducers/user";
 import { BACKEND_URL } from "../constants";
 import FontAwesome from "react-native-vector-icons/FontAwesome";

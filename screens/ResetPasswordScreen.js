@@ -32,7 +32,6 @@ const ResetPassword = ({ navigation }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         showToasts();
       })
       .catch((e) => showFailedToasts());
