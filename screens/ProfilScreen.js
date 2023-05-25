@@ -149,9 +149,8 @@ export default function ProfilScreen({ navigation }) {
       },
       method: "DELETE",
       body: JSON.stringify({ email })
-    }
-  )
-};
+  }
+  )};
 
   return (
     <View style={styles.container1}>

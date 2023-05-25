@@ -69,8 +69,8 @@ const TabNavigator = () => {
           } else if (route.name === "Profil") {
             iconName = "user-circle";
           }
-          if (route.name === "Messages") {
-            iconName = "comment";
+          if (route.name === "Amis") {
+            iconName = "users";
           }
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
@@ -88,7 +88,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Mes Events" component={MyEventsScreen} />
       <Tab.Screen name="Créer" component={CreateScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
-      <Tab.Screen name="Messages" component={MessageScreen} />
+      <Tab.Screen name="Amis" component={MessageScreen} />
     </Tab.Navigator>
   );
 };

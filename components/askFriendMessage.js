@@ -2,14 +2,15 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const askFriendMessage = ({ message, acceptFriend, refuseFriend, userId }) => {
+
   const friendAccepted = () => {
     acceptFriend(userId);
-    console.log(userId);
   };
+
   const friendrefused = () => {
     refuseFriend(userId);
-    console.log(userId);
   };
+
   return (
     <View style={styles.container}>
       <Text>{message}</Text>
@@ -19,6 +20,7 @@ const askFriendMessage = ({ message, acceptFriend, refuseFriend, userId }) => {
           <Text style={styles.textButton}>Accepter</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={friendrefused}>
           <Text style={styles.textButton}>Refuser</Text>
@@ -47,9 +49,9 @@ styles = StyleSheet.create({
     paddingRight: 20,
     alignSelf: "center",
   },
-
   textButton: {
     color: "#DDA304",
+    fontFamily: "Inter",
     height: 30,
     fontWeight: "600",
     fontSize: 16,
