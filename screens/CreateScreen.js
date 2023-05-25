@@ -23,6 +23,13 @@ export default function CreateScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
+  const showToasts = () => {
+    Toast.success("Amis ajouté");
+  };
+  const badToast = () => {
+    Toast.error("Impossible à ajouter");
+  };
+
   const [nameEvent, setNameEvent] = useState("");
   const [adressEvent, setAdressEvent] = useState(null);
   const [descriptionEvent, setDescriptionEvent] = useState("");
@@ -80,34 +87,27 @@ export default function CreateScreen({ navigation }) {
   // };
 
   const handleSubmit = () => {
-    // if (
-    //   !nameEvent ||
-    //   !selectedDate ||
-    //   !selectedTime||
-    //   !adressEvent ||
-    //   !descriptionEvent
-    // ) {
-    //   setError("merci de compléter tous les champs ");
-    //   setSubmitted(true);
-
-    //   return;
-    // }
+    if (
+      nameEvent === "" ||
+      selectedDate === "" ||
+      selectedTime === "" ||
+      adressEvent === "" ||
+      descriptionEvent === ""
+    ) {
+      setError("merci de compléter tous les champs ");
+      setSubmitted(true);
+      return;
+    }
 
     const eventTimestamp = combineTime(datePickerValue, timePickerValue);
-
-    console.log("PARTICIPANTS", participants);
 
     fetch(`${BACKEND_URL}/events/addevent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: nameEvent,
-        // title, location, description, userId, role
-        //todo gestion userId, add back date and time
         date: eventTimestamp,
         participants: participants,
-        //date: selectedDate,
-        //time: selectedTime,
         role: "admin",
         userId: user.userId,
         location: adressEvent,
@@ -123,8 +123,6 @@ export default function CreateScreen({ navigation }) {
 
         const newEvent = {
           title: createdEventData.title,
-          //date: createdEventData.event.selectedDate,
-          //time: createdEventData.event.selectedTime,
           location: createdEventData.location,
           description: createdEventData.description,
         };
@@ -164,22 +162,15 @@ export default function CreateScreen({ navigation }) {
     setShowTimePicker(true);
   };
 
-  const showToasts = () => {
-    Toast.success("Profil modifié");
-  };
-  const badToast = () => {
-    Toast.error("Profil modifié");
-  };
-
   //FRIENDS
   //todo modifier le fetch pour qu'il soit dynamique
   const showGuests = () => {
     setShowModal(!showModal);
-    fetch(
-      `${BACKEND_URL}/users/getfriends/${user.userId}`,
-    ).then((response) => response.json()).then((data) => {
-      setFriends(data.user.friends);
-    });
+    fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFriends(data.user.friends);
+      });
   };
 
   let friendsList = friends.map((data, i) => {
@@ -187,14 +178,17 @@ export default function CreateScreen({ navigation }) {
     // let color;
     // invited? color="red": color="blue";
     return (
-      <View style={styles.friendContainer}>
-        <Text key={i} onPress={() => handleGuest(data._id)} style={styles.participant}>{data.firstname}</Text>
+      <View style={styles.friendContainer} key={i}>
+        <Text onPress={() => handleGuest(data._id)} style={styles.participant}>
+          {data.firstname}
+        </Text>
       </View>
     );
   });
 
   const handleGuest = (guestId) => {
     console.log(guestId);
+
     const invited = participants.includes(guestId);
     // const invited = participants.some( e => e.userId = guestId);
 
@@ -211,7 +205,6 @@ export default function CreateScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ToastManager />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
@@ -347,6 +340,7 @@ export default function CreateScreen({ navigation }) {
       >
         <Text style={styles.textButtonValid}> Valider </Text>
       </TouchableOpacity>
+      <ToastManager />
     </View>
   );
 }

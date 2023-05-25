@@ -21,6 +21,7 @@ export default function MyEventsScreen({}) {
   const [eventsData, setEventsData] = useState([]);
   const user = useSelector((state) => state.user.value);
   const [eventsFiltered, setEventsFiltered] = useState(eventsData);
+  const [orderDate, setOrderDate] = useState(true);
 
   const filterEvents = (value) => {
     setSearch(value);
@@ -30,6 +31,20 @@ export default function MyEventsScreen({}) {
     setEventsFiltered(filter);
   };
 
+  const handleOrdersDateByNew = () => {
+    setEventsFiltered(
+      eventsData.sort((a, b) => new Date(b.date) - new Date(a.date))
+    );
+    setOrderDate(!orderDate);
+  };
+
+  const handleOrdersDateByOld = () => {
+    setEventsFiltered(
+      eventsData.sort((a, b) => new Date(a.date) - new Date(b.date))
+    );
+    setOrderDate(!orderDate);
+  };
+
   useFocusEffect(
     useCallback(() => {
       const fetchEvents = fetch(
@@ -37,6 +52,7 @@ export default function MyEventsScreen({}) {
       )
         .then((response) => response.json())
         .then((data) => {
+          data.events.sort((a, b) => new Date(a.date) - new Date(b.date));
           setEventsData(data.events);
         });
 
@@ -90,14 +106,25 @@ export default function MyEventsScreen({}) {
   return (
     <>
       <ScrollView style={styles.scrollView} stickyHeaderIndices={[0]}>
-        <View style={{ backgroundColor: "#FAF5FF" }}>
+        {orderDate ? (
           <TouchableOpacity
             style={styles.buttonPastEvents}
             activeOpacity={0.8}
-            // onPress={() => }
+            onPress={handleOrdersDateByNew}
           >
             <FontAwesome name="clock-o" size={28} color="#6B21A8" />
           </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.buttonPastEvents}
+            activeOpacity={0.8}
+            onPress={handleOrdersDateByOld}
+          >
+            <FontAwesome name="clock-o" size={28} color="green" />
+          </TouchableOpacity>
+        )}
+
+        <View style={{ backgroundColor: "#FAF5FF" }}>
           <Text style={styles.title}>My Events</Text>
           <KeyboardAvoidingView style={{ width: "100%" }}>
             <TextInput
