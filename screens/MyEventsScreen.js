@@ -66,6 +66,7 @@ export default function MyEventsScreen({}) {
           date={data.date}
           description={data.description}
           eventId={data._id}
+          handleDelete={handleDelete}
           //navigation={navigation}
         />
       );
@@ -79,6 +80,7 @@ export default function MyEventsScreen({}) {
           date={data.date}
           description={data.description}
           eventId={data._id}
+          handleDelete={handleDelete}
           //navigation={navigation}
         />
       );
