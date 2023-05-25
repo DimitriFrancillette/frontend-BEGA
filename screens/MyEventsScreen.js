@@ -83,7 +83,6 @@ export default function MyEventsScreen({}) {
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
-          handleDelete={handleDelete}
         />
       );
     });
@@ -97,7 +96,6 @@ export default function MyEventsScreen({}) {
           description={data.description}
           eventId={data._id}
           //navigation={navigation}
-          handleDelete={handleDelete}
         />
       );
     });
