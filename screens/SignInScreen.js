@@ -63,7 +63,7 @@ export default function SignInScreen({ navigation }) {
           };
 
           dispatch(addUser(newUser));
-          navigation.navigate("TabNavigator", { screen: "MyEvents" });
+          navigation.navigate("TabNavigator", { screen: "Mes Events" });
 
           setEmail("");
           setPassword("");

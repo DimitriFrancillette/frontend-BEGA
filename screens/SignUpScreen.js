@@ -72,7 +72,7 @@ export default function SignUpScreen({ navigation }) {
             token: data.user.authTokens[0].authToken,
           };
           dispatch(addUser(newUser));
-          navigation.navigate("TabNavigator", { screen: "MyEvents" });
+          navigation.navigate("TabNavigator", { screen: "Mes Events" });
 
           setFirstname("");
           setLastname("");

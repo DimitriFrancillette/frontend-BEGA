@@ -197,7 +197,7 @@ export default function EventScreen({ navigation, route }) {
             name="arrow-left"
             size={25}
             color="#000000"
-            onPress={() => navigation.navigate("MyEvents")}
+            onPress={() => navigation.navigate("Mes Events")}
           />
         </View> */}
         <View style={styles.titleContainer}>
@@ -206,7 +206,7 @@ export default function EventScreen({ navigation, route }) {
             size={25}
             color="#000000"
             style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("MyEvents")}
+            onPress={() => navigation.navigate("Mes Events")}
           />
           <TextInput
             placeholder="Nom"
