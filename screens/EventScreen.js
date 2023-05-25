@@ -195,14 +195,6 @@ export default function EventScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {showCreateTodo && (
-        <Modal transparent={true} visible={showCreateTodo}>
-          <CreateTodoModal
-            closeModal={() => setShowCreateTodo(false)}
-            handleTodo={handleTodo}
-          />
-        </Modal>
-      )}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
@@ -329,7 +321,7 @@ export default function EventScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
-                //onPress={}
+                onPress={() => setShowCagnotte(false)}
               >
                 <Text style={styles.textButtonValid}> Valider </Text>
               </TouchableOpacity>
@@ -358,9 +350,7 @@ export default function EventScreen({ navigation, route }) {
                     style={styles.plusButton}
                     onPress={() => setShowCreateTodo(true)}
                   >
-                    <Text>
-                      Nouvelle tâche
-                    </Text>
+                    <Text style={styles.plusButtonText}>Nouvelle tâche</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.todoValidButton}
@@ -372,6 +362,14 @@ export default function EventScreen({ navigation, route }) {
                 </>
               )}
             </View>
+            {showCreateTodo && (
+              <Modal animationType={"fade"} transparent={true} visible={showCreateTodo}>
+                <CreateTodoModal
+                  closeModal={() => setShowCreateTodo(false)}
+                  handleTodo={handleTodo}
+                />
+              </Modal>
+            )}
           </SafeAreaView>
         </Modal>
         {/*Modal TODO */}
@@ -451,6 +449,7 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    marginBottom: 30,
   },
   title: {
     width: "100%",
@@ -460,7 +459,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   eventInfosContainer: {
-    marginTop: 40,
     justifyContent: "center",
     alignItems: "flex-start",
     width: "90%",
