@@ -33,7 +33,7 @@ const MessageScreen = () => {
 
   const askFriend = (userId) => {
     console.log("iCCCCCIIIII", user.userId);
-    fetch(`http://192.168.1.57:3000/askfriend/`, {
+    fetch(`${BACKEND_URL}/askfriend/`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const MessageScreen = () => {
 
   const searchFriend = (value) => {
     setSearch(value);
-    fetch(`http://192.168.1.57:3000/askfriend/findfriendbyemail`, {
+    fetch(`${BACKEND_URL}/askfriend/findfriendbyemail`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const MessageScreen = () => {
   };
 
   const acceptFriend = (userId) => {
-    fetch(`http://192.168.1.57:3000/askfriend/acceptfriend`, {
+    fetch(`${BACKEND_URL}/askfriend/acceptfriend`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const MessageScreen = () => {
   };
 
   const refuseFriend = (userId) => {
-    fetch(`http://192.168.1.57:3000/askfriend/refusedfriend`, {
+    fetch(`${BACKEND_URL}/askfriend/refusedfriend`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const MessageScreen = () => {
 
   useEffect(() => {
     const fetchMessage = fetch(
-      `http://192.168.1.57:3000/askfriend/getaskfriendmessage/${user.userId}`
+      `${BACKEND_URL}/askfriend/getaskfriendmessage/${user.userId}`
     )
       .then((response) => response.json())
       .then((data) => {
