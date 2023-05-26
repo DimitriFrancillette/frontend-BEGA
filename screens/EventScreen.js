@@ -33,6 +33,9 @@ export default function EventScreen({ navigation, route }) {
   const [strongboxId, setStrongboxId] = useState();
   const [showCreateTodo, setShowCreateTodo] = useState(false);
   const [reloadTodo, setReloadTodo] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [showFriendModal, setShowFriendModal] = useState(false);
+  const [newParticipants, setNewParticipants] = useState([]);
 
   const { eventId } = route.params;
   ////////////////////todo/////////////////////////////
@@ -178,20 +181,104 @@ export default function EventScreen({ navigation, route }) {
     totalStrongBox += transaction.amount;
   }
 
-   const guestList = participants.map((participant, i) => {
-     return(
-       <View style={styles.oneGuestContainer}>
-       <FontAwesome
-         name="user-circle"
-         size={50}
-         color="#6B21A8"
-         style={{ marginRight: 10 }}
-       />
-       <Text>{participant.userId.firstname}</Text>
-     </View>
+  const guestList =  participants.map((participant, i) => {
+    return (
+      <View key={i} style={styles.oneGuestContainer}>
+        <FontAwesome
+          name="user-circle"
+          size={50}
+          color="#6B21A8"
+          style={{ marginRight: 10 }}
+        />
+        <Text>{participant.userId.firstname}</Text>
+      </View>
+    );
+  });
 
-     )
-   })
+  const showGuests = () => {
+    setShowFriendModal(!showFriendModal);
+    fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFriends(data.user.friends);
+      });
+  };
+
+  let friendsList = friends.map((data, i) => {
+    let inviteIcon = "user-plus";
+
+    const invited = newParticipants.includes(data._id);
+
+    !invited ? (inviteIcon = "user-plus") : (inviteIcon = "minus");
+    return (
+      <View key={i} style={styles.friendContainer}>
+        <Text onPress={() => handleGuest(data._id)} style={styles.participant}>
+          {data.firstname}
+        </Text>
+        <FontAwesome
+          onPress={() => handleGuest(data._id)}
+          name={inviteIcon}
+          size={30}
+          color="#6B21A8"
+        />
+      </View>
+    );
+  });
+
+  const handleGuest = (guestId) => {
+    console.log("NEW PART", newParticipants);
+    console.log(guestId);
+
+    const invited = newParticipants.includes(guestId);
+    console.log("INVITED", invited);
+
+    if (!invited) {
+      setNewParticipants([...newParticipants, guestId]);
+      console.log("ADDED");
+      // showToasts();
+    } else {
+      setNewParticipants(newParticipants.filter((e) => e !== guestId));
+      console.log("REMOVED");
+      // badToast();
+    }
+  };
+
+  const updateEvent = () => {
+    console.log("NEW PARTS", newParticipants);
+    let updatedParticipantsList = [];
+
+    for (const participant of participants) {
+      const object = { userId: participant.userId._id, role: participant.role };
+      updatedParticipantsList.push(object);
+    }
+
+    for (const newParticipant of newParticipants) {
+      const object = { userId: newParticipant, role: "participant" };
+      updatedParticipantsList.push(object);
+    }
+    fetch(`${BACKEND_URL}/events/updateevent`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: eventTitle,
+        location: address,
+        description: description,
+        eventId: eventId,
+        participants: updatedParticipantsList,
+      }),
+    })
+      .then((response) => response.json())
+      .then((updateData) => {
+        if (updateData.result === false) {
+          console.log(updateData);
+          setNewParticipants([]);
+          return;
+        }
+        console.log("FETCH UPDATE", updateData);
+        setNewParticipants([]);
+        setReloadTodo(!reloadTodo);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -213,7 +300,10 @@ export default function EventScreen({ navigation, route }) {
             size={25}
             color="#000000"
             style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("Mes Events")}
+            onPress={() => {
+              navigation.navigate("Mes Events")
+              updateEvent();
+            }}
           />
           <TextInput
             placeholder="Nom"
@@ -315,7 +405,10 @@ export default function EventScreen({ navigation, route }) {
                   name="arrow-left"
                   size={25}
                   color="#000000"
-                  onPress={() => setShowCagnotte(false)}
+                  onPress={() => { 
+                    setShowCagnotte(false)
+                    
+                  }} 
                 />
               </View>
               <TouchableOpacity
@@ -363,7 +456,11 @@ export default function EventScreen({ navigation, route }) {
               )}
             </View>
             {showCreateTodo && (
-              <Modal animationType={"fade"} transparent={true} visible={showCreateTodo}>
+              <Modal
+                animationType={"fade"}
+                transparent={true}
+                visible={showCreateTodo}
+              >
                 <CreateTodoModal
                   closeModal={() => setShowCreateTodo(false)}
                   handleTodo={handleTodo}
@@ -407,12 +504,57 @@ export default function EventScreen({ navigation, route }) {
         <View style={styles.guestsContainer}>
           <View style={styles.guestsListContainer}>
             <Text style={styles.infosText}>Guest List</Text>
-             {guestList}
+            {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
             <View style={styles.buttonContainer}>
+              <SafeAreaView style={{ flex: 1 }}>
+                <Modal
+                  animationType={"slide"}
+                  transparent={false}
+                  visible={showFriendModal}
+                  onRequestClose={() => {
+                    console.log("Modal has been closed.");
+                  }}
+                >
+                  <View style={styles.modalFriend}>
+                    <Text style={styles.title}> Liste d'amis</Text>
+                    {/* <TextInput
+onChangeText={(value) => setEmailInvitation(value)}
+value={emailInvitation}
+style={styles.inputEmailInvitation}
+placeholder="email de l'invité"
+placeholderTextColor="#c0c0c0"
+/>
+<View style={styles.closeButton}>
+<Button
+color="#841584"
+title="X"
+onPress={() => {
+setShowModal(!showModal);
+}}
+/>
+</View> */}
+
+                    {friendsList}
+
+                    <TouchableOpacity
+                      style={styles.modalValidButton}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        updateEvent();
+                        setShowFriendModal(!showFriendModal);
+                      }}
+                    >
+                      <Text style={styles.textButtonValid}> Valider </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+              </SafeAreaView>
               <TouchableOpacity
-                // onPress={() => }
+                onPress={() => {
+                  showGuests();
+                }}
                 activeOpacity={0.8}
               >
                 <Text style={styles.buttonText}>Ajouter</Text>
@@ -673,5 +815,39 @@ const styles = StyleSheet.create({
   participe: {
     color: "#6B21A8",
     fontWeight: 700,
+  },
+  modalFriend: {
+    alignItems: "center",
+    backgroundColor: "#FAF5FF",
+    paddingTop: 30,
+    width: "100%",
+    height: "100%",
+  },
+  modalValidButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    paddingTop: 8,
+    alignItems: "center",
+    position: "absolute",
+    bottom: 70,
+    paddingHorizontal: 40,
+  },
+  participant: {
+    fontSize: 30,
+    margin: 10,
+  },
+  friendContainer: {
+    marginTop: 20,
+    width: "70%",
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingRight: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

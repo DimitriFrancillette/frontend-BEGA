@@ -188,7 +188,7 @@ const MessageScreen = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-      <FriendsList />
+      {/* <FriendsList /> */}
     </View>
   );
 };
