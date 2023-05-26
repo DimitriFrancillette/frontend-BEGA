@@ -15,6 +15,7 @@ import AskFriendMessage from "../components/askFriendMessage";
 import { useSelector } from "react-redux";
 import { BACKEND_URL } from "../constants";
 import ToastManager, { Toast } from "toastify-react-native";
+import FriendsList from "../components/FriendsList";
 
 const MessageScreen = () => {
   const user = useSelector((state) => state.user.value);
@@ -22,16 +23,28 @@ const MessageScreen = () => {
   const [reload, setReload] = useState(false);
   const [search, setSearch] = useState("");
   const [listfriend, setListfriend] = useState();
+  const [alreadyFriends, setAlreadyFriends] = useState(null);
+
+  const showToastsInvitation = () => {
+    Toast.success("Demande envoyé 🤩");
+  };
 
   const showToasts = () => {
-    Toast.success("Vous venez d'ajouter un(e) ami(e) !");
+    Toast.success("Vous venez d'ajouter un(e) ami(e) ! 🤩");
   };
   const badToast = () => {
-    Toast.error("Au revoir !");
+    Toast.error("Au revoir ! 😌");
+  };
+  const alreadyFriend = () => {
+    Toast.error("Deja ami ! 🤩");
   };
 
   const askFriend = (userId) => {
-    console.log("iCCCCCIIIII", user.userId);
+    if (alreadyFriends.some((e) => e._id === userId)) {
+      alreadyFriend();
+      return;
+    }
+
     fetch(`${BACKEND_URL}/askfriend/`, {
       headers: {
         Accept: "application/json",
@@ -44,6 +57,8 @@ const MessageScreen = () => {
         myName: user.email,
       }),
     });
+    setReload(!reload);
+    showToastsInvitation();
   };
 
   const searchFriend = (value) => {
@@ -58,7 +73,6 @@ const MessageScreen = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setListfriend(value ? data.user : []);
       });
   };
@@ -77,13 +91,13 @@ const MessageScreen = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (!data.result) {
-          badToast();
-          return;
-        }
+        setReload(!reload);
         showToasts();
+      })
+      .catch((e) => {
+        setReload(!reload);
+        badToast();
       });
-    setReload(!reload);
   };
 
   const refuseFriend = (userId) => {
@@ -97,15 +111,9 @@ const MessageScreen = () => {
         userIdHim: userId,
         userIdMe: user.userId,
       }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data) {
-          return;
-        }
-        badToast();
-        setReload(!reload);
-      });
+    });
+    setReload(!reload);
+    badToast();
   };
 
   useEffect(() => {
@@ -115,18 +123,26 @@ const MessageScreen = () => {
       .then((response) => response.json())
       .then((data) => {
         setMessagesList(data.findMessage.askFriend);
-        console.log(data.findMessage.askFriend);
+      });
+
+    const fetchFriendsList = fetch(
+      `${BACKEND_URL}/users/getfriends/${user.userId}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setAlreadyFriends(data.user.friends);
       });
 
     return () => {
       fetchMessage;
+      fetchFriendsList;
     };
   }, [reload]);
 
   return (
     <View style={styles.container}>
+      <ToastManager />
       <SafeAreaView>
-        <ToastManager />
         <Text style={styles.title}>Invites tes ami(e)s</Text>
         <ScrollView style={styles.scrollView}>
           <View style={styles.friendsContainer}>
@@ -172,6 +188,7 @@ const MessageScreen = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
+      <FriendsList />
     </View>
   );
 };
@@ -219,6 +236,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter",
     textAlign: "center",
     marginBottom: 30,
+    marginTop: 70,
   },
   email: {
     color: "#d48221",

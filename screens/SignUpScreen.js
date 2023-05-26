@@ -86,7 +86,8 @@ export default function SignUpScreen({ navigation }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}>
+      style={styles.container}
+    >
       <ScrollView style={styles.scrollView}>
         <View style={styles.arrowContainer}>
           <FontAwesome
@@ -101,76 +102,76 @@ export default function SignUpScreen({ navigation }) {
           source={require("../assets/logo-bega.png")}
         />
         <View style={styles.formContainer}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Prénom"
-                onChangeText={(value) => setFirstname(value)}
-                value={firstname}
-                style={styles.input}
-                placeholderTextColor="#faf5ff"
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Nom"
-                onChangeText={(value) => setLastname(value)}
-                value={lastname}
-                style={styles.input}
-                placeholderTextColor="#faf5ff"
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Adresse email"
-                onChangeText={(value) => setEmail(value)}
-                value={email}
-                style={styles.input}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                autoComplete="email"
-                placeholderTextColor="#faf5ff"
-              />
-            </View>
-            {emailError && (
-              <Text style={styles.error}>Adresse email invalide</Text>
-            )}
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Mot de passe"
-                onChangeText={(value) => setPassword(value)}
-                value={password}
-                secureTextEntry={true}
-                style={styles.input}
-                placeholderTextColor="#faf5ff"
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Confirmation de mot de passe"
-                onChangeText={(value) => setConfirmedPassword(value)}
-                value={confirmedPassword}
-                secureTextEntry={true}
-                style={styles.input}
-                placeholderTextColor="#faf5ff"
-              />
-            </View>
-            {passwordError && (
-              <Text style={styles.error}>
-                Les mots de passe ne correspondent pas
-              </Text>
-            )}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Prénom"
+              onChangeText={(value) => setFirstname(value)}
+              value={firstname}
+              style={styles.input}
+              placeholderTextColor="#faf5ff"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Nom"
+              onChangeText={(value) => setLastname(value)}
+              value={lastname}
+              style={styles.input}
+              placeholderTextColor="#faf5ff"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Adresse email"
+              onChangeText={(value) => setEmail(value)}
+              value={email}
+              style={styles.input}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoComplete="email"
+              placeholderTextColor="#faf5ff"
+            />
+          </View>
+          {emailError && (
+            <Text style={styles.error}>Adresse email invalide</Text>
+          )}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Mot de passe"
+              onChangeText={(value) => setPassword(value)}
+              value={password}
+              secureTextEntry={true}
+              style={styles.input}
+              placeholderTextColor="#faf5ff"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Confirmation de mot de passe"
+              onChangeText={(value) => setConfirmedPassword(value)}
+              value={confirmedPassword}
+              secureTextEntry={true}
+              style={styles.input}
+              placeholderTextColor="#faf5ff"
+            />
+          </View>
+          {passwordError && (
+            <Text style={styles.error}>
+              Les mots de passe ne correspondent pas
+            </Text>
+          )}
 
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => handleSubmit()}
-                style={styles.buttonSignUp}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.textButton}>S'enregistrer</Text>
-              </TouchableOpacity>
-            </View>
-         </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => handleSubmit()}
+              style={styles.buttonSignUp}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.textButton}>S'enregistrer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -200,12 +201,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 250,
     marginTop: 80,
-    resizeMode: 'contain'
+    resizeMode: "contain",
   },
 
-  formContainer: {
-
-  },
+  formContainer: {},
 
   inputContainer: {
     width: "80%",
