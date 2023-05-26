@@ -84,7 +84,6 @@ export default function ProfilScreen({ navigation }) {
           setEmail(data.user.email);
           setFirstname(data.user.firstname);
           setLastname(data.user.lastname);
-          setPassword(data.user.password);
         }
       });
     return () => fetchDataUser;
@@ -148,9 +147,10 @@ export default function ProfilScreen({ navigation }) {
         "Content-Type": "application/json",
       },
       method: "DELETE",
-      body: JSON.stringify({ email })
-  }
-  )};
+      body: JSON.stringify({ email }),
+    });
+    navigation.navigate("Home");
+  };
 
   return (
     <View style={styles.container1}>

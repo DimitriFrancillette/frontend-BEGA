@@ -23,15 +23,18 @@ const MessageScreen = () => {
   const [search, setSearch] = useState("");
   const [listfriend, setListfriend] = useState();
 
+  const showToastsInvitation = () => {
+    Toast.success("Demande envoyé 🤩");
+  };
+
   const showToasts = () => {
-    Toast.success("Vous venez d'ajouter un(e) ami(e) !");
+    Toast.success("Vous venez d'ajouter un(e) ami(e) ! 🤩");
   };
   const badToast = () => {
-    Toast.error("Au revoir !");
+    Toast.error("Au revoir ! 😌");
   };
 
   const askFriend = (userId) => {
-    console.log("iCCCCCIIIII", user.userId);
     fetch(`${BACKEND_URL}/askfriend/`, {
       headers: {
         Accept: "application/json",
@@ -44,6 +47,8 @@ const MessageScreen = () => {
         myName: user.email,
       }),
     });
+    setReload(!reload);
+    showToastsInvitation();
   };
 
   const searchFriend = (value) => {
@@ -77,13 +82,13 @@ const MessageScreen = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (!data.result) {
-          badToast();
-          return;
-        }
+        setReload(!reload);
         showToasts();
+      })
+      .catch((e) => {
+        setReload(!reload);
+        badToast();
       });
-    setReload(!reload);
   };
 
   const refuseFriend = (userId) => {
@@ -97,15 +102,9 @@ const MessageScreen = () => {
         userIdHim: userId,
         userIdMe: user.userId,
       }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data) {
-          return;
-        }
-        badToast();
-        setReload(!reload);
-      });
+    });
+    setReload(!reload);
+    badToast();
   };
 
   useEffect(() => {
@@ -125,8 +124,8 @@ const MessageScreen = () => {
 
   return (
     <View style={styles.container}>
+      <ToastManager />
       <SafeAreaView>
-        <ToastManager />
         <Text style={styles.title}>Invites tes ami(e)s</Text>
         <ScrollView style={styles.scrollView}>
           <View style={styles.friendsContainer}>
@@ -204,7 +203,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: "#6B21A8",
-    color: '#FDBA74',
     borderRadius: 10,
     padding: 8,
     alignSelf: "center",

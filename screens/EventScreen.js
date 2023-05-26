@@ -165,7 +165,6 @@ export default function EventScreen({ navigation, route }) {
   });
   ///////////////////////todo//////////////////////////////////////
 
-  // JE COMMENCE MAINTENANT POUR AJOUTER DES PARTICIPANTS CECI EST MARQUEUR CTRL+Z
   const userList = transactions?.map(
     (transaction) => transaction.userId.firstname
   );
@@ -219,7 +218,7 @@ export default function EventScreen({ navigation, route }) {
 
     !invited ? inviteIcon = "user-plus" : inviteIcon = "minus";
     return (
-      <View style={styles.friendContainer} key={i}>
+      <View key={i} style={styles.friendContainer} >
         <Text onPress={() => handleGuest(data._id)} style={styles.participant}>
           {data.firstname}
         </Text>
@@ -671,13 +670,10 @@ const styles = StyleSheet.create({
   },
   // DIM MODIF-----------------------
   guestsButtonContainer: {
-    position: "absolute",
     width: "50%",
     // flexDirection:"row",
-    // justifyContent: "center",
-    // alignItems: "center",
-    marginLeft:300,
-    marginTop: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
   // DIM MODIF-----------------------
 
