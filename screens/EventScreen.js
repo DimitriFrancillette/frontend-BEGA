@@ -202,7 +202,7 @@ export default function EventScreen({ navigation, route }) {
 
 
 
-// DIM MODIF ---------------------------------------------------
+// DIM MODIF ----------------------------------------------------
   const showGuests = () => {
     setShowFriendModal(!showFriendModal);
     fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
