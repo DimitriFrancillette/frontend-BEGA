@@ -170,9 +170,11 @@ export default function EventScreen({ navigation, route }) {
   const uniqueUserList = [...new Set(userList)];
   const people = uniqueUserList?.map((user, i) => {
     return (
-      <Text key={i} style={styles.people}>
+      <View key={i} >
+      <Text style={styles.people}>
         {user}
       </Text>
+      </View>
     );
   });
 
@@ -392,11 +394,11 @@ export default function EventScreen({ navigation, route }) {
                 <Text style={styles.participe}>Participants :</Text>
                 {uniqueUserList?.map((user, i) => {
                   return (
-                    <>
-                      <Text key={i} style={styles.people}>
+                   <View key={i}>
+                      <Text  style={styles.people}>
                         {user}
                       </Text>
-                    </>
+                    </View>
                   );
                 })}
               </View>

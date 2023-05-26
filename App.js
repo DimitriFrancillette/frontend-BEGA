@@ -23,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 
+console.disableYellowBox = true
+
 const persistConfig = {
   key: "bega",
   storage: AsyncStorage,
