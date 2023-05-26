@@ -33,6 +33,11 @@ export default function EventScreen({ navigation, route }) {
   const [strongboxId, setStrongboxId] = useState();
   const [showCreateTodo, setShowCreateTodo] = useState(false);
   const [reloadTodo, setReloadTodo] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [showFriendModal, setShowFriendModal] = useState(false);
+  const [newParticipants, setNewParticipants] = useState([]);
+
+
 
   const { eventId } = route.params;
   ////////////////////todo/////////////////////////////
@@ -180,19 +185,108 @@ export default function EventScreen({ navigation, route }) {
   }
 
   const guestList = participants.map((participant, i) => {
-    return(
+    return (
       <View key={i} style={styles.oneGuestContainer}>
-      <FontAwesome
-        name="user-circle"
-        size={50}
-        color="#6B21A8"
-        style={{ marginRight: 10 }}
-      />
-      <Text>{participant.userId.firstname}</Text>
-    </View>
+        <FontAwesome
+          name="user-circle"
+          size={50}
+          color="#6B21A8"
+          style={{ marginRight: 10 }}
+        />
+        <Text>{participant.userId.firstname}</Text>
+      </View>
 
     )
   })
+
+
+
+
+// DIM MODIF ---------------------------------------------------
+  const showGuests = () => {
+    setShowFriendModal(!showFriendModal);
+    fetch(`${BACKEND_URL}/users/getfriends/${user.userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFriends(data.user.friends);
+      });
+  };
+
+  let friendsList = friends.map((data, i) => {
+    let inviteIcon = "user-plus";
+
+    const invited = newParticipants.includes(data._id);
+
+    !invited ? inviteIcon = "user-plus" : inviteIcon = "minus";
+    return (
+      <View style={styles.friendContainer} key={i}>
+        <Text onPress={() => handleGuest(data._id)} style={styles.participant}>
+          {data.firstname}
+        </Text>
+        <FontAwesome onPress={() => handleGuest(data._id)} name={inviteIcon} size={30} color="#6B21A8" />
+      </View>
+    );
+  });
+
+  const handleGuest = (guestId) => {
+    console.log('NEW PART', newParticipants);
+    console.log(guestId);
+
+    const invited = newParticipants.includes(guestId);
+    console.log('INVITED', invited);
+
+    if (!invited) {
+      setNewParticipants([...newParticipants, guestId]);
+      console.log("ADDED");
+      // showToasts();
+    } else {
+      setNewParticipants(newParticipants.filter((e) => e !== guestId));
+      console.log("REMOVED");
+      // badToast();
+    }
+  };
+
+  const updateEvent = () => {
+    console.log('NEW PARTS', newParticipants)
+    let updatedParticipantsList = [];
+
+    for (const participant of participants) {
+      const object = { userId: participant.userId._id, role: participant.role }
+      updatedParticipantsList.push(object);
+    }
+
+    for (const newParticipant of newParticipants) {
+      const object = { userId: newParticipant, role: "participant" }
+      updatedParticipantsList.push(object);
+
+    }
+    fetch(`${BACKEND_URL}/events/updateevent`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: eventTitle,
+        location: address,
+        description: description,
+        eventId: eventId,
+        participants: updatedParticipantsList,
+      }),
+    })
+      .then((response) => response.json())
+      .then((updateData) => {
+        if (updateData.result === false) {
+          console.log(updateData);
+          setNewParticipants([]);
+          return;
+        }
+        console.log('FETCH UPDATE', updateData);
+        setNewParticipants([]);
+        setReloadTodo(!reloadTodo);
+      });
+
+  };
+// DIM MODIF ---------------------------------------------------
+
+
 
   return (
     <View style={styles.container}>
@@ -208,21 +302,16 @@ export default function EventScreen({ navigation, route }) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
       >
-        {/* <View style={styles.arrowContainer}>
-          <FontAwesome
-            name="arrow-left"
-            size={25}
-            color="#000000"
-            onPress={() => navigation.navigate("Mes Events")}
-          />
-        </View> */}
         <View style={styles.titleContainer}>
           <FontAwesome
             name="arrow-left"
             size={25}
             color="#000000"
             style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("Mes Events")}
+            onPress={() => {
+              navigation.navigate("Mes Events")
+              updateEvent();
+            }}
           />
           <TextInput
             placeholder="Nom"
@@ -330,7 +419,7 @@ export default function EventScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.cagnotteValidButton}
                 activeOpacity={0.8}
-                //onPress={}
+              //onPress={}
               >
                 <Text style={styles.textButtonValid}> Valider </Text>
               </TouchableOpacity>
@@ -397,9 +486,6 @@ export default function EventScreen({ navigation, route }) {
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              // onPress={() => {
-              //   setShowModal(!showModal);
-              // }}
               activeOpacity={0.8}
             >
               <Text style={styles.buttonText}>DÉPENSES</Text>
@@ -413,10 +499,57 @@ export default function EventScreen({ navigation, route }) {
             {guestList}
           </View>
           <View style={styles.guestsButtonContainer}>
+            {/* DIM MODIF------------------------- */}
+            <SafeAreaView style={{ flex: 1 }}>
+              <Modal
+                animationType={"slide"}
+                transparent={false}
+                visible={showFriendModal}
+                onRequestClose={() => {
+                  console.log("Modal has been closed.");
+                }}
+              >
+                <View style={styles.modalFriend}>
+                  <Text style={styles.title}> Liste d'amis</Text>
+                  {/* <TextInput
+                      onChangeText={(value) => setEmailInvitation(value)}
+                      value={emailInvitation}
+                      style={styles.inputEmailInvitation}
+                      placeholder="email de l'invité"
+                      placeholderTextColor="#c0c0c0"
+                    />
+                    <View style={styles.closeButton}>
+                      <Button
+                        color="#841584"
+                        title="X"
+                        onPress={() => {
+                          setShowModal(!showModal);
+                        }}
+                      />
+                    </View> */}
+
+                  {friendsList}
+
+                  <TouchableOpacity
+                    style={styles.modalValidButton}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      updateEvent();
+                      setShowFriendModal(!showFriendModal);
+                    }}
+                  >
+                    <Text style={styles.textButtonValid}> Valider </Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            </SafeAreaView>
+            {/* DIM MODIF------------------------- */}
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                // onPress={() => }
                 activeOpacity={0.8}
+                onPress={() => {
+                  showGuests();
+                }}
               >
                 <Text style={styles.buttonText}>Ajouter</Text>
               </TouchableOpacity>
@@ -536,12 +669,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-
+  // DIM MODIF-----------------------
   guestsButtonContainer: {
+    position: "absolute",
     width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
+    // flexDirection:"row",
+    // justifyContent: "center",
+    // alignItems: "center",
+    marginLeft:300,
+    marginTop: 100,
   },
+  // DIM MODIF-----------------------
+
   text: {
     color: "#3f2949",
     marginTop: 10,
@@ -677,4 +816,39 @@ const styles = StyleSheet.create({
     color: "#6B21A8",
     fontWeight: 700,
   },
+  // DIM MODIF-----------------------
+  modalFriend: {
+    alignItems: "center",
+    backgroundColor: "#FAF5FF",
+    paddingTop: 30,
+    width: "100%",
+    height: "100%",
+  },
+  modalValidButton: {
+    backgroundColor: "#6B21A8",
+    borderRadius: 10,
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    paddingTop: 8,
+    alignItems: "center",
+    position: "absolute",
+    bottom: 70,
+    paddingHorizontal: 40,
+  },
+  participant: {
+    fontSize: 30,
+    margin: 10,
+  },
+  friendContainer: {
+    marginTop: 20,
+    width: '70%',
+    borderColor: "#DDA304",
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    paddingLeft: 10,
+    paddingRight: 10,
+    justifyContent: 'space-between',
+    alignItems: "center",
+  }
 });
