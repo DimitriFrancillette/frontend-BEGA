@@ -231,7 +231,7 @@ export default function ProfilScreen({ navigation }) {
               secureTextEntry={true}
             />
           </View>
-          <View style={styles.notificationContainer}>
+          {/* <View style={styles.notificationContainer}>
             <Text>Events notifications</Text>
             <Switch
               trackColor={{ false: "#767577", true: "#6B21A8" }}
@@ -240,7 +240,7 @@ export default function ProfilScreen({ navigation }) {
               onValueChange={toggleSwitch}
               value={isEnabled}
             />
-          </View>
+          </View> */}
           {isChanged && (
             <View style={styles.buttonContainer}>
               <TouchableOpacity
